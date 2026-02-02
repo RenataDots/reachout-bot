@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reach Out Bot - Email Testing Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🤖 Reach Out Bot</h1>
+      <p class="subtitle">Email Outreach Campaign Testing Dashboard</p>
+      <div class="header-status">
+        <span id="status-badge" class="status-badge">●</span>
+        <span id="status-text">Connecting...</span>
+      </div>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="create">Create</button>
+      <button class="tab-btn" data-tab="review">Review</button>
+      <button class="tab-btn" data-tab="data">Data</button>
+    </nav>
+
+    <!-- CREATE TAB -->
+    <section id="create-tab" class="tab-content active">
+      <h2>Create Workflow</h2>
+
+      <div class="form-section">
+        <h3>1. Create Campaign</h3>
+        <form id="campaign-form" class="form">
+          <div class="form-group">
+            <label for="campaign-name">Campaign Name</label>
+            <input type="text" id="campaign-name" placeholder="e.g., Global Health Initiative Q1 2026" value="Global Health Initiative Q1 2026">
+          </div>
+          <div class="form-group">
+            <label for="campaign-desc">Description</label>
+            <textarea id="campaign-desc" placeholder="Campaign description" rows="3">We're launching a collaborative initiative to improve healthcare access in underserved regions.</textarea>
+          </div>
+          <button type="button" class="btn btn-primary" onclick="createCampaign()">Create Campaign</button>
+          <div id="campaign-output" class="output"></div>
+        </form>
+      </div>
+
+      <div class="form-section">
+        <h3>2. Create NGO Profile</h3>
+        <form id="ngo-form" class="form">
+          <div class="form-group">
+            <label for="ngo-name">Organization Name</label>
+            <input type="text" id="ngo-name" placeholder="e.g., Doctors Without Borders" value="Doctors Without Borders">
+          </div>
+          <div class="form-group">
+            <label for="ngo-email">Email</label>
+            <input type="email" id="ngo-email" placeholder="e.g., partnerships@example.org" value="partnerships@doctorswithoutborders.org">
+          </div>
+          <div class="form-group">
+            <label for="ngo-website">Website (optional)</label>
+            <input type="url" id="ngo-website" placeholder="https://example.org" value="https://www.doctorswithoutborders.org">
+          </div>
+          <button type="button" class="btn btn-primary" onclick="createNGO()">Create NGO</button>
+          <div id="ngo-output" class="output"></div>
+        </form>
+      </div>
+
+      <div class="form-section">
+        <h3>3. Initiate Workflow</h3>
+        <form id="workflow-form" class="form">
+          <button type="button" class="btn btn-primary" onclick="initiateWorkflow()">Start Outreach Workflow</button>
+          <div id="workflow-output" class="output"></div>
+        </form>
+      </div>
+
+      <div class="form-section">
+        <h3>4. Generate Email Draft</h3>
+        <form id="draft-form" class="form">
+          <button type="button" class="btn btn-primary" onclick="generateDraft()" disabled id="generate-btn">Generate Email Draft</button>
+          <div id="draft-output" class="output"></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- REVIEW TAB -->
+    <section id="review-tab" class="tab-content">
+      <h2>Review & Approve Emails</h2>
+
+      <div class="email-preview" id="email-preview">
+        <p class="placeholder">No email loaded. Create a workflow and generate a draft to review here.</p>
+      </div>
+
+      <div class="approval-section">
+        <div class="form-group">
+          <label for="approval-notes">Approval Notes</label>
+          <textarea id="approval-notes" placeholder="Add any notes for the approval record..." rows="3">Looks good, ready to send.</textarea>
+        </div>
+        <button class="btn btn-success" onclick="approveEmail()" disabled id="approve-btn">✓ Approve & Send Email</button>
+        <button class="btn btn-secondary" onclick="rejectEmail()" disabled id="reject-btn">✗ Reject Email</button>
+      </div>
+
+      <div id="approval-output" class="output"></div>
+
+      <div class="form-section">
+        <h3>Sent Emails</h3>
+        <div id="sent-emails-list" class="emails-list">
+          <p class="placeholder">No emails sent yet.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- DATA TAB -->
+    <section id="data-tab" class="tab-content">
+      <h2>Mock Database & State</h2>
+
+      <div class="data-controls">
+        <button class="btn btn-secondary" onclick="refreshData()">🔄 Refresh Data</button>
+        <button class="btn btn-danger" onclick="resetDatabase()">🗑️ Reset Database</button>
+      </div>
+
+      <div class="data-viewers">
+        <div class="viewer-section">
+          <h3>Workflows</h3>
+          <pre id="workflows-data" class="data-output">Loading...</pre>
+        </div>
+
+        <div class="viewer-section">
+          <h3>Draft Emails</h3>
+          <pre id="emails-data" class="data-output">Loading...</pre>
+        </div>
+
+        <div class="viewer-section">
+          <h3>Approvals</h3>
+          <pre id="approvals-data" class="data-output">Loading...</pre>
+        </div>
+
+        <div class="viewer-section">
+          <h3>NGO Profiles</h3>
+          <pre id="ngos-data" class="data-output">Loading...</pre>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- State Storage (client-side) -->
+  <script>
+    const STATE = {
+      campaign: null,
+      ngo: null,
+      workflow: null,
+      draftEmail: null,
+      approval: null,
+    };
+  </script>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -5,6 +5,7 @@
   "main": "dist/backend/index.js",
   "scripts": {
     "dev": "npm run build && node dist/backend/index.js",
+    "server": "npm run build && node dist/server/api.js",
     "build": "tsc",
     "test": "npm run build && node dist/tests/constraints.test.js",
     "test:watch": "npm run build && node --watch dist/tests/constraints.test.js",
@@ -24,9 +25,11 @@
   "author": "Dots Eco",
   "license": "MIT",
   "dependencies": {
+    "express": "^4.22.1",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
     "@types/node": "^20.0.0",
     "@types/uuid": "^10.0.0",
