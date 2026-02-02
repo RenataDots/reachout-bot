@@ -23,6 +23,45 @@ const logger = (msg: string, level: 'info' | 'warn' | 'error' = 'info') => {
   console.log(`[${timestamp}] [${level.toUpperCase()}] ${msg}`);
 };
 
+// Global test state
+let passedCount = 0;
+let failedCount = 0;
+
+// Set up globals early
+(global as any).describe = (name: string, fn: () => void) => {
+  console.log(`\n${name}`);
+  fn();
+};
+
+(global as any).it = (name: string, fn: () => Promise<void> | void) => {
+  try {
+    const result = fn();
+    if (result instanceof Promise) {
+      result
+        .then(() => {
+          console.log(`  ✓ ${name}`);
+          passedCount++;
+        })
+        .catch((err) => {
+          console.error(`  ✗ ${name}`);
+          console.error(`    ${err.message}`);
+          failedCount++;
+        });
+    } else {
+      console.log(`  ✓ ${name}`);
+      passedCount++;
+    }
+  } catch (err) {
+    console.error(`  ✗ ${name}`);
+    console.error(`    ${(err as Error).message}`);
+    failedCount++;
+  }
+};
+
+(global as any).beforeEach = (fn: () => void) => {
+  fn();
+};
+
 describe('Hard Constraints & Invariants', () => {
   let workflow: ReachOutWorkflow;
   let supabase: mocks.MockSupabaseService;
@@ -465,41 +504,12 @@ describe('Hard Constraints & Invariants', () => {
 
 // Run tests if this is the main module
 if (require.main === module) {
-  let passedCount = 0;
-  let failedCount = 0;
-
-  const originalDescribe = global.describe as any;
-  const originalIt = global.it as any;
-  const originalBeforeEach = global.beforeEach as any;
-
-  (global as any).describe = (name: string, fn: () => void) => {
-    console.log(`\n${name}`);
-    fn();
-  };
-
-  (global as any).it = (name: string, fn: () => Promise<void> | void) => {
-    try {
-      const result = fn();
-      if (result instanceof Promise) {
-        result.catch((err) => {
-          console.error(`  ✗ ${name}`);
-          console.error(`    ${err.message}`);
-          failedCount++;
-        });
-      } else {
-        console.log(`  ✓ ${name}`);
-        passedCount++;
-      }
-    } catch (err) {
-      console.error(`  ✗ ${name}`);
-      console.error(`    ${(err as Error).message}`);
-      failedCount++;
-    }
-  };
-
-  (global as any).beforeEach = (fn: () => void) => {
-    fn();
-  };
+  // Tests already ran (globals were set up at module load time)
+  // Just report results after a short delay to allow async tests to complete
+  setTimeout(() => {
+    console.log(`\n\nTest Results: ${passedCount} passed, ${failedCount} failed`);
+    process.exit(failedCount > 0 ? 1 : 0);
+  }, 1000);
 }
 
 export {};

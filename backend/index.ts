@@ -181,7 +181,7 @@ async function main() {
 }
 
 // Run if this is the main module
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (require.main === module) {
   main();
 }
 

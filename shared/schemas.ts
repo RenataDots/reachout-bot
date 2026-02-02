@@ -145,7 +145,7 @@ export interface IdempotencyKey {
   resourceId: string; // Email ID, NGO ID, etc.
   createdAt: string;
   completedAt?: string;
-  result?: Record<string, unknown>;
+  result?: unknown;
 }
 
 /**

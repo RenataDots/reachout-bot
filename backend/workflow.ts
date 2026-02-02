@@ -9,7 +9,7 @@
 
 import * as schemas from '../shared/schemas';
 import * as validation from '../shared/validation';
-import * as interfaces from './interfaces';
+import type { IEmailService, IHubSpotService, ISupabaseService, IAIService } from '../integrations/interfaces';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface WorkflowContext {
@@ -20,16 +20,16 @@ export interface WorkflowContext {
 }
 
 export class ReachOutWorkflow {
-  private supabase: interfaces.ISupabaseService;
-  private email: interfaces.IEmailService;
-  private hubspot: interfaces.IHubSpotService;
-  private ai: interfaces.IAIService;
+  private supabase: ISupabaseService;
+  private email: IEmailService;
+  private hubspot: IHubSpotService;
+  private ai: IAIService;
 
   constructor(
-    supabase: interfaces.ISupabaseService,
-    email: interfaces.IEmailService,
-    hubspot: interfaces.IHubSpotService,
-    ai: interfaces.IAIService,
+    supabase: ISupabaseService,
+    email: IEmailService,
+    hubspot: IHubSpotService,
+    ai: IAIService,
   ) {
     this.supabase = supabase;
     this.email = email;

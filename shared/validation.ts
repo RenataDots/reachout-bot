@@ -139,7 +139,7 @@ export function validateAIGeneratedEmail(data: unknown): ValidationResult<schema
 
   return {
     valid: true,
-    data: obj as schemas.AIGeneratedEmail,
+    data: obj as unknown as schemas.AIGeneratedEmail,
     errors: [],
   };
 }
@@ -203,7 +203,7 @@ export function validateDraftEmail(data: unknown): ValidationResult<schemas.Draf
 
   return {
     valid: true,
-    data: obj as schemas.DraftEmail,
+    data: obj as unknown as schemas.DraftEmail,
     errors: [],
   };
 }
@@ -256,7 +256,7 @@ export function validateUserApproval(data: unknown): ValidationResult<schemas.Us
 
   return {
     valid: true,
-    data: obj as schemas.UserApproval,
+    data: obj as unknown as schemas.UserApproval,
     errors: [],
   };
 }

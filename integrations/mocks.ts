@@ -92,7 +92,7 @@ export class MockEmailService implements interfaces.IEmailService {
       this.logger(`[MockEmailService] Follow-up already scheduled for idempotency key: ${idempotencyKey}`);
       return {
         success: true,
-        scheduledEmailId: existingKey.result?.scheduledEmailId as string,
+        scheduledEmailId: (existingKey.result as any)?.scheduledEmailId as string,
       };
     }
 
