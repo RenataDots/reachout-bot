@@ -325,46 +325,82 @@ async function generateAllEmails() {
 // ============================================================================
 
 function loadCurrentEmail() {
+  console.log(`=== loadCurrentEmail called ===`);
   console.log(
-    `Loading email index: ${STATE.currentEmailIndex} of ${STATE.generatedEmails.length}`,
+    `Current index: ${STATE.currentEmailIndex}, Total emails: ${STATE.generatedEmails.length}`,
   );
-  console.log(
-    "Generated emails:",
-    STATE.generatedEmails.map((e) => ({ id: e.id, ngo: e.ngo.name })),
-  );
+  console.log("Generated emails array:", STATE.generatedEmails);
+  console.log("STATE object:", STATE);
+
+  if (STATE.generatedEmails.length === 0) {
+    console.error("No generated emails available!");
+    showOutput("approval-output", "No emails to display", "error");
+    return;
+  }
 
   const email = STATE.generatedEmails[STATE.currentEmailIndex];
+  console.log(`Email at index ${STATE.currentEmailIndex}:`, email);
 
   if (!email) {
+    console.error(`No email found at index ${STATE.currentEmailIndex}`);
     showOutput("approval-output", "No email to display", "error");
     return;
   }
 
-  console.log(`Loading email for ${email.ngo.name}`);
+  console.log(`Loading email for ${email.ngo?.name || "Unknown NGO"}`);
 
-  // Update header
-  document.getElementById("current-email-index").textContent =
-    STATE.currentEmailIndex + 1;
-  document.getElementById("total-emails").textContent =
-    STATE.generatedEmails.length;
-  document.getElementById("current-email-org").textContent =
-    `Email for ${email.ngo.name}`;
+  try {
+    // Update header
+    const indexElement = document.getElementById("current-email-index");
+    const totalElement = document.getElementById("total-emails");
+    const orgElement = document.getElementById("current-email-org");
 
-  // Load email content
-  document.getElementById("email-to").textContent = email.recipientEmail;
-  document.getElementById("email-subject").value = email.subject;
-  document.getElementById("email-body").value = email.body;
+    console.log("Header elements:", { indexElement, totalElement, orgElement });
 
-  // Clear approval notes
-  document.getElementById("approval-notes").value = "";
+    if (indexElement) indexElement.textContent = STATE.currentEmailIndex + 1;
+    if (totalElement) totalElement.textContent = STATE.generatedEmails.length;
+    if (orgElement)
+      orgElement.textContent = `Email for ${email.ngo?.name || "Unknown NGO"}`;
 
-  // Update button states
-  document.getElementById("prev-btn").disabled = STATE.currentEmailIndex === 0;
-  document.getElementById("next-btn").disabled =
-    STATE.currentEmailIndex === STATE.generatedEmails.length - 1;
+    // Load email content
+    const toElement = document.getElementById("email-to");
+    const subjectElement = document.getElementById("email-subject");
+    const bodyElement = document.getElementById("email-body");
 
-  // Clear output
-  showOutput("approval-output", "", "info");
+    console.log("Email elements:", { toElement, subjectElement, bodyElement });
+
+    if (toElement)
+      toElement.textContent = email.recipientEmail || "No recipient";
+    if (subjectElement) subjectElement.value = email.subject || "No subject";
+    if (bodyElement) bodyElement.value = email.body || "No body";
+
+    // Clear approval notes
+    const notesElement = document.getElementById("approval-notes");
+    if (notesElement) notesElement.value = "";
+
+    // Update button states
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+
+    console.log("Button elements:", { prevBtn, nextBtn });
+
+    if (prevBtn) prevBtn.disabled = STATE.currentEmailIndex === 0;
+    if (nextBtn)
+      nextBtn.disabled =
+        STATE.currentEmailIndex === STATE.generatedEmails.length - 1;
+
+    // Clear output
+    showOutput("approval-output", "", "info");
+
+    console.log("=== loadCurrentEmail completed successfully ===");
+  } catch (error) {
+    console.error("Error in loadCurrentEmail:", error);
+    showOutput(
+      "approval-output",
+      `Error loading email: ${error.message}`,
+      "error",
+    );
+  }
 }
 
 async function approveAndSendEmail() {
@@ -429,16 +465,38 @@ function skipEmail() {
 
 // Navigation functions for email review
 function previousEmail() {
+  console.log(
+    `Previous button clicked. Current index: ${STATE.currentEmailIndex}, Total emails: ${STATE.generatedEmails.length}`,
+  );
+  console.log(
+    "Generated emails:",
+    STATE.generatedEmails.map((e) => ({ id: e.id, ngo: e.ngo?.name })),
+  );
+
   if (STATE.currentEmailIndex > 0) {
     STATE.currentEmailIndex--;
+    console.log(`Moving to index: ${STATE.currentEmailIndex}`);
     loadCurrentEmail();
+  } else {
+    console.log("Already at first email, cannot go back");
   }
 }
 
 function nextEmail() {
+  console.log(
+    `Next button clicked. Current index: ${STATE.currentEmailIndex}, Total emails: ${STATE.generatedEmails.length}`,
+  );
+  console.log(
+    "Generated emails:",
+    STATE.generatedEmails.map((e) => ({ id: e.id, ngo: e.ngo?.name })),
+  );
+
   if (STATE.currentEmailIndex < STATE.generatedEmails.length - 1) {
     STATE.currentEmailIndex++;
+    console.log(`Moving to index: ${STATE.currentEmailIndex}`);
     loadCurrentEmail();
+  } else {
+    console.log("Already at last email, cannot go forward");
   }
 }
 
