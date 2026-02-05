@@ -1,95 +1,99 @@
 /**
  * Client-side JavaScript for Reach Out Bot Web Interface
+ *
+ * Workflow:
+ * 1. Enter campaign brief and search for matching NGOs
+ * 2. Select NGOs to target
+ * 3. Generate email drafts for selected NGOs
+ * 4. Review and approve emails one by one
+ * 5. View campaign summary
  */
 
-const API_BASE = 'http://localhost:3000/api';
+const API_BASE = "http://localhost:3000/api";
+
+// ============================================================================
+// Global STATE object for client-side data management
+// ============================================================================
+
+const STATE = {
+  campaign: null,
+  allNGOs: [],
+  selectedNGOs: [],
+  generatedEmails: [],
+  currentEmailIndex: 0,
+  sentEmails: [],
+  skippedEmails: [],
+};
 
 // ============================================================================
 // Utility Functions
 // ============================================================================
 
-async function apiCall(endpoint, method = 'GET', body = null) {
+async function apiCall(endpoint, method = "GET", body = null) {
   try {
+    console.log(`API Call starting: ${method} ${API_BASE}${endpoint}`);
+
     const options = {
       method,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { "Content-Type": "application/json" },
     };
 
     if (body) {
       options.body = JSON.stringify(body);
     }
 
+    console.log("Making fetch request...");
     const response = await fetch(`${API_BASE}${endpoint}`, options);
+    console.log(`Response received: ${response.status} ${response.statusText}`);
+
     const data = await response.json();
+    console.log("Response data:", data);
 
     if (!response.ok) {
-      throw new Error(data.error || 'API request failed');
+      throw new Error(data.error || "API request failed");
     }
 
     return data;
   } catch (error) {
+    console.error("API call error:", error);
     throw error;
   }
 }
 
-function showOutput(elementId, message, type = 'info') {
+function showOutput(elementId, message, type = "info") {
   const element = document.getElementById(elementId);
   if (!element) return;
 
   element.textContent = message;
   element.className = `output ${type}`;
 
-  if (type === 'loading') {
-    element.textContent = '⏳ ' + message;
-  } else if (type === 'success') {
-    element.textContent = '✅ ' + message;
-  } else if (type === 'error') {
-    element.textContent = '❌ ' + message;
-  } else if (type === 'info') {
-    element.textContent = 'ℹ️ ' + message;
+  if (type === "loading") {
+    element.textContent = "⏳ " + message;
+  } else if (type === "success") {
+    element.textContent = "✅ " + message;
+  } else if (type === "error") {
+    element.textContent = "❌ " + message;
+  } else if (type === "info") {
+    element.textContent = "ℹ️ " + message;
   }
-}
-
-function showJSON(elementId, data, type = 'info') {
-  const element = document.getElementById(elementId);
-  if (!element) return;
-
-  element.textContent = JSON.stringify(data, null, 2);
-  element.className = `output ${type}`;
 }
 
 function formatDate(dateString) {
   return new Date(dateString).toLocaleString();
 }
 
-// ============================================================================
-// Tab Navigation
-// ============================================================================
-
-document.querySelectorAll('.tab-btn').forEach((btn) => {
-  btn.addEventListener('click', () => {
-    const tabName = btn.dataset.tab;
-
-    // Hide all tabs
-    document.querySelectorAll('.tab-content').forEach((tab) => {
-      tab.classList.remove('active');
-    });
-
-    // Remove active class from all buttons
-    document.querySelectorAll('.tab-btn').forEach((b) => {
-      b.classList.remove('active');
-    });
-
-    // Show selected tab
-    document.getElementById(`${tabName}-tab`).classList.add('active');
-    btn.classList.add('active');
-
-    // Refresh data if Data tab selected
-    if (tabName === 'data') {
-      refreshData();
-    }
+function showStep(stepNumber) {
+  // Hide all steps
+  document.querySelectorAll(".workflow-step").forEach((step) => {
+    step.style.display = "none";
   });
-});
+  // Show target step
+  document.getElementById(`step-${stepNumber}`).style.display = "block";
+}
+
+function goBack(stepNumber) {
+  showStep(stepNumber);
+}
 
 // ============================================================================
 // Server Status
@@ -97,362 +101,407 @@ document.querySelectorAll('.tab-btn').forEach((btn) => {
 
 async function checkStatus() {
   try {
-    const data = await apiCall('/status');
-    const badge = document.getElementById('status-badge');
-    const text = document.getElementById('status-text');
+    const data = await apiCall("/status");
+    const badge = document.getElementById("status-badge");
+    const text = document.getElementById("status-text");
 
-    badge.className = 'status-badge connected';
-    text.textContent = `✓ Connected (${data.mode} mode)`;
+    if (badge && text) {
+      badge.className = "status-badge connected";
+      text.textContent = `✓ Connected (${data.mode} mode)`;
+    }
   } catch (error) {
-    const badge = document.getElementById('status-badge');
-    const text = document.getElementById('status-text');
+    console.error("Status check failed:", error);
+    const badge = document.getElementById("status-badge");
+    const text = document.getElementById("status-text");
 
-    badge.className = 'status-badge error';
-    text.textContent = '✗ Connection failed';
+    if (badge && text) {
+      badge.className = "status-badge error";
+      text.textContent = "✗ Connection failed";
+    } else {
+      console.error("Status elements not found in DOM");
+    }
   }
 }
 
-// Check status on load and every 10 seconds
-checkStatus();
-setInterval(checkStatus, 10000);
+// Wait for DOM to be ready before starting status checks
+document.addEventListener("DOMContentLoaded", function () {
+  console.log("DOM loaded, starting status check...");
+  checkStatus();
+  setInterval(checkStatus, 10000);
+});
+
+// Also add a simple test to verify JavaScript is working
+console.log("JavaScript loaded successfully");
+console.log("API_BASE:", API_BASE);
 
 // ============================================================================
-// CREATE TAB - Step 1: Campaign
+// STEP 1: Search NGOs by Brief
 // ============================================================================
 
-async function createCampaign() {
+async function searchNGOs() {
   try {
-    const name = document.getElementById('campaign-name').value;
-    const description = document.getElementById('campaign-desc').value;
+    const brief = document.getElementById("campaign-brief").value.trim();
 
-    showOutput('campaign-output', 'Creating campaign...', 'loading');
-
-    const data = await apiCall('/campaigns', 'POST', { name, description });
-
-    STATE.campaign = data.campaign;
-
-    showOutput('campaign-output', `Campaign created: ${data.campaign.id}`, 'success');
-    document.getElementById('generate-btn').disabled = false;
-
-    console.log('Campaign:', data.campaign);
-  } catch (error) {
-    showOutput('campaign-output', error.message, 'error');
-  }
-}
-
-// ============================================================================
-// CREATE TAB - Step 2: NGO
-// ============================================================================
-
-async function createNGO() {
-  try {
-    const name = document.getElementById('ngo-name').value;
-    const email = document.getElementById('ngo-email').value;
-    const website = document.getElementById('ngo-website').value;
-
-    showOutput('ngo-output', 'Creating NGO...', 'loading');
-
-    const data = await apiCall('/ngos', 'POST', { name, email, website });
-
-    STATE.ngo = data.ngo;
-
-    showOutput('ngo-output', `NGO created: ${data.ngo.id}`, 'success');
-    document.getElementById('generate-btn').disabled = false;
-
-    console.log('NGO:', data.ngo);
-  } catch (error) {
-    showOutput('ngo-output', error.message, 'error');
-  }
-}
-
-// ============================================================================
-// CREATE TAB - Step 3: Workflow
-// ============================================================================
-
-async function initiateWorkflow() {
-  try {
-    if (!STATE.ngo) {
-      showOutput('workflow-output', 'Please create an NGO profile first', 'error');
+    if (!brief) {
+      showOutput("brief-output", "Please enter a campaign brief", "error");
       return;
     }
 
-    showOutput('workflow-output', 'Initiating workflow...', 'loading');
+    showOutput("brief-output", "Searching for matching NGOs...", "loading");
 
-    const data = await apiCall('/workflows/initiate', 'POST', {
-      ngoProfile: STATE.ngo,
+    // Create campaign with brief as name
+    const campaignData = await apiCall("/campaigns", "POST", {
+      name: brief.substring(0, 100), // Use first 100 chars of brief as name
+      description: brief,
     });
 
-    STATE.workflow = data;
+    STATE.campaign = campaignData.campaign;
+
+    // Search NGOs
+    const searchData = await apiCall("/ngos/search", "POST", { brief });
+
+    if (searchData.count === 0) {
+      showOutput(
+        "brief-output",
+        "No matching NGOs found. Try a different brief.",
+        "error",
+      );
+      return;
+    }
+
+    // Populate NGO table
+    populateNGOTable(searchData.ngos);
+    STATE.allNGOs = searchData.ngos;
 
     showOutput(
-      'workflow-output',
-      `Workflow initiated: ${data.workflowId}\nStage: ${data.stage}`,
-      'success'
+      "brief-output",
+      `Found ${searchData.count} matching NGOs`,
+      "success",
     );
-
-    document.getElementById('generate-btn').disabled = false;
-
-    console.log('Workflow:', data);
+    showStep(2);
   } catch (error) {
-    showOutput('workflow-output', error.message, 'error');
+    showOutput("brief-output", error.message, "error");
   }
 }
 
 // ============================================================================
-// CREATE TAB - Step 4: Draft
+// STEP 2: Select NGOs
 // ============================================================================
 
-async function generateDraft() {
-  try {
-    if (!STATE.workflow) {
-      showOutput('draft-output', 'Please initiate a workflow first', 'error');
-      return;
-    }
+function populateNGOTable(ngos) {
+  const tbody = document.getElementById("ngos-tbody");
+  tbody.innerHTML = "";
 
-    if (!STATE.campaign) {
-      showOutput('draft-output', 'Please create a campaign first', 'error');
-      return;
-    }
-
-    showOutput('draft-output', 'Generating email draft...', 'loading');
-
-    const data = await apiCall(
-      `/workflows/${STATE.workflow.workflowId}/generate-draft`,
-      'POST',
-      { campaign: STATE.campaign }
-    );
-
-    STATE.draftEmail = data.email;
-
-    showOutput('draft-output', `Email draft created: ${data.email.id}`, 'success');
-
-    // Load email into review tab
-    loadEmailPreview(data.email);
-    document.getElementById('approve-btn').disabled = false;
-
-    console.log('Draft Email:', data.email);
-  } catch (error) {
-    showOutput('draft-output', error.message, 'error');
-  }
+  ngos.forEach((ngo, index) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td><input type="checkbox" class="ngo-checkbox" data-id="${ngo.id}" data-index="${index}"></td>
+      <td>${ngo.name}</td>
+      <td>${ngo.email}</td>
+      <td>${ngo.geography || "-"}</td>
+      <td>${(ngo.focusAreas || []).join(", ") || "-"}</td>
+      <td>${ngo.fitRationale || "-"}</td>
+      <td><span class="badge badge-${ngo.partnerStatus}">${ngo.partnerStatus || "unknown"}</span></td>
+      <td><span class="risk-score">${ngo.riskScore || "-"}</span></td>
+      <td>${ngo.controversySummary || "-"}</td>
+    `;
+    tbody.appendChild(row);
+  });
 }
 
-// ============================================================================
-// REVIEW TAB - Email Preview
-// ============================================================================
-
-function loadEmailPreview(email) {
-  const preview = document.getElementById('email-preview');
-
-  preview.innerHTML = `
-    <div class="email-field">
-      <div class="email-label">To</div>
-      <div class="email-value">${email.recipientEmail}</div>
-    </div>
-    <div class="email-field">
-      <div class="email-label">Subject</div>
-      <div class="email-value subject">${email.subject}</div>
-    </div>
-    <div class="email-field">
-      <div class="email-label">Body</div>
-      <div class="email-value body">${email.body}</div>
-    </div>
-    <div class="email-field">
-      <div class="email-label">Status</div>
-      <div class="email-value">${email.status}</div>
-    </div>
-    <div class="email-field">
-      <div class="email-label">Email ID</div>
-      <div class="email-value" style="font-size: 12px; color: #9ca3af;">${email.id}</div>
-    </div>
-  `;
-
-  preview.classList.add('loaded');
+function toggleSelectAll() {
+  const selectAllCheckbox = document.getElementById("select-all");
+  const checkboxes = document.querySelectorAll(".ngo-checkbox");
+  checkboxes.forEach((checkbox) => {
+    checkbox.checked = selectAllCheckbox.checked;
+  });
 }
 
-// ============================================================================
-// REVIEW TAB - Approval
-// ============================================================================
+function generateEmailsForSelected() {
+  const checkboxes = document.querySelectorAll(".ngo-checkbox:checked");
 
-async function approveEmail() {
-  try {
-    if (!STATE.draftEmail) {
-      showOutput('approval-output', 'No email to approve', 'error');
-      return;
-    }
-
-    const approvalText = document.getElementById('approval-notes').value;
-
-    showOutput('approval-output', 'Recording approval...', 'loading');
-
-    // Record approval
-    const approvalData = await apiCall('/approvals', 'POST', {
-      resourceId: STATE.draftEmail.id,
-      approvalText,
-    });
-
-    STATE.approval = approvalData.approval;
-
-    showOutput('approval-output', 'Approval recorded. Sending email...', 'info');
-
-    // Send email
-    const sendData = await apiCall(`/emails/${STATE.draftEmail.id}/send`, 'POST', {
-      approval: STATE.approval,
-    });
-
-    showOutput(
-      'approval-output',
-      `Email sent successfully!\nMessage ID: ${sendData.messageId}\nSent at: ${formatDate(sendData.sentAt)}`,
-      'success'
-    );
-
-    // Disable buttons
-    document.getElementById('approve-btn').disabled = true;
-    document.getElementById('reject-btn').disabled = true;
-
-    // Add to sent list
-    addSentEmail(STATE.draftEmail);
-
-    // Reset state for next email
-    STATE.draftEmail = null;
-    document.getElementById('email-preview').innerHTML =
-      '<p class="placeholder">Email sent! Create another workflow to continue.</p>';
-    document.getElementById('email-preview').classList.remove('loaded');
-
-    console.log('Approval:', STATE.approval);
-    console.log('Sent:', sendData);
-  } catch (error) {
-    showOutput('approval-output', error.message, 'error');
-  }
-}
-
-function rejectEmail() {
-  showOutput(
-    'approval-output',
-    'Email rejected. You can create a new workflow to try again.',
-    'info'
-  );
-
-  // Reset
-  STATE.draftEmail = null;
-  document.getElementById('email-preview').innerHTML =
-    '<p class="placeholder">Email rejected. Ready for next workflow.</p>';
-  document.getElementById('email-preview').classList.remove('loaded');
-  document.getElementById('approve-btn').disabled = true;
-  document.getElementById('reject-btn').disabled = true;
-}
-
-function addSentEmail(email) {
-  const list = document.getElementById('sent-emails-list');
-
-  if (list.querySelector('.placeholder')) {
-    list.innerHTML = '';
-  }
-
-  const item = document.createElement('div');
-  item.className = 'email-item';
-  item.innerHTML = `
-    <div class="email-item-header">📧 ${email.subject}</div>
-    <div class="email-item-meta">
-      <span><strong>To:</strong> ${email.recipientEmail}</span>
-      <span><strong>Sent:</strong> ${formatDate(email.createdAt)}</span>
-      <span><strong>ID:</strong> ${email.id.substring(0, 8)}...</span>
-    </div>
-  `;
-
-  list.appendChild(item);
-}
-
-// ============================================================================
-// DATA TAB
-// ============================================================================
-
-async function refreshData() {
-  try {
-    const data = await apiCall('/data/mock');
-
-    // Format and display each data type
-    if (data.data.workflows && data.data.workflows.length > 0) {
-      document.getElementById('workflows-data').textContent = JSON.stringify(
-        data.data.workflows,
-        null,
-        2
-      );
-    } else {
-      document.getElementById('workflows-data').textContent = '(No workflows yet)';
-    }
-
-    if (data.data.draftEmails && data.data.draftEmails.length > 0) {
-      document.getElementById('emails-data').textContent = JSON.stringify(
-        data.data.draftEmails,
-        null,
-        2
-      );
-    } else {
-      document.getElementById('emails-data').textContent = '(No draft emails yet)';
-    }
-
-    if (data.data.approvals && data.data.approvals.length > 0) {
-      document.getElementById('approvals-data').textContent = JSON.stringify(
-        data.data.approvals,
-        null,
-        2
-      );
-    } else {
-      document.getElementById('approvals-data').textContent = '(No approvals yet)';
-    }
-
-    if (data.data.ngoProfiles && data.data.ngoProfiles.length > 0) {
-      document.getElementById('ngos-data').textContent = JSON.stringify(
-        data.data.ngoProfiles,
-        null,
-        2
-      );
-    } else {
-      document.getElementById('ngos-data').textContent = '(No NGOs yet)';
-    }
-  } catch (error) {
-    console.error('Error refreshing data:', error);
-    document.getElementById('workflows-data').textContent = 'Error loading data';
-  }
-}
-
-async function resetDatabase() {
-  if (!confirm('Are you sure you want to reset the mock database? This cannot be undone.')) {
+  if (checkboxes.length === 0) {
+    showOutput("ngos-output", "Please select at least one NGO", "error");
     return;
   }
 
+  // Collect selected NGOs
+  STATE.selectedNGOs = [];
+  checkboxes.forEach((checkbox) => {
+    const id = checkbox.dataset.id;
+    const ngo = STATE.allNGOs.find((n) => n.id === id);
+    if (ngo) {
+      STATE.selectedNGOs.push(ngo);
+    }
+  });
+
+  // Generate emails for each selected NGO
+  generateAllEmails();
+}
+
+async function generateAllEmails() {
   try {
-    await apiCall('/data/reset', 'POST');
+    console.log(
+      `Starting email generation for ${STATE.selectedNGOs.length} NGOs`,
+    );
+    console.log(
+      "Selected NGOs:",
+      STATE.selectedNGOs.map((n) => n.name),
+    );
 
-    // Clear state
-    STATE.campaign = null;
-    STATE.ngo = null;
-    STATE.workflow = null;
-    STATE.draftEmail = null;
-    STATE.approval = null;
+    showOutput(
+      "ngos-output",
+      `Generating ${STATE.selectedNGOs.length} emails...`,
+      "loading",
+    );
 
-    // Reset UI
-    document.getElementById('email-preview').innerHTML =
-      '<p class="placeholder">Database reset. Ready to start over.</p>';
-    document.getElementById('email-preview').classList.remove('loaded');
-    document.getElementById('sent-emails-list').innerHTML =
-      '<p class="placeholder">No emails sent yet.</p>';
-    document.getElementById('approve-btn').disabled = true;
-    document.getElementById('reject-btn').disabled = true;
-    document.getElementById('generate-btn').disabled = false;
+    STATE.generatedEmails = [];
 
-    // Refresh data view
-    refreshData();
+    for (const ngo of STATE.selectedNGOs) {
+      try {
+        console.log(`Generating email for ${ngo.name}...`);
 
-    alert('Database reset successfully!');
+        // Initiate workflow for NGO
+        const workflowData = await apiCall("/workflows/initiate", "POST", {
+          ngoProfile: ngo,
+        });
+        console.log(
+          `Workflow initiated for ${ngo.name}: ${workflowData.workflowId}`,
+        );
+
+        // Generate draft email
+        const emailData = await apiCall(
+          `/workflows/${workflowData.workflowId}/generate-draft`,
+          "POST",
+          { campaign: STATE.campaign },
+        );
+        console.log(`Email generated for ${ngo.name}: ${emailData.email.id}`);
+
+        STATE.generatedEmails.push({
+          ...emailData.email,
+          ngo,
+          workflowId: workflowData.workflowId,
+        });
+        console.log(
+          `Email added to array. Total emails: ${STATE.generatedEmails.length}`,
+        );
+      } catch (err) {
+        console.error(`Error generating email for ${ngo.name}:`, err);
+        showOutput(
+          "ngos-output",
+          `Failed to generate email for ${ngo.name}: ${err.message}`,
+          "error",
+        );
+      }
+    }
+
+    console.log(
+      `Email generation complete. Total emails: ${STATE.generatedEmails.length}`,
+    );
+
+    if (STATE.generatedEmails.length === 0) {
+      showOutput("ngos-output", "Failed to generate emails", "error");
+      return;
+    }
+
+    showOutput(
+      "ngos-output",
+      `Generated ${STATE.generatedEmails.length} email drafts`,
+      "success",
+    );
+
+    // Move to review step
+    STATE.currentEmailIndex = 0;
+    showStep(3);
+    loadCurrentEmail();
   } catch (error) {
-    alert('Error resetting database: ' + error.message);
+    console.error("Error in generateAllEmails:", error);
+    showOutput("ngos-output", error.message, "error");
   }
+}
+
+// ============================================================================
+// STEP 3: Review & Approve Emails
+// ============================================================================
+
+function loadCurrentEmail() {
+  console.log(
+    `Loading email index: ${STATE.currentEmailIndex} of ${STATE.generatedEmails.length}`,
+  );
+  console.log(
+    "Generated emails:",
+    STATE.generatedEmails.map((e) => ({ id: e.id, ngo: e.ngo.name })),
+  );
+
+  const email = STATE.generatedEmails[STATE.currentEmailIndex];
+
+  if (!email) {
+    showOutput("approval-output", "No email to display", "error");
+    return;
+  }
+
+  console.log(`Loading email for ${email.ngo.name}`);
+
+  // Update header
+  document.getElementById("current-email-index").textContent =
+    STATE.currentEmailIndex + 1;
+  document.getElementById("total-emails").textContent =
+    STATE.generatedEmails.length;
+  document.getElementById("current-email-org").textContent =
+    `Email for ${email.ngo.name}`;
+
+  // Load email content
+  document.getElementById("email-to").textContent = email.recipientEmail;
+  document.getElementById("email-subject").value = email.subject;
+  document.getElementById("email-body").value = email.body;
+
+  // Clear approval notes
+  document.getElementById("approval-notes").value = "";
+
+  // Update button states
+  document.getElementById("prev-btn").disabled = STATE.currentEmailIndex === 0;
+  document.getElementById("next-btn").disabled =
+    STATE.currentEmailIndex === STATE.generatedEmails.length - 1;
+
+  // Clear output
+  showOutput("approval-output", "", "info");
+}
+
+async function approveAndSendEmail() {
+  try {
+    const email = STATE.generatedEmails[STATE.currentEmailIndex];
+
+    if (!email) {
+      showOutput("approval-output", "No email to approve", "error");
+      return;
+    }
+
+    const approvalText = document.getElementById("approval-notes").value;
+
+    showOutput("approval-output", "Sending email...", "loading");
+
+    // Record approval
+    const approvalData = await apiCall("/approvals", "POST", {
+      resourceId: email.id,
+      approvalText: approvalText || "Approved via web interface",
+    });
+
+    // Send email
+    await apiCall(`/emails/${email.id}/send`, "POST", {
+      approval: approvalData.approval,
+    });
+
+    STATE.sentEmails.push(email);
+
+    showOutput(
+      "approval-output",
+      `✓ Email sent to ${email.ngo.name}`,
+      "success",
+    );
+
+    // Move to next email or summary
+    if (STATE.currentEmailIndex < STATE.generatedEmails.length - 1) {
+      STATE.currentEmailIndex++;
+      loadCurrentEmail();
+    } else {
+      // All done, show summary
+      showSummary();
+    }
+  } catch (error) {
+    showOutput("approval-output", error.message, "error");
+  }
+}
+
+function skipEmail() {
+  const email = STATE.generatedEmails[STATE.currentEmailIndex];
+  STATE.skippedEmails.push(email);
+
+  showOutput("approval-output", `Skipped email to ${email.ngo.name}`, "info");
+
+  // Move to next email or summary
+  if (STATE.currentEmailIndex < STATE.generatedEmails.length - 1) {
+    STATE.currentEmailIndex++;
+    loadCurrentEmail();
+  } else {
+    showSummary();
+  }
+}
+
+// Navigation functions for email review
+function previousEmail() {
+  if (STATE.currentEmailIndex > 0) {
+    STATE.currentEmailIndex--;
+    loadCurrentEmail();
+  }
+}
+
+function nextEmail() {
+  if (STATE.currentEmailIndex < STATE.generatedEmails.length - 1) {
+    STATE.currentEmailIndex++;
+    loadCurrentEmail();
+  }
+}
+
+// ============================================================================
+// STEP 4: Campaign Summary
+// ============================================================================
+
+function showSummary() {
+  document.getElementById("summary-campaign-name").textContent =
+    STATE.campaign.name;
+  document.getElementById("summary-total-ngos").textContent =
+    STATE.selectedNGOs.length;
+  document.getElementById("summary-sent-count").textContent =
+    STATE.sentEmails.length;
+  document.getElementById("summary-skipped-count").textContent =
+    STATE.skippedEmails.length;
+
+  // Show sent emails
+  const sentList = document.getElementById("sent-emails-list");
+  if (STATE.sentEmails.length > 0) {
+    sentList.innerHTML = STATE.sentEmails
+      .map(
+        (email) => `
+      <div class="email-item">
+        <div class="email-item-header">✓ ${email.ngo.name}</div>
+        <div class="email-item-meta">
+          <span><strong>Email:</strong> ${email.recipientEmail}</span>
+          <span><strong>Subject:</strong> ${email.subject}</span>
+        </div>
+      </div>
+    `,
+      )
+      .join("");
+  } else {
+    sentList.innerHTML =
+      '<p class="placeholder">No emails sent in this campaign.</p>';
+  }
+
+  showStep(4);
+}
+
+function startNewCampaign() {
+  // Reset state
+  STATE.campaign = null;
+  STATE.selectedNGOs = [];
+  STATE.generatedEmails = [];
+  STATE.currentEmailIndex = 0;
+  STATE.sentEmails = [];
+  STATE.skippedEmails = [];
+  STATE.allNGOs = [];
+
+  // Reset form
+  document.getElementById("campaign-brief").value =
+    "We're launching a collaborative initiative to protect marine ecosystems and restore coral reefs. We believe organizations focused on ocean conservation, marine protection, and coastal restoration could be powerful partners in this effort. We'd love to explore potential synergies and ways we might work together to safeguard our oceans for future generations.";
+  document.getElementById("select-all").checked = false;
+
+  // Show step 1
+  showStep(1);
 }
 
 // ============================================================================
 // Initialization
 // ============================================================================
 
-// Initial data load
-refreshData();
+// Show step 1 on load
+showStep(1);

@@ -1,22 +1,27 @@
 /**
  * Core Workflow Orchestrator
- * 
+ *
  * Implements the main outreach workflow with explicit state transitions,
  * defensive guards, and enforcement of all Hard Constraints.
- * 
+ *
  * All operations are idempotent and require explicit human approval for outbound actions.
  */
 
-import * as schemas from '../shared/schemas';
-import * as validation from '../shared/validation';
-import type { IEmailService, IHubSpotService, ISupabaseService, IAIService } from '../integrations/interfaces';
-import { v4 as uuidv4 } from 'uuid';
+import * as schemas from "../shared/schemas";
+import * as validation from "../shared/validation";
+import type {
+  IEmailService,
+  IHubSpotService,
+  ISupabaseService,
+  IAIService,
+} from "../integrations/interfaces";
+import { v4 as uuidv4 } from "uuid";
 
 export interface WorkflowContext {
   campaignId: string;
   ngoId: string;
   userId: string;
-  logger: (msg: string, level?: 'info' | 'warn' | 'error') => void;
+  logger: (msg: string, level?: "info" | "warn" | "error") => void;
 }
 
 export class ReachOutWorkflow {
@@ -42,8 +47,11 @@ export class ReachOutWorkflow {
    *
    * HARD CONSTRAINT: Never auto-dispatch. All operations are explicit.
    */
-  async initiateOutreach(ctx: WorkflowContext, ngoProfile: schemas.NGOProfile): Promise<WorkflowInitResult> {
-    const logMsg = (msg: string, level: 'info' | 'warn' | 'error' = 'info') => {
+  async initiateOutreach(
+    ctx: WorkflowContext,
+    ngoProfile: schemas.NGOProfile,
+  ): Promise<WorkflowInitResult> {
+    const logMsg = (msg: string, level: "info" | "warn" | "error" = "info") => {
       ctx.logger(`[ReachOutWorkflow] ${msg}`, level);
     };
 
@@ -51,10 +59,10 @@ export class ReachOutWorkflow {
 
     // Validate NGO profile
     if (!ngoProfile.id || !ngoProfile.email || !ngoProfile.name) {
-      logMsg('Invalid NGO profile: missing required fields', 'error');
+      logMsg("Invalid NGO profile: missing required fields", "error");
       return {
         success: false,
-        error: 'Invalid NGO profile: missing required fields',
+        error: "Invalid NGO profile: missing required fields",
       };
     }
 
@@ -64,7 +72,7 @@ export class ReachOutWorkflow {
       id: workflowId,
       campaignId: ctx.campaignId,
       ngoId: ngoProfile.id,
-      stage: 'initial_research',
+      stage: "initial_research",
       data: {
         ngoProfile,
         initiatedAt: new Date().toISOString(),
@@ -74,9 +82,24 @@ export class ReachOutWorkflow {
       createdBy: ctx.userId,
     };
 
+    // Check if NGO profile already exists, save if not
+    let ngoResult;
+    const existingNGO = await this.supabase.getNGOProfile(ngoProfile.id);
+    if (existingNGO) {
+      logMsg(`NGO profile already exists: ${ngoProfile.id}`);
+      ngoResult = { success: true, profile: existingNGO };
+    } else {
+      logMsg(`Saving new NGO profile: ${ngoProfile.id}`);
+      ngoResult = await this.supabase.saveNGOProfile(ngoProfile);
+      if (!ngoResult.success) {
+        logMsg(`Failed to save NGO profile: ${ngoResult.error}`, "error");
+        return { success: false, error: ngoResult.error };
+      }
+    }
+
     const result = await this.supabase.saveWorkflowState(workflowState);
     if (!result.success) {
-      logMsg(`Failed to save workflow state: ${result.error}`, 'error');
+      logMsg(`Failed to save workflow state: ${result.error}`, "error");
       return { success: false, error: result.error };
     }
 
@@ -95,8 +118,12 @@ export class ReachOutWorkflow {
    * HARD CONSTRAINT: Draft only. No sending without explicit approval.
    * All AI outputs must be validated against schema.
    */
-  async generateEmailDraft(ctx: WorkflowContext, workflowId: string, campaign: schemas.OutreachCampaign): Promise<GenerateEmailResult> {
-    const logMsg = (msg: string, level: 'info' | 'warn' | 'error' = 'info') => {
+  async generateEmailDraft(
+    ctx: WorkflowContext,
+    workflowId: string,
+    campaign: schemas.OutreachCampaign,
+  ): Promise<GenerateEmailResult> {
+    const logMsg = (msg: string, level: "info" | "warn" | "error" = "info") => {
       ctx.logger(`[ReachOutWorkflow] ${msg}`, level);
     };
 
@@ -105,34 +132,42 @@ export class ReachOutWorkflow {
     // Retrieve workflow state
     const workflow = await this.supabase.getWorkflowState(workflowId);
     if (!workflow) {
-      logMsg(`Workflow not found: ${workflowId}`, 'error');
+      logMsg(`Workflow not found: ${workflowId}`, "error");
       return { success: false, error: `Workflow not found: ${workflowId}` };
     }
 
-    if (workflow.stage !== 'initial_research') {
-      logMsg(`Cannot generate email for workflow in stage: ${workflow.stage}`, 'warn');
+    if (workflow.stage !== "initial_research") {
+      logMsg(
+        `Cannot generate email for workflow in stage: ${workflow.stage}`,
+        "warn",
+      );
     }
 
     // Retrieve NGO profile
     const ngoProfile = await this.supabase.getNGOProfile(workflow.ngoId);
     if (!ngoProfile) {
-      logMsg(`NGO profile not found: ${workflow.ngoId}`, 'error');
-      return { success: false, error: `NGO profile not found: ${workflow.ngoId}` };
+      logMsg(`NGO profile not found: ${workflow.ngoId}`, "error");
+      return {
+        success: false,
+        error: `NGO profile not found: ${workflow.ngoId}`,
+      };
     }
 
     // Call AI service
     logMsg(`Calling AI service to generate email for: ${ngoProfile.name}`);
     const aiResult = await this.ai.generateEmail(ngoProfile, campaign);
     if (!aiResult.success) {
-      logMsg(`AI generation failed: ${aiResult.error}`, 'error');
+      logMsg(`AI generation failed: ${aiResult.error}`, "error");
       return { success: false, error: aiResult.error };
     }
 
     // HARD CONSTRAINT: Validate AI output against schema
     const validationResult = validation.validateAIGeneratedEmail(aiResult.data);
     if (!validationResult.valid) {
-      const errorMsg = validation.formatValidationErrors(validationResult.errors);
-      logMsg(`AI output validation failed:\n${errorMsg}`, 'error');
+      const errorMsg = validation.formatValidationErrors(
+        validationResult.errors,
+      );
+      logMsg(`AI output validation failed:\n${errorMsg}`, "error");
       return {
         success: false,
         error: `AI output validation failed. Errors: ${errorMsg}`,
@@ -147,7 +182,7 @@ export class ReachOutWorkflow {
       id: draftEmailId,
       campaignId: workflow.campaignId,
       ngoId: workflow.ngoId,
-      status: 'draft',
+      status: "draft",
       subject: generatedEmail.subject,
       body: generatedEmail.body,
       recipientEmail: ngoProfile.email,
@@ -158,22 +193,27 @@ export class ReachOutWorkflow {
     // Validate draft email schema
     const draftValidation = validation.validateDraftEmail(draftEmail);
     if (!draftValidation.valid) {
-      const errorMsg = validation.formatValidationErrors(draftValidation.errors);
-      logMsg(`Draft email validation failed:\n${errorMsg}`, 'error');
-      return { success: false, error: `Draft email validation failed: ${errorMsg}` };
+      const errorMsg = validation.formatValidationErrors(
+        draftValidation.errors,
+      );
+      logMsg(`Draft email validation failed:\n${errorMsg}`, "error");
+      return {
+        success: false,
+        error: `Draft email validation failed: ${errorMsg}`,
+      };
     }
 
     // Save draft to database
     const saveResult = await this.supabase.saveDraftEmail(draftEmail);
     if (!saveResult.success) {
-      logMsg(`Failed to save draft email: ${saveResult.error}`, 'error');
+      logMsg(`Failed to save draft email: ${saveResult.error}`, "error");
       return { success: false, error: saveResult.error };
     }
 
     logMsg(`Draft email created: ${draftEmailId} (awaiting approval)`);
 
     // Update workflow state
-    await this.supabase.updateWorkflowStage(workflowId, 'draft_generation', {
+    await this.supabase.updateWorkflowStage(workflowId, "draft_generation", {
       draftEmailId: draftEmailId,
       generatedAt: new Date().toISOString(),
     });
@@ -191,8 +231,12 @@ export class ReachOutWorkflow {
    * HARD CONSTRAINT: Will NOT send without documented approval.
    * Enforces idempotency to prevent duplicate sends.
    */
-  async sendEmailWithApproval(ctx: WorkflowContext, emailId: string, approval: schemas.UserApproval): Promise<SendEmailResult> {
-    const logMsg = (msg: string, level: 'info' | 'warn' | 'error' = 'info') => {
+  async sendEmailWithApproval(
+    ctx: WorkflowContext,
+    emailId: string,
+    approval: schemas.UserApproval,
+  ): Promise<SendEmailResult> {
+    const logMsg = (msg: string, level: "info" | "warn" | "error" = "info") => {
       ctx.logger(`[ReachOutWorkflow] ${msg}`, level);
     };
 
@@ -201,34 +245,38 @@ export class ReachOutWorkflow {
     // Retrieve draft email
     const draftEmail = await this.supabase.getDraftEmail(emailId);
     if (!draftEmail) {
-      logMsg(`Draft email not found: ${emailId}`, 'error');
+      logMsg(`Draft email not found: ${emailId}`, "error");
       return { success: false, error: `Draft email not found: ${emailId}` };
     }
 
     // Check if already sent
-    if (draftEmail.status === 'sent') {
+    if (draftEmail.status === "sent") {
       logMsg(`Email already sent: ${emailId}`);
       return {
         success: true,
-        message: 'Email already sent',
+        message: "Email already sent",
         emailId,
       };
     }
 
     // HARD CONSTRAINT: Verify approval is present and valid
-    if (!approval.id || approval.resourceType !== 'email' || approval.resourceId !== emailId) {
-      logMsg(`Invalid approval for email: ${emailId}`, 'error');
-      return { success: false, error: 'Invalid approval for this email' };
+    if (
+      !approval.id ||
+      approval.resourceType !== "email" ||
+      approval.resourceId !== emailId
+    ) {
+      logMsg(`Invalid approval for email: ${emailId}`, "error");
+      return { success: false, error: "Invalid approval for this email" };
     }
 
     if (new Date(approval.approvedAt) > new Date()) {
-      logMsg(`Approval not yet valid: ${approval.id}`, 'error');
-      return { success: false, error: 'Approval is not yet valid' };
+      logMsg(`Approval not yet valid: ${approval.id}`, "error");
+      return { success: false, error: "Approval is not yet valid" };
     }
 
     if (approval.expiresAt && new Date() > new Date(approval.expiresAt)) {
-      logMsg(`Approval has expired: ${approval.id}`, 'warn');
-      return { success: false, error: 'Approval has expired' };
+      logMsg(`Approval has expired: ${approval.id}`, "warn");
+      return { success: false, error: "Approval has expired" };
     }
 
     // HARD CONSTRAINT: Enforce idempotency
@@ -238,7 +286,7 @@ export class ReachOutWorkflow {
       logMsg(`Email already sent via idempotency check: ${emailId}`);
       return {
         success: true,
-        message: 'Email already sent (idempotency)',
+        message: "Email already sent (idempotency)",
         emailId,
       };
     }
@@ -247,14 +295,14 @@ export class ReachOutWorkflow {
     logMsg(`Executing email send: ${emailId}`);
     const sendResult = await this.email.sendApprovedEmail(draftEmail, approval);
     if (!sendResult.success) {
-      logMsg(`Email send failed: ${sendResult.error}`, 'error');
+      logMsg(`Email send failed: ${sendResult.error}`, "error");
       return { success: false, error: sendResult.error };
     }
 
     // Record idempotency
     const idempKey: schemas.IdempotencyKey = {
       key: idempotencyKey,
-      operationType: 'send_email',
+      operationType: "send_email",
       resourceId: emailId,
       createdAt: new Date().toISOString(),
       completedAt: new Date().toISOString(),
@@ -275,12 +323,15 @@ export class ReachOutWorkflow {
 
   /**
    * Record an outreach batch approval
-   * 
+   *
    * This allows batch approval of multiple emails while maintaining
    * explicit per-message record in the database.
    */
-  async recordApproval(ctx: WorkflowContext, approval: schemas.UserApproval): Promise<RecordApprovalResult> {
-    const logMsg = (msg: string, level: 'info' | 'warn' | 'error' = 'info') => {
+  async recordApproval(
+    ctx: WorkflowContext,
+    approval: schemas.UserApproval,
+  ): Promise<RecordApprovalResult> {
+    const logMsg = (msg: string, level: "info" | "warn" | "error" = "info") => {
       ctx.logger(`[ReachOutWorkflow] ${msg}`, level);
     };
 
@@ -289,15 +340,22 @@ export class ReachOutWorkflow {
     // Validate approval
     const validationResult = validation.validateUserApproval(approval);
     if (!validationResult.valid) {
-      const errorMsg = validation.formatValidationErrors(validationResult.errors);
-      logMsg(`Approval validation failed:\n${errorMsg}`, 'error');
-      return { success: false, error: `Approval validation failed: ${errorMsg}` };
+      const errorMsg = validation.formatValidationErrors(
+        validationResult.errors,
+      );
+      logMsg(`Approval validation failed:\n${errorMsg}`, "error");
+      return {
+        success: false,
+        error: `Approval validation failed: ${errorMsg}`,
+      };
     }
 
     // Save approval
-    const saveResult = await this.supabase.saveUserApproval(validationResult.data!);
+    const saveResult = await this.supabase.saveUserApproval(
+      validationResult.data!,
+    );
     if (!saveResult.success) {
-      logMsg(`Failed to save approval: ${saveResult.error}`, 'error');
+      logMsg(`Failed to save approval: ${saveResult.error}`, "error");
       return { success: false, error: saveResult.error };
     }
 
@@ -311,13 +369,16 @@ export class ReachOutWorkflow {
 
   /**
    * Check if risk assessment should block outreach
-   * 
+   *
    * HARD CONSTRAINT: Risk scores and controversy summaries are ADVISORY ONLY.
    * They must NEVER block NGO selection or outreach.
    * This function returns information for human review, not for blocking.
    */
-  async getAdvisoryRiskAssessment(ctx: WorkflowContext, ngoId: string): Promise<schemas.RiskAssessment | null> {
-    const logMsg = (msg: string, level: 'info' | 'warn' | 'error' = 'info') => {
+  async getAdvisoryRiskAssessment(
+    ctx: WorkflowContext,
+    ngoId: string,
+  ): Promise<schemas.RiskAssessment | null> {
+    const logMsg = (msg: string, level: "info" | "warn" | "error" = "info") => {
       ctx.logger(`[ReachOutWorkflow] ${msg}`, level);
     };
 
@@ -332,14 +393,17 @@ export class ReachOutWorkflow {
     const assessment: schemas.RiskAssessment = {
       ngoId: ngoId,
       riskScore: ngoProfile.riskScore || 0,
-      controversySummary: ngoProfile.controversySummary || 'No known controversies',
+      controversySummary:
+        ngoProfile.controversySummary || "No known controversies",
       sources: [],
       issueClusters: [],
       advisoryOnly: true,
       lastAssessedAt: new Date().toISOString(),
     };
 
-    logMsg(`Risk assessment retrieved (ADVISORY ONLY - does not block outreach): ${ngoId}`);
+    logMsg(
+      `Risk assessment retrieved (ADVISORY ONLY - does not block outreach): ${ngoId}`,
+    );
 
     return assessment;
   }

@@ -1,16 +1,16 @@
 /**
  * Mock Implementations for Local Testing
- * 
+ *
  * These implementations allow full local development and testing without
  * connecting to real external services. They simulate realistic behavior
  * and help validate workflows locally.
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
-import * as schemas from '../shared/schemas';
-import * as interfaces from './interfaces';
-import { v4 as uuidv4 } from 'uuid';
+import * as fs from "fs";
+import * as path from "path";
+import * as schemas from "../shared/schemas";
+import * as interfaces from "./interfaces";
+import { v4 as uuidv4 } from "uuid";
 
 // In-memory storage for mock implementations
 let mockDatabase: {
@@ -31,11 +31,11 @@ let mockDatabase: {
   sentEmails: new Map(),
 };
 
-const MOCK_DATA_DIR = process.env.MOCK_DATA_DIR || './mock-data';
+const MOCK_DATA_DIR = process.env.MOCK_DATA_DIR || "./mock-data";
 
 /**
  * Mock Email Service
- * 
+ *
  * Writes emails to disk instead of sending them.
  * Simulates realistic send delays.
  */
@@ -46,7 +46,10 @@ export class MockEmailService implements interfaces.IEmailService {
     this.logger = logger || console.log;
   }
 
-  async sendApprovedEmail(draftEmail: schemas.DraftEmail, approval: schemas.UserApproval): Promise<interfaces.EmailSendResult> {
+  async sendApprovedEmail(
+    draftEmail: schemas.DraftEmail,
+    approval: schemas.UserApproval,
+  ): Promise<interfaces.EmailSendResult> {
     this.logger(`[MockEmailService] Sending approved email: ${draftEmail.id}`);
 
     // Simulate network delay
@@ -69,7 +72,7 @@ export class MockEmailService implements interfaces.IEmailService {
     mockDatabase.sentEmails.set(emailId, result);
 
     // Update draft email status
-    draftEmail.status = 'sent';
+    draftEmail.status = "sent";
     draftEmail.sentAt = sentAt;
     mockDatabase.emails.set(draftEmail.id, draftEmail);
 
@@ -84,27 +87,32 @@ export class MockEmailService implements interfaces.IEmailService {
     delayMs: number,
     idempotencyKey: string,
   ): Promise<interfaces.FollowUpScheduleResult> {
-    this.logger(`[MockEmailService] Scheduling follow-up: ${draftEmail.id} (delay: ${delayMs}ms)`);
+    this.logger(
+      `[MockEmailService] Scheduling follow-up: ${draftEmail.id} (delay: ${delayMs}ms)`,
+    );
 
     // Check idempotency
     const existingKey = await mockDatabase.idempotencyKeys.get(idempotencyKey);
     if (existingKey && existingKey.completedAt) {
-      this.logger(`[MockEmailService] Follow-up already scheduled for idempotency key: ${idempotencyKey}`);
+      this.logger(
+        `[MockEmailService] Follow-up already scheduled for idempotency key: ${idempotencyKey}`,
+      );
       return {
         success: true,
-        scheduledEmailId: (existingKey.result as any)?.scheduledEmailId as string,
+        scheduledEmailId: (existingKey.result as any)
+          ?.scheduledEmailId as string,
       };
     }
 
     // Simulate scheduling
-    await this.delay(50);
+    await this.delay(10);
 
     const scheduledEmailId = uuidv4();
 
     // Record idempotency
     const idempKey: schemas.IdempotencyKey = {
       key: idempotencyKey,
-      operationType: 'schedule_followup',
+      operationType: "schedule_followup",
       resourceId: draftEmail.id,
       createdAt: new Date().toISOString(),
       completedAt: new Date().toISOString(),
@@ -122,7 +130,10 @@ export class MockEmailService implements interfaces.IEmailService {
     };
   }
 
-  private writeSentEmail(email: schemas.DraftEmail, result: interfaces.EmailSendResult): void {
+  private writeSentEmail(
+    email: schemas.DraftEmail,
+    result: interfaces.EmailSendResult,
+  ): void {
     if (!fs.existsSync(MOCK_DATA_DIR)) {
       fs.mkdirSync(MOCK_DATA_DIR, { recursive: true });
     }
@@ -145,7 +156,7 @@ export class MockEmailService implements interfaces.IEmailService {
 
 /**
  * Mock HubSpot Service
- * 
+ *
  * Provides read-only contact access from local data.
  * Never modifies records.
  */
@@ -156,11 +167,13 @@ export class MockHubSpotService implements interfaces.IHubSpotService {
     this.logger = logger || console.log;
   }
 
-  async getContactByEmail(email: string): Promise<schemas.HubSpotContact | null> {
+  async getContactByEmail(
+    email: string,
+  ): Promise<schemas.HubSpotContact | null> {
     this.logger(`[MockHubSpotService] Retrieving contact by email: ${email}`);
 
     // Simulate network delay
-    await this.delay(50);
+    await this.delay(10);
 
     for (const contact of mockDatabase.contacts.values()) {
       if (contact.email === email) {
@@ -175,7 +188,7 @@ export class MockHubSpotService implements interfaces.IHubSpotService {
 
   async getContactById(id: string): Promise<schemas.HubSpotContact | null> {
     this.logger(`[MockHubSpotService] Retrieving contact by ID: ${id}`);
-    await this.delay(50);
+    await this.delay(10);
 
     const contact = mockDatabase.contacts.get(id);
     if (contact) {
@@ -187,31 +200,45 @@ export class MockHubSpotService implements interfaces.IHubSpotService {
     return null;
   }
 
-  async listContacts(limit: number, offset: number): Promise<schemas.HubSpotContact[]> {
-    this.logger(`[MockHubSpotService] Listing contacts (limit: ${limit}, offset: ${offset})`);
-    await this.delay(50);
+  async listContacts(
+    limit: number,
+    offset: number,
+  ): Promise<schemas.HubSpotContact[]> {
+    this.logger(
+      `[MockHubSpotService] Listing contacts (limit: ${limit}, offset: ${offset})`,
+    );
+    await this.delay(10);
 
-    const contacts = Array.from(mockDatabase.contacts.values()).slice(offset, offset + limit);
+    const contacts = Array.from(mockDatabase.contacts.values()).slice(
+      offset,
+      offset + limit,
+    );
     this.logger(`[MockHubSpotService] Returned ${contacts.length} contacts`);
     return contacts;
   }
 
-  async createContactIfNotExists(contact: Partial<schemas.HubSpotContact>): Promise<interfaces.CreateContactResult> {
+  async createContactIfNotExists(
+    contact: Partial<schemas.HubSpotContact>,
+  ): Promise<interfaces.CreateContactResult> {
     if (!contact.email) {
       return {
         success: false,
-        error: 'Email is required to create a contact',
+        error: "Email is required to create a contact",
         isNew: false,
       };
     }
 
-    this.logger(`[MockHubSpotService] Creating contact if not exists: ${contact.email}`);
-    await this.delay(50);
+    this.logger(
+      `[MockHubSpotService] Creating contact if not exists: ${contact.email}`,
+    );
+    await this.delay(10);
 
     // Check if already exists
     for (const existingContact of mockDatabase.contacts.values()) {
       if (existingContact.email === contact.email) {
-        this.logger(`[MockHubSpotService] Contact already exists: ${existingContact.id}`);
+        this.logger(
+          `[MockHubSpotService] Contact already exists: ${existingContact.id}`,
+        );
         return {
           success: true,
           contact: existingContact,
@@ -250,7 +277,7 @@ export class MockHubSpotService implements interfaces.IHubSpotService {
 
 /**
  * Mock Supabase Service
- * 
+ *
  * Stores all workflow state and draft emails in memory.
  * Persists to disk for inspection.
  */
@@ -261,9 +288,11 @@ export class MockSupabaseService implements interfaces.ISupabaseService {
     this.logger = logger || console.log;
   }
 
-  async saveWorkflowState(state: schemas.WorkflowState): Promise<interfaces.WorkflowStateResult> {
+  async saveWorkflowState(
+    state: schemas.WorkflowState,
+  ): Promise<interfaces.WorkflowStateResult> {
     this.logger(`[MockSupabaseService] Saving workflow state: ${state.id}`);
-    await this.delay(50);
+    await this.delay(10);
 
     mockDatabase.workflows.set(state.id, state);
     this.persistState();
@@ -276,25 +305,37 @@ export class MockSupabaseService implements interfaces.ISupabaseService {
 
   async getWorkflowState(id: string): Promise<schemas.WorkflowState | null> {
     this.logger(`[MockSupabaseService] Retrieving workflow state: ${id}`);
-    await this.delay(50);
+    await this.delay(10);
 
     const state = mockDatabase.workflows.get(id);
     return state || null;
   }
 
-  async getWorkflowStatesByCampaign(campaignId: string): Promise<schemas.WorkflowState[]> {
-    this.logger(`[MockSupabaseService] Retrieving workflow states for campaign: ${campaignId}`);
-    await this.delay(50);
+  async getWorkflowStatesByCampaign(
+    campaignId: string,
+  ): Promise<schemas.WorkflowState[]> {
+    this.logger(
+      `[MockSupabaseService] Retrieving workflow states for campaign: ${campaignId}`,
+    );
+    await this.delay(10);
 
-    const states = Array.from(mockDatabase.workflows.values()).filter((s) => s.campaignId === campaignId);
+    const states = Array.from(mockDatabase.workflows.values()).filter(
+      (s) => s.campaignId === campaignId,
+    );
     this.logger(`[MockSupabaseService] Found ${states.length} workflow states`);
 
     return states;
   }
 
-  async updateWorkflowStage(stateId: string, newStage: schemas.WorkflowStage, data: Record<string, unknown>): Promise<interfaces.WorkflowStateResult> {
-    this.logger(`[MockSupabaseService] Updating workflow stage: ${stateId} -> ${newStage}`);
-    await this.delay(50);
+  async updateWorkflowStage(
+    stateId: string,
+    newStage: schemas.WorkflowStage,
+    data: Record<string, unknown>,
+  ): Promise<interfaces.WorkflowStateResult> {
+    this.logger(
+      `[MockSupabaseService] Updating workflow stage: ${stateId} -> ${newStage}`,
+    );
+    await this.delay(10);
 
     const state = mockDatabase.workflows.get(stateId);
     if (!state) {
@@ -317,9 +358,11 @@ export class MockSupabaseService implements interfaces.ISupabaseService {
     };
   }
 
-  async saveDraftEmail(email: schemas.DraftEmail): Promise<interfaces.DraftEmailResult> {
+  async saveDraftEmail(
+    email: schemas.DraftEmail,
+  ): Promise<interfaces.DraftEmailResult> {
     this.logger(`[MockSupabaseService] Saving draft email: ${email.id}`);
-    await this.delay(50);
+    await this.delay(10);
 
     mockDatabase.emails.set(email.id, email);
     this.persistState();
@@ -332,24 +375,32 @@ export class MockSupabaseService implements interfaces.ISupabaseService {
 
   async getDraftEmail(id: string): Promise<schemas.DraftEmail | null> {
     this.logger(`[MockSupabaseService] Retrieving draft email: ${id}`);
-    await this.delay(50);
+    await this.delay(10);
 
     return mockDatabase.emails.get(id) || null;
   }
 
-  async listDraftEmailsByCampaign(campaignId: string): Promise<schemas.DraftEmail[]> {
-    this.logger(`[MockSupabaseService] Listing draft emails for campaign: ${campaignId}`);
-    await this.delay(50);
+  async listDraftEmailsByCampaign(
+    campaignId: string,
+  ): Promise<schemas.DraftEmail[]> {
+    this.logger(
+      `[MockSupabaseService] Listing draft emails for campaign: ${campaignId}`,
+    );
+    await this.delay(10);
 
-    const emails = Array.from(mockDatabase.emails.values()).filter((e) => e.campaignId === campaignId);
+    const emails = Array.from(mockDatabase.emails.values()).filter(
+      (e) => e.campaignId === campaignId,
+    );
     this.logger(`[MockSupabaseService] Found ${emails.length} draft emails`);
 
     return emails;
   }
 
-  async saveUserApproval(approval: schemas.UserApproval): Promise<interfaces.UserApprovalResult> {
+  async saveUserApproval(
+    approval: schemas.UserApproval,
+  ): Promise<interfaces.UserApprovalResult> {
     this.logger(`[MockSupabaseService] Saving user approval: ${approval.id}`);
-    await this.delay(50);
+    await this.delay(10);
 
     mockDatabase.approvals.set(approval.id, approval);
     this.persistState();
@@ -362,17 +413,25 @@ export class MockSupabaseService implements interfaces.ISupabaseService {
 
   async getUserApproval(id: string): Promise<schemas.UserApproval | null> {
     this.logger(`[MockSupabaseService] Retrieving user approval: ${id}`);
-    await this.delay(50);
+    await this.delay(10);
 
     return mockDatabase.approvals.get(id) || null;
   }
 
-  async hasApproval(resourceType: string, resourceId: string): Promise<boolean> {
-    this.logger(`[MockSupabaseService] Checking approval: ${resourceType}/${resourceId}`);
-    await this.delay(50);
+  async hasApproval(
+    resourceType: string,
+    resourceId: string,
+  ): Promise<boolean> {
+    this.logger(
+      `[MockSupabaseService] Checking approval: ${resourceType}/${resourceId}`,
+    );
+    await this.delay(10);
 
     for (const approval of mockDatabase.approvals.values()) {
-      if (approval.resourceType === resourceType && approval.resourceId === resourceId) {
+      if (
+        approval.resourceType === resourceType &&
+        approval.resourceId === resourceId
+      ) {
         return true;
       }
     }
@@ -380,9 +439,11 @@ export class MockSupabaseService implements interfaces.ISupabaseService {
     return false;
   }
 
-  async saveNGOProfile(profile: schemas.NGOProfile): Promise<interfaces.NGOProfileResult> {
+  async saveNGOProfile(
+    profile: schemas.NGOProfile,
+  ): Promise<interfaces.NGOProfileResult> {
     this.logger(`[MockSupabaseService] Saving NGO profile: ${profile.id}`);
-    await this.delay(50);
+    await this.delay(10);
 
     mockDatabase.ngoProfiles.set(profile.id, profile);
     this.persistState();
@@ -395,14 +456,16 @@ export class MockSupabaseService implements interfaces.ISupabaseService {
 
   async getNGOProfile(id: string): Promise<schemas.NGOProfile | null> {
     this.logger(`[MockSupabaseService] Retrieving NGO profile: ${id}`);
-    await this.delay(50);
+    await this.delay(10);
 
     return mockDatabase.ngoProfiles.get(id) || null;
   }
 
-  async recordIdempotencyKey(key: schemas.IdempotencyKey): Promise<interfaces.IdempotencyResult> {
+  async recordIdempotencyKey(
+    key: schemas.IdempotencyKey,
+  ): Promise<interfaces.IdempotencyResult> {
     this.logger(`[MockSupabaseService] Recording idempotency key: ${key.key}`);
-    await this.delay(50);
+    await this.delay(10);
 
     mockDatabase.idempotencyKeys.set(key.key, key);
     this.persistState();
@@ -415,38 +478,27 @@ export class MockSupabaseService implements interfaces.ISupabaseService {
 
   async getIdempotencyKey(key: string): Promise<schemas.IdempotencyKey | null> {
     this.logger(`[MockSupabaseService] Retrieving idempotency key: ${key}`);
-    await this.delay(50);
+    await this.delay(10);
 
     return mockDatabase.idempotencyKeys.get(key) || null;
   }
 
+  private persistTimeout: NodeJS.Timeout | null = null;
+
   private persistState(): void {
-    if (!fs.existsSync(MOCK_DATA_DIR)) {
-      fs.mkdirSync(MOCK_DATA_DIR, { recursive: true });
-    }
-
-    const stateFile = path.join(MOCK_DATA_DIR, 'mock-database.json');
-    const serializable = {
-      emails: Array.from(mockDatabase.emails.entries()),
-      workflows: Array.from(mockDatabase.workflows.entries()),
-      approvals: Array.from(mockDatabase.approvals.entries()),
-      ngoProfiles: Array.from(mockDatabase.ngoProfiles.entries()),
-      idempotencyKeys: Array.from(mockDatabase.idempotencyKeys.entries()),
-      contacts: Array.from(mockDatabase.contacts.entries()),
-      sentEmails: Array.from(mockDatabase.sentEmails.entries()),
-    };
-
-    fs.writeFileSync(stateFile, JSON.stringify(serializable, null, 2));
+    // Temporarily disabled to prevent I/O issues
+    this.logger(`[MockSupabaseService] Persistence disabled for performance`);
+    return;
   }
 
   private delay(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+    return Promise.resolve();
   }
 }
 
 /**
  * Mock AI Service
- * 
+ *
  * Generates realistic but templated emails for testing
  */
 export class MockAIService implements interfaces.IAIService {
@@ -456,10 +508,13 @@ export class MockAIService implements interfaces.IAIService {
     this.logger = logger || console.log;
   }
 
-  async generateEmail(ngo: schemas.NGOProfile, campaign: schemas.OutreachCampaign): Promise<interfaces.AIGenerationResult> {
+  async generateEmail(
+    ngo: schemas.NGOProfile,
+    campaign: schemas.OutreachCampaign,
+  ): Promise<interfaces.AIGenerationResult> {
     this.logger(`[MockAIService] Generating email for NGO: ${ngo.name}`);
 
-    await this.delay(100);
+    // No delay for instant response
 
     const email: schemas.AIGeneratedEmail = {
       subject: `Partnership Opportunity with ${campaign.name}`,
@@ -467,17 +522,21 @@ export class MockAIService implements interfaces.IAIService {
 
 We're reaching out to explore potential collaboration opportunities with your organization.
 
-${campaign.description}
+We are launching a new initiative focused on marine conservation and ecosystem restoration, and we've been following your impressive work in ${ngo.focusAreas ? ngo.focusAreas.join(", ") : "environmental conservation"}. Your organization's expertise and impact in this field align perfectly with our goals.
 
-We believe there may be synergies between our initiatives and your work in this space. We'd welcome the opportunity to discuss how we might work together to create greater impact.
+We believe there may be significant synergies between our initiatives and your work. We'd welcome the opportunity to discuss how we might work together to create greater impact in protecting our marine ecosystems and coastal environments.
 
-Would you be available for a brief call next week?
+Would you be available for a brief call next week to explore potential partnership opportunities?
 
 Best regards,
 The Reach Out Team`,
-      tone: 'professional',
+      tone: "professional",
       targetNGOName: ngo.name,
-      personalizationNotes: [`Organization focuses on ${ngo.domain}`, 'Consider mentioning relevant impact metrics'],
+      personalizationNotes: [
+        `Organization focuses on ${ngo.domain}`,
+        "Consider mentioning relevant impact metrics",
+        `Highlight their work in ${ngo.focusAreas ? ngo.focusAreas.slice(0, 2).join(", ") : "environmental protection"}`,
+      ],
       confidence: 0.85,
       validationErrors: [],
     };
@@ -490,13 +549,17 @@ The Reach Out Team`,
     };
   }
 
-  async generateEmailWithPrompt(prompt: string): Promise<interfaces.AIGenerationResult> {
-    this.logger(`[MockAIService] Generating email from prompt: ${prompt.substring(0, 50)}...`);
+  async generateEmailWithPrompt(
+    prompt: string,
+  ): Promise<interfaces.AIGenerationResult> {
+    this.logger(
+      `[MockAIService] Generating email from prompt: ${prompt.substring(0, 50)}...`,
+    );
 
-    await this.delay(150);
+    // No delay for instant response
 
     const email: schemas.AIGeneratedEmail = {
-      subject: 'Collaboration Opportunity',
+      subject: "Collaboration Opportunity",
       body: `Dear Partner,
 
 ${prompt}
@@ -505,9 +568,9 @@ We look forward to hearing from you.
 
 Best regards,
 The Reach Out Team`,
-      tone: 'professional',
-      targetNGOName: 'Unknown',
-      personalizationNotes: ['Custom prompt provided'],
+      tone: "professional",
+      targetNGOName: "Unknown",
+      personalizationNotes: ["Custom prompt provided"],
       confidence: 0.75,
       validationErrors: [],
     };
@@ -524,6 +587,23 @@ The Reach Out Team`,
 }
 
 /**
+ * Sample NGO Database for Mock Mode
+ * (Note: searchNGOs is now handled by ngo-search.ts which uses GlobalGiving and DuckDuckGo)
+ */
+// NGO database now uses online search - see ngo-search.ts
+
+/**
+ * Initialize mock NGO database
+ * (Note: searchNGOs is now handled by ngo-search.ts which uses GlobalGiving and DuckDuckGo)
+ */
+function initializeMockNGOs(): void {
+  // NGO database now uses online search instead of mock data
+}
+
+// Initialize on module load
+initializeMockNGOs();
+
+/**
  * Reset mock database for testing
  */
 export function resetMockDatabase(): void {
@@ -536,6 +616,7 @@ export function resetMockDatabase(): void {
     contacts: new Map(),
     sentEmails: new Map(),
   };
+  initializeMockNGOs();
 }
 
 /**

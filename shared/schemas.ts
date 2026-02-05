@@ -12,6 +12,10 @@ export interface NGOProfile {
   name: string;
   email: string;
   domain: string;
+  geography?: string;
+  focusAreas?: string[];
+  fitRationale?: string;
+  partnerStatus?: 'potential' | 'engaged' | 'partner' | 'inactive';
   hubspotContactId?: string;
   riskScore?: number;
   controversySummary?: string;

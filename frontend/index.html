@@ -1,156 +1,212 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reach Out Bot - Email Testing Dashboard</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <div class="container">
-    <header>
-      <h1>🤖 Reach Out Bot</h1>
-      <p class="subtitle">Email Outreach Campaign Testing Dashboard</p>
-      <div class="header-status">
-        <span id="status-badge" class="status-badge">●</span>
-        <span id="status-text">Connecting...</span>
-      </div>
-    </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reach Out Bot - NGO Outreach Campaign</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🤖 Reach Out Bot</h1>
+        <p class="subtitle">NGO Outreach Campaign Automation</p>
+        <div class="header-status">
+          <span id="status-badge" class="status-badge">●</span>
+          <span id="status-text">Connecting...</span>
+        </div>
+      </header>
 
-    <nav class="tabs">
-      <button class="tab-btn active" data-tab="create">Create</button>
-      <button class="tab-btn" data-tab="review">Review</button>
-      <button class="tab-btn" data-tab="data">Data</button>
-    </nav>
-
-    <!-- CREATE TAB -->
-    <section id="create-tab" class="tab-content active">
-      <h2>Create Workflow</h2>
-
-      <div class="form-section">
-        <h3>1. Create Campaign</h3>
-        <form id="campaign-form" class="form">
-          <div class="form-group">
-            <label for="campaign-name">Campaign Name</label>
-            <input type="text" id="campaign-name" placeholder="e.g., Global Health Initiative Q1 2026" value="Global Health Initiative Q1 2026">
+      <main class="workflow-container">
+        <!-- STEP 1: Enter Brief -->
+        <section id="step-1" class="workflow-step">
+          <h2>Step 1: Enter Campaign Brief</h2>
+          <div class="form-section">
+            <form id="brief-form" class="form">
+              <div class="form-group">
+                <label for="campaign-brief"
+                  >Campaign Brief (copy/paste here)</label
+                >
+                <textarea
+                  id="campaign-brief"
+                  placeholder="Paste your campaign brief here to find matching NGOs..."
+                  rows="6"
+                >
+We're launching a collaborative initiative to protect marine ecosystems and restore coral reefs. We believe organizations focused on ocean conservation, marine protection, and coastal restoration could be powerful partners in this effort. We'd love to explore potential synergies and ways we might work together to safeguard our oceans for future generations.</textarea
+                >
+              </div>
+              <button
+                type="button"
+                class="btn btn-primary"
+                onclick="searchNGOs()"
+              >
+                🔍 Search for Matching NGOs
+              </button>
+              <div id="brief-output" class="output"></div>
+            </form>
           </div>
-          <div class="form-group">
-            <label for="campaign-desc">Description</label>
-            <textarea id="campaign-desc" placeholder="Campaign description" rows="3">We're launching a collaborative initiative to improve healthcare access in underserved regions.</textarea>
+        </section>
+
+        <!-- STEP 2: Review NGOs -->
+        <section id="step-2" class="workflow-step" style="display: none">
+          <h2>Step 2: Select NGOs for Outreach</h2>
+          <div id="ngos-table-container" class="table-container">
+            <table id="ngos-table" class="ngo-table">
+              <thead>
+                <tr>
+                  <th>
+                    <input
+                      type="checkbox"
+                      id="select-all"
+                      onchange="toggleSelectAll()"
+                    />
+                  </th>
+                  <th>Organization Name</th>
+                  <th>Email</th>
+                  <th>Geography</th>
+                  <th>Focus Areas</th>
+                  <th>Fit Rationale</th>
+                  <th>Partner Status</th>
+                  <th>Risk Score</th>
+                  <th>Risk Summary</th>
+                </tr>
+              </thead>
+              <tbody id="ngos-tbody"></tbody>
+            </table>
           </div>
-          <button type="button" class="btn btn-primary" onclick="createCampaign()">Create Campaign</button>
-          <div id="campaign-output" class="output"></div>
-        </form>
-      </div>
-
-      <div class="form-section">
-        <h3>2. Create NGO Profile</h3>
-        <form id="ngo-form" class="form">
-          <div class="form-group">
-            <label for="ngo-name">Organization Name</label>
-            <input type="text" id="ngo-name" placeholder="e.g., Doctors Without Borders" value="Doctors Without Borders">
+          <div class="button-group">
+            <button
+              class="btn btn-primary"
+              onclick="generateEmailsForSelected()"
+            >
+              ✉️ Generate Emails for Selected NGOs
+            </button>
+            <button class="btn btn-secondary" onclick="goBack(1)">
+              ← Back to Brief
+            </button>
           </div>
-          <div class="form-group">
-            <label for="ngo-email">Email</label>
-            <input type="email" id="ngo-email" placeholder="e.g., partnerships@example.org" value="partnerships@doctorswithoutborders.org">
+          <div id="ngos-output" class="output"></div>
+        </section>
+
+        <!-- STEP 3: Review & Approve -->
+        <section id="step-3" class="workflow-step" style="display: none">
+          <h2>Step 3: Review & Approve Emails</h2>
+
+          <div class="email-carousel">
+            <div class="carousel-header">
+              <h3 id="current-email-org">
+                Email <span id="current-email-index">1</span> of
+                <span id="total-emails">1</span>
+              </h3>
+              <div class="carousel-nav">
+                <button
+                  class="btn btn-secondary"
+                  onclick="previousEmail()"
+                  id="prev-btn"
+                >
+                  ← Previous
+                </button>
+                <button
+                  class="btn btn-secondary"
+                  onclick="nextEmail()"
+                  id="next-btn"
+                >
+                  Next →
+                </button>
+              </div>
+            </div>
+
+            <div id="email-preview" class="email-preview">
+              <div class="email-content">
+                <p><strong>To:</strong> <span id="email-to"></span></p>
+                <p>
+                  <strong>Subject:</strong>
+                  <input
+                    type="text"
+                    id="email-subject"
+                    class="email-subject-input"
+                    placeholder="Email subject..."
+                  />
+                </p>
+                <hr />
+                <div class="email-body-container">
+                  <label for="email-body" class="email-body-label"
+                    ><strong>Email Body:</strong></label
+                  >
+                  <textarea
+                    id="email-body"
+                    class="email-body-textarea"
+                    placeholder="Compose your email..."
+                    rows="12"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="approval-section">
+              <div class="form-group">
+                <label for="approval-notes">Approval Notes (optional)</label>
+                <textarea
+                  id="approval-notes"
+                  placeholder="Add any notes for the approval record..."
+                  rows="3"
+                ></textarea>
+              </div>
+              <div class="button-group">
+                <button class="btn btn-success" onclick="approveAndSendEmail()">
+                  ✓ Approve & Send
+                </button>
+                <button class="btn btn-danger" onclick="skipEmail()">
+                  ⊘ Skip This Email
+                </button>
+                <button class="btn btn-secondary" onclick="goBack(2)">
+                  ← Back to Selection
+                </button>
+              </div>
+            </div>
+
+            <div id="approval-output" class="output"></div>
           </div>
-          <div class="form-group">
-            <label for="ngo-website">Website (optional)</label>
-            <input type="url" id="ngo-website" placeholder="https://example.org" value="https://www.doctorswithoutborders.org">
+        </section>
+
+        <!-- STEP 4: Summary -->
+        <section id="step-4" class="workflow-step" style="display: none">
+          <h2>Step 4: Campaign Summary</h2>
+          <div class="summary-section">
+            <h3>Campaign Details</h3>
+            <p>
+              <strong>Name:</strong> <span id="summary-campaign-name"></span>
+            </p>
+            <p>
+              <strong>Total NGOs Selected:</strong>
+              <span id="summary-total-ngos"></span>
+            </p>
+            <p>
+              <strong>Emails Sent:</strong>
+              <span id="summary-sent-count"></span>
+            </p>
+            <p>
+              <strong>Emails Skipped:</strong>
+              <span id="summary-skipped-count"></span>
+            </p>
           </div>
-          <button type="button" class="btn btn-primary" onclick="createNGO()">Create NGO</button>
-          <div id="ngo-output" class="output"></div>
-        </form>
-      </div>
 
-      <div class="form-section">
-        <h3>3. Initiate Workflow</h3>
-        <form id="workflow-form" class="form">
-          <button type="button" class="btn btn-primary" onclick="initiateWorkflow()">Start Outreach Workflow</button>
-          <div id="workflow-output" class="output"></div>
-        </form>
-      </div>
+          <div class="summary-section">
+            <h3>Sent Emails</h3>
+            <div id="sent-emails-list" class="emails-list">
+              <p class="placeholder">No emails sent yet.</p>
+            </div>
+          </div>
 
-      <div class="form-section">
-        <h3>4. Generate Email Draft</h3>
-        <form id="draft-form" class="form">
-          <button type="button" class="btn btn-primary" onclick="generateDraft()" disabled id="generate-btn">Generate Email Draft</button>
-          <div id="draft-output" class="output"></div>
-        </form>
-      </div>
-    </section>
+          <div class="button-group">
+            <button class="btn btn-secondary" onclick="startNewCampaign()">
+              🔄 Start New Campaign
+            </button>
+          </div>
+        </section>
+      </main>
+    </div>
 
-    <!-- REVIEW TAB -->
-    <section id="review-tab" class="tab-content">
-      <h2>Review & Approve Emails</h2>
-
-      <div class="email-preview" id="email-preview">
-        <p class="placeholder">No email loaded. Create a workflow and generate a draft to review here.</p>
-      </div>
-
-      <div class="approval-section">
-        <div class="form-group">
-          <label for="approval-notes">Approval Notes</label>
-          <textarea id="approval-notes" placeholder="Add any notes for the approval record..." rows="3">Looks good, ready to send.</textarea>
-        </div>
-        <button class="btn btn-success" onclick="approveEmail()" disabled id="approve-btn">✓ Approve & Send Email</button>
-        <button class="btn btn-secondary" onclick="rejectEmail()" disabled id="reject-btn">✗ Reject Email</button>
-      </div>
-
-      <div id="approval-output" class="output"></div>
-
-      <div class="form-section">
-        <h3>Sent Emails</h3>
-        <div id="sent-emails-list" class="emails-list">
-          <p class="placeholder">No emails sent yet.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- DATA TAB -->
-    <section id="data-tab" class="tab-content">
-      <h2>Mock Database & State</h2>
-
-      <div class="data-controls">
-        <button class="btn btn-secondary" onclick="refreshData()">🔄 Refresh Data</button>
-        <button class="btn btn-danger" onclick="resetDatabase()">🗑️ Reset Database</button>
-      </div>
-
-      <div class="data-viewers">
-        <div class="viewer-section">
-          <h3>Workflows</h3>
-          <pre id="workflows-data" class="data-output">Loading...</pre>
-        </div>
-
-        <div class="viewer-section">
-          <h3>Draft Emails</h3>
-          <pre id="emails-data" class="data-output">Loading...</pre>
-        </div>
-
-        <div class="viewer-section">
-          <h3>Approvals</h3>
-          <pre id="approvals-data" class="data-output">Loading...</pre>
-        </div>
-
-        <div class="viewer-section">
-          <h3>NGO Profiles</h3>
-          <pre id="ngos-data" class="data-output">Loading...</pre>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <!-- State Storage (client-side) -->
-  <script>
-    const STATE = {
-      campaign: null,
-      ngo: null,
-      workflow: null,
-      draftEmail: null,
-      approval: null,
-    };
-  </script>
-
-  <script src="app.js"></script>
-</body>
+    <script src="app.js"></script>
+  </body>
 </html>
