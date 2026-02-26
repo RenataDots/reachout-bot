@@ -4,8 +4,8 @@
  * Uses comprehensive geographic data with regions, aliases, ISO codes, and GeoNames IDs
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from "fs";
+import * as path from "path";
 
 export interface LocationInfo {
   name: string;
@@ -14,15 +14,15 @@ export interface LocationInfo {
   district?: string;
   city?: string;
   coordinates?: { lat: number; lng: number };
-  administrativeLevel?: 'country' | 'state' | 'district' | 'city';
+  administrativeLevel?: "country" | "state" | "district" | "city";
   confidence: number;
-  source: 'local' | 'nominatim' | 'un' | 'partial';
+  source: "local" | "nominatim" | "un" | "partial";
 }
 
 export interface CachedResult {
   data: LocationInfo;
   timestamp: number;
-  source: 'local' | 'nominatim' | 'un' | 'partial';
+  source: "local" | "nominatim" | "un" | "partial";
   accessCount: number;
 }
 
@@ -65,8 +65,8 @@ export class GeographicService {
   private readonly CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
   private readonly dbPath = path.join(
     process.cwd(),
-    'data',
-    'geographic-database.json',
+    "data",
+    "geographic-database.json",
   );
   private log: (message: string) => void;
 
@@ -80,15 +80,19 @@ export class GeographicService {
    */
   private async loadDatabase(): Promise<void> {
     try {
-      const data = await fs.promises.readFile(this.dbPath, 'utf8');
+      const data = await fs.promises.readFile(this.dbPath, "utf8");
       this.geographicData = JSON.parse(data);
       const countryCount = Object.values(this.geographicData).reduce(
         (total, region) => total + Object.keys(region).length,
-        0
+        0,
       );
-      this.log(`[GeographicService] Loaded ${countryCount} countries from enhanced database`);
+      this.log(
+        `[GeographicService] Loaded ${countryCount} countries from enhanced database`,
+      );
     } catch (error) {
-      this.log('[GeographicService] No local database found, using fallback data...');
+      this.log(
+        "[GeographicService] No local database found, using fallback data...",
+      );
       this.geographicData = await this.getFallbackData();
       await this.saveDatabase();
     }
@@ -99,10 +103,13 @@ export class GeographicService {
    */
   private async saveDatabase(): Promise<void> {
     try {
-      await fs.promises.writeFile(this.dbPath, JSON.stringify(this.geographicData, null, 2));
-      this.log('[GeographicService] Enhanced database saved to file');
+      await fs.promises.writeFile(
+        this.dbPath,
+        JSON.stringify(this.geographicData, null, 2),
+      );
+      this.log("[GeographicService] Enhanced database saved to file");
     } catch (error) {
-      this.log('[GeographicService] Error saving database: ' + error);
+      this.log("[GeographicService] Error saving database: " + error);
     }
   }
 
@@ -127,20 +134,20 @@ export class GeographicService {
                     geoname_id: 5368361,
                     lat: 34.0522,
                     lon: -118.2437,
-                    aliases: []
+                    aliases: [],
                   },
                   "San Francisco": {
                     geoname_id: 5391959,
                     lat: 37.7749,
                     lon: -122.4194,
-                    aliases: []
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+                    aliases: [],
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     };
   }
 
@@ -149,48 +156,64 @@ export class GeographicService {
    */
   private findLocation(location: string): LocationInfo | null {
     const normalized = location.toLowerCase();
-    
+
     // Search through all regions, countries, subdivisions, and cities
     for (const [regionName, region] of Object.entries(this.geographicData)) {
       for (const [countryName, countryData] of Object.entries(region)) {
         // Check if location matches country name or aliases
-        if (this.matchesLocation(normalized, countryName, countryData.aliases)) {
+        if (
+          this.matchesLocation(normalized, countryName, countryData.aliases)
+        ) {
           return {
             name: location,
             country: this.capitalize(countryName),
-            administrativeLevel: 'country',
+            administrativeLevel: "country",
             confidence: 95,
-            source: 'local'
+            source: "local",
           };
         }
-        
+
         // Search subdivisions and cities
-        for (const [subdivisionType, subdivisions] of Object.entries(countryData.subdivisions)) {
-          for (const [subdivisionName, subdivisionData] of Object.entries(subdivisions)) {
+        for (const [subdivisionType, subdivisions] of Object.entries(
+          countryData.subdivisions,
+        )) {
+          for (const [subdivisionName, subdivisionData] of Object.entries(
+            subdivisions,
+          )) {
             // Check if location matches subdivision name or aliases
-            if (this.matchesLocation(normalized, subdivisionName, subdivisionData.aliases)) {
+            if (
+              this.matchesLocation(
+                normalized,
+                subdivisionName,
+                subdivisionData.aliases,
+              )
+            ) {
               return {
                 name: location,
                 country: this.capitalize(countryName),
                 state: this.capitalize(subdivisionName),
-                administrativeLevel: 'state',
+                administrativeLevel: "state",
                 confidence: 90,
-                source: 'local'
+                source: "local",
               };
             }
-            
+
             // Search cities
-            for (const [cityName, cityData] of Object.entries(subdivisionData.cities)) {
-              if (this.matchesLocation(normalized, cityName, cityData.aliases)) {
+            for (const [cityName, cityData] of Object.entries(
+              subdivisionData.cities,
+            )) {
+              if (
+                this.matchesLocation(normalized, cityName, cityData.aliases)
+              ) {
                 return {
                   name: location,
                   city: this.capitalize(cityName),
                   state: this.capitalize(subdivisionName),
                   country: this.capitalize(countryName),
                   coordinates: { lat: cityData.lat, lng: cityData.lon },
-                  administrativeLevel: 'city',
+                  administrativeLevel: "city",
                   confidence: 95,
-                  source: 'local'
+                  source: "local",
                 };
               }
             }
@@ -198,28 +221,33 @@ export class GeographicService {
         }
       }
     }
-    
+
     return null;
   }
 
   /**
    * Check if location matches name or aliases
    */
-  private matchesLocation(searchTerm: string, name: string, aliases: string[]): boolean {
+  private matchesLocation(
+    searchTerm: string,
+    name: string,
+    aliases: string[],
+  ): boolean {
     if (name.toLowerCase() === searchTerm) {
       return true;
     }
-    
-    return aliases.some(alias => alias.toLowerCase() === searchTerm);
+
+    return aliases.some((alias) => alias.toLowerCase() === searchTerm);
   }
 
   /**
    * Capitalize first letter of each word
    */
   private capitalize(str: string): string {
-    return str.split(' ').map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-    ).join(' ');
+    return str
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
   }
 
   /**
@@ -227,7 +255,7 @@ export class GeographicService {
    */
   async resolveLocation(location: string): Promise<LocationInfo | null> {
     const normalized = location.toLowerCase();
-    
+
     // Check cache first
     const cached = this.cache.get(normalized);
     if (cached && Date.now() - cached.timestamp < this.CACHE_DURATION) {
@@ -242,8 +270,8 @@ export class GeographicService {
       this.cache.set(normalized, {
         data: localResult,
         timestamp: Date.now(),
-        source: 'local',
-        accessCount: 1
+        source: "local",
+        accessCount: 1,
       });
       this.log(`[GeographicService] Enhanced database hit for: ${location}`);
       return localResult;
@@ -256,10 +284,10 @@ export class GeographicService {
         this.cache.set(normalized, {
           data: apiResult,
           timestamp: Date.now(),
-          source: 'nominatim',
-          accessCount: 1
+          source: "nominatim",
+          accessCount: 1,
         });
-        
+
         this.log(`[GeographicService] API result for: ${location}`);
         return apiResult;
       }
@@ -275,40 +303,41 @@ export class GeographicService {
    */
   private async queryNominatim(location: string): Promise<LocationInfo | null> {
     await this.rateLimit();
-    
+
     const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}&limit=1`;
-    
+
     const response = await fetch(url, {
       headers: {
-        'User-Agent': 'ReachoutBot/1.0 (geographic-service@example.com)'
-      }
+        "User-Agent": "ReachoutBot/1.0 (geographic-service@example.com)",
+      },
     });
 
     if (!response.ok) {
       throw new Error(`Nominatim API error: ${response.status}`);
     }
 
-    const data = await response.json() as any[];
-    
+    const data = (await response.json()) as any[];
+
     if (data.length === 0) {
       return null;
     }
 
     const result = data[0];
-    
+
     return {
-      name: result.display_name.split(',')[0],
+      name: result.display_name.split(",")[0],
       country: result.address?.country,
       state: result.address?.state || result.address?.province,
       district: result.address?.county || result.address?.district,
-      city: result.address?.city || result.address?.town || result.address?.village,
+      city:
+        result.address?.city || result.address?.town || result.address?.village,
       coordinates: {
         lat: parseFloat(result.lat),
-        lng: parseFloat(result.lon)
+        lng: parseFloat(result.lon),
       },
       administrativeLevel: this.determineAdminLevel(result),
       confidence: this.calculateAPIConfidence(result),
-      source: 'nominatim'
+      source: "nominatim",
     };
   }
 
@@ -318,27 +347,34 @@ export class GeographicService {
   private async rateLimit(): Promise<void> {
     const now = Date.now();
     const timeSinceLastRequest = now - this.rateLimiter.lastRequest;
-    
+
     if (timeSinceLastRequest < this.RATE_LIMIT) {
       const waitTime = this.RATE_LIMIT - timeSinceLastRequest;
-      await new Promise(resolve => setTimeout(resolve, waitTime));
+      await new Promise((resolve) => setTimeout(resolve, waitTime));
     }
-    
+
     this.rateLimiter.lastRequest = Date.now();
   }
 
   /**
    * Determine administrative level from Nominatim result
    */
-  private determineAdminLevel(result: any): 'country' | 'state' | 'district' | 'city' {
-    if (result.type === 'country' || result.class === 'boundary' && result.type === 'administrative' && result.address?.country) {
-      return 'country';
-    } else if (result.type === 'state' || result.type === 'province') {
-      return 'state';
-    } else if (result.type === 'county' || result.type === 'district') {
-      return 'district';
+  private determineAdminLevel(
+    result: any,
+  ): "country" | "state" | "district" | "city" {
+    if (
+      result.type === "country" ||
+      (result.class === "boundary" &&
+        result.type === "administrative" &&
+        result.address?.country)
+    ) {
+      return "country";
+    } else if (result.type === "state" || result.type === "province") {
+      return "state";
+    } else if (result.type === "county" || result.type === "district") {
+      return "district";
     } else {
-      return 'city';
+      return "city";
     }
   }
 
@@ -347,19 +383,19 @@ export class GeographicService {
    */
   private calculateAPIConfidence(result: any): number {
     let confidence = 50; // Base confidence
-    
+
     if (result.importance) {
       confidence += Math.round(result.importance * 30);
     }
-    
+
     if (result.address?.country && result.address?.state) {
       confidence += 10;
     }
-    
-    if (result.type === 'city' || result.type === 'town') {
+
+    if (result.type === "city" || result.type === "town") {
       confidence += 10;
     }
-    
+
     return Math.min(confidence, 95);
   }
 
@@ -369,14 +405,14 @@ export class GeographicService {
   async extractLocations(text: string): Promise<LocationInfo[]> {
     const locationPhrases = this.extractLocationPhrases(text);
     const locations: LocationInfo[] = [];
-    
+
     for (const phrase of locationPhrases) {
       const location = await this.resolveLocation(phrase);
       if (location) {
         locations.push(location);
       }
     }
-    
+
     return locations;
   }
 
@@ -385,26 +421,31 @@ export class GeographicService {
    */
   private extractLocationPhrases(text: string): string[] {
     const phrases: string[] = [];
-    
+
     // Simple regex patterns for location mentions
     const patterns = [
       /\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:state|province|country|city|town)\b/gi,
       /\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:in|from|at|to)\b/gi,
-      /\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\b/g
+      /\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\b/g,
     ];
-    
-    patterns.forEach(pattern => {
+
+    patterns.forEach((pattern) => {
       const matches = text.match(pattern);
       if (matches) {
-        matches.forEach(match => {
-          const cleanMatch = match.replace(/\s+(?:state|province|country|city|town|in|from|at|to)\s*$/i, '').trim();
+        matches.forEach((match) => {
+          const cleanMatch = match
+            .replace(
+              /\s+(?:state|province|country|city|town|in|from|at|to)\s*$/i,
+              "",
+            )
+            .trim();
           if (cleanMatch.length > 2 && !phrases.includes(cleanMatch)) {
             phrases.push(cleanMatch);
           }
         });
       }
     });
-    
+
     return phrases;
   }
 }

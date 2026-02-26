@@ -1,1 +1,5255 @@
-﻿{"North America": {"United States": {"aliases": ["USA", "US", "United States of America"], "iso2": "US", "iso3": "USA", "m49": "840", "subdivisions": {"states": {"California": {"iso3166_2": "US-CA", "aliases": ["CA"], "cities": {"Los Angeles": {"geoname_id": 5368361, "lat": 34.0522, "lon": -118.2437, "aliases": []}, "San Francisco": {"geoname_id": 5391959, "lat": 37.7749, "lon": -122.4194, "aliases": []}}}}}}}}
+{
+  "Africa": {
+    "Algeria": {
+      "aliases": ["People's Democratic Republic of Algeria", "Djazair"],
+      "iso2": "DZ",
+      "iso3": "DZA",
+      "m49": "012",
+      "subdivisions": {
+        "provinces": {
+          "Algiers": {
+            "iso3166_2": "DZ-01",
+            "aliases": ["Alger"],
+            "cities": {
+              "Algiers": {
+                "geoname_id": 2507455,
+                "lat": 36.7538,
+                "lon": 3.0588,
+                "aliases": ["Alger"]
+              }
+            }
+          },
+          "Oran": {
+            "iso3166_2": "DZ-31",
+            "aliases": ["Wahran"],
+            "cities": {
+              "Oran": {
+                "geoname_id": 2478486,
+                "lat": 35.6911,
+                "lon": -0.6417,
+                "aliases": ["Wahran"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Angola": {
+      "aliases": ["Republic of Angola"],
+      "iso2": "AO",
+      "iso3": "AGO",
+      "m49": "024",
+      "subdivisions": {
+        "provinces": {
+          "Luanda": {
+            "iso3166_2": "AO-LUA",
+            "aliases": [],
+            "cities": {
+              "Luanda": {
+                "geoname_id": 3351879,
+                "lat": -8.8368,
+                "lon": 13.2343,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Benin": {
+      "aliases": ["Republic of Benin", "Dahomey"],
+      "iso2": "BJ",
+      "iso3": "BEN",
+      "m49": "204",
+      "subdivisions": {
+        "departments": {
+          "Littoral": {
+            "iso3166_2": "BJ-LI",
+            "aliases": [],
+            "cities": {
+              "Cotonou": {
+                "geoname_id": 2394884,
+                "lat": 6.3703,
+                "lon": 2.3931,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Botswana": {
+      "aliases": ["Republic of Botswana"],
+      "iso2": "BW",
+      "iso3": "BWA",
+      "m49": "072",
+      "subdivisions": {
+        "districts": {
+          "Gaborone": {
+            "iso3166_2": "BW-GW",
+            "aliases": [],
+            "cities": {
+              "Gaborone": {
+                "geoname_id": 933154,
+                "lat": -24.6575,
+                "lon": 25.9087,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Burkina Faso": {
+      "aliases": ["Burkina"],
+      "iso2": "BF",
+      "iso3": "BFA",
+      "m49": "854",
+      "subdivisions": {
+        "regions": {
+          "Centre": {
+            "iso3166_2": "BF-06",
+            "aliases": [],
+            "cities": {
+              "Ouagadougou": {
+                "geoname_id": 2357048,
+                "lat": 12.3714,
+                "lon": -1.5197,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Burundi": {
+      "aliases": ["Republic of Burundi"],
+      "iso2": "BI",
+      "iso3": "BDI",
+      "m49": "108",
+      "subdivisions": {
+        "provinces": {
+          "Bujumbura": {
+            "iso3166_2": "BI-BJ",
+            "aliases": [],
+            "cities": {
+              "Bujumbura": {
+                "geoname_id": 425378,
+                "lat": -3.3833,
+                "lon": 29.3611,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Cabo Verde": {
+      "aliases": ["Cape Verde", "Republic of Cabo Verde"],
+      "iso2": "CV",
+      "iso3": "CPV",
+      "m49": "132",
+      "subdivisions": {
+        "municipalities": {
+          "Praia": {
+            "iso3166_2": "CV-PR",
+            "aliases": [],
+            "cities": {
+              "Praia": {
+                "geoname_id": 3374217,
+                "lat": 14.9333,
+                "lon": -23.5167,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Cameroon": {
+      "aliases": ["Republic of Cameroon"],
+      "iso2": "CM",
+      "iso3": "CMR",
+      "m49": "120",
+      "subdivisions": {
+        "regions": {
+          "Centre": {
+            "iso3166_2": "CM-CE",
+            "aliases": [],
+            "cities": {
+              "Yaoundé": {
+                "geoname_id": 2220957,
+                "lat": 3.848,
+                "lon": 11.5021,
+                "aliases": ["Yaounde"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Central African Republic": {
+      "aliases": ["CAR"],
+      "iso2": "CF",
+      "iso3": "CAF",
+      "m49": "140",
+      "subdivisions": {
+        "prefectures": {
+          "Ombella-M'Poko": {
+            "iso3166_2": "CF-MP",
+            "aliases": [],
+            "cities": {
+              "Bangui": {
+                "geoname_id": 2398858,
+                "lat": 4.3612,
+                "lon": 18.555,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Chad": {
+      "aliases": ["Republic of Chad"],
+      "iso2": "TD",
+      "iso3": "TCD",
+      "m49": "148",
+      "subdivisions": {
+        "regions": {
+          "N'Djamena": {
+            "iso3166_2": "TD-ND",
+            "aliases": [],
+            "cities": {
+              "N'Djamena": {
+                "geoname_id": 2427117,
+                "lat": 12.1067,
+                "lon": 15.0444,
+                "aliases": ["N'Djamena"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Comoros": {
+      "aliases": ["Union of the Comoros"],
+      "iso2": "KM",
+      "iso3": "COM",
+      "m49": "174",
+      "subdivisions": {
+        "autonomous islands": {
+          "Grande Comore": {
+            "iso3166_2": "KM-G",
+            "aliases": ["Ngazidja"],
+            "cities": {
+              "Moroni": {
+                "geoname_id": 921771,
+                "lat": -11.7042,
+                "lon": 43.2443,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Congo": {
+      "aliases": ["Republic of the Congo", "Congo-Brazzaville"],
+      "iso2": "CG",
+      "iso3": "COG",
+      "m49": "178",
+      "subdivisions": {
+        "departments": {
+          "Brazzaville": {
+            "iso3166_2": "CG-BZV",
+            "aliases": [],
+            "cities": {
+              "Brazzaville": {
+                "geoname_id": 2256836,
+                "lat": -4.2634,
+                "lon": 15.2429,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Côte d'Ivoire": {
+      "aliases": ["Ivory Coast", "Republic of Côte d'Ivoire"],
+      "iso2": "CI",
+      "iso3": "CIV",
+      "m49": "384",
+      "subdivisions": {
+        "autonomous districts": {
+          "Abidjan": {
+            "iso3166_2": "CI-AB",
+            "aliases": [],
+            "cities": {
+              "Abidjan": {
+                "geoname_id": 2294787,
+                "lat": 5.3604,
+                "lon": -4.0033,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Democratic Republic of the Congo": {
+      "aliases": ["DRC", "Congo-Kinshasa"],
+      "iso2": "CD",
+      "iso3": "COD",
+      "m49": "180",
+      "subdivisions": {
+        "provinces": {
+          "Kinshasa": {
+            "iso3166_2": "CD-KN",
+            "aliases": [],
+            "cities": {
+              "Kinshasa": {
+                "geoname_id": 2314302,
+                "lat": -4.4419,
+                "lon": 15.2663,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Djibouti": {
+      "aliases": ["Republic of Djibouti"],
+      "iso2": "DJ",
+      "iso3": "DJI",
+      "m49": "262",
+      "subdivisions": {
+        "regions": {
+          "Djibouti": {
+            "iso3166_2": "DJ-DJ",
+            "aliases": [],
+            "cities": {
+              "Djibouti": {
+                "geoname_id": 223819,
+                "lat": 11.589,
+                "lon": 43.145,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Egypt": {
+      "aliases": ["Arab Republic of Egypt"],
+      "iso2": "EG",
+      "iso3": "EGY",
+      "m49": "818",
+      "subdivisions": {
+        "governorates": {
+          "Cairo": {
+            "iso3166_2": "EG-C",
+            "aliases": [],
+            "cities": {
+              "Cairo": {
+                "geoname_id": 360630,
+                "lat": 30.0444,
+                "lon": 31.2357,
+                "aliases": []
+              }
+            }
+          },
+          "Alexandria": {
+            "iso3166_2": "EG-ALX",
+            "aliases": [],
+            "cities": {
+              "Alexandria": {
+                "geoname_id": 361058,
+                "lat": 31.2001,
+                "lon": 29.9187,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Equatorial Guinea": {
+      "aliases": ["Republic of Equatorial Guinea"],
+      "iso2": "GQ",
+      "iso3": "GNQ",
+      "m49": "226",
+      "subdivisions": {
+        "provinces": {
+          "Bioko Norte": {
+            "iso3166_2": "GQ-BN",
+            "aliases": [],
+            "cities": {
+              "Malabo": {
+                "geoname_id": 2309093,
+                "lat": 3.7547,
+                "lon": 8.7703,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Eritrea": {
+      "aliases": ["State of Eritrea"],
+      "iso2": "ER",
+      "iso3": "ERI",
+      "m49": "232",
+      "subdivisions": {
+        "regions": {
+          "Maekel": {
+            "iso3166_2": "ER-MA",
+            "aliases": [],
+            "cities": {
+              "Asmara": {
+                "geoname_id": 344907,
+                "lat": 15.338,
+                "lon": 38.931,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Eswatini": {
+      "aliases": ["Kingdom of Eswatini", "Swaziland"],
+      "iso2": "SZ",
+      "iso3": "SWZ",
+      "m49": "748",
+      "subdivisions": {
+        "regions": {
+          "Hhohho": {
+            "iso3166_2": "SZ-HH",
+            "aliases": [],
+            "cities": {
+              "Mbabane": {
+                "geoname_id": 934981,
+                "lat": -26.3167,
+                "lon": 31.1333,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Ethiopia": {
+      "aliases": ["Federal Democratic Republic of Ethiopia"],
+      "iso2": "ET",
+      "iso3": "ETH",
+      "m49": "231",
+      "subdivisions": {
+        "chartered cities": {
+          "Addis Ababa": {
+            "iso3166_2": "ET-AA",
+            "aliases": [],
+            "cities": {
+              "Addis Ababa": {
+                "geoname_id": 344979,
+                "lat": 9.0035,
+                "lon": 38.7603,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Gabon": {
+      "aliases": ["Gabonese Republic"],
+      "iso2": "GA",
+      "iso3": "GAB",
+      "m49": "266",
+      "subdivisions": {
+        "provinces": {
+          "Estuaire": {
+            "iso3166_2": "GA-ES",
+            "aliases": [],
+            "cities": {
+              "Libreville": {
+                "geoname_id": 2396798,
+                "lat": 0.3898,
+                "lon": 9.4544,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Gambia": {
+      "aliases": ["Republic of The Gambia"],
+      "iso2": "GM",
+      "iso3": "GMB",
+      "m49": "270",
+      "subdivisions": {
+        "divisions": {
+          "Banjul": {
+            "iso3166_2": "GM-BJ",
+            "aliases": [],
+            "cities": {
+              "Banjul": {
+                "geoname_id": 2413866,
+                "lat": 13.4531,
+                "lon": -16.5775,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Ghana": {
+      "aliases": ["Republic of Ghana"],
+      "iso2": "GH",
+      "iso3": "GHA",
+      "m49": "288",
+      "subdivisions": {
+        "regions": {
+          "Greater Accra": {
+            "iso3166_2": "GH-AH",
+            "aliases": [],
+            "cities": {
+              "Accra": {
+                "geoname_id": 2306104,
+                "lat": 5.556,
+                "lon": -0.1969,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Guinea": {
+      "aliases": ["Republic of Guinea"],
+      "iso2": "GN",
+      "iso3": "GIN",
+      "m49": "324",
+      "subdivisions": {
+        "regions": {
+          "Conakry": {
+            "iso3166_2": "GN-C",
+            "aliases": [],
+            "cities": {
+              "Conakry": {
+                "geoname_id": 2420582,
+                "lat": 9.537,
+                "lon": -13.6785,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Guinea-Bissau": {
+      "aliases": ["Republic of Guinea-Bissau"],
+      "iso2": "GW",
+      "iso3": "GNB",
+      "m49": "624",
+      "subdivisions": {
+        "autonomous sectors": {
+          "Bissau": {
+            "iso3166_2": "GW-BS",
+            "aliases": [],
+            "cities": {
+              "Bissau": {
+                "geoname_id": 2372238,
+                "lat": 11.8594,
+                "lon": -15.5958,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Kenya": {
+      "aliases": ["Republic of Kenya"],
+      "iso2": "KE",
+      "iso3": "KEN",
+      "m49": "404",
+      "subdivisions": {
+        "counties": {
+          "Nairobi": {
+            "iso3166_2": "KE-110",
+            "aliases": [],
+            "cities": {
+              "Nairobi": {
+                "geoname_id": 184745,
+                "lat": -1.2921,
+                "lon": 36.8219,
+                "aliases": []
+              }
+            }
+          },
+          "Mombasa": {
+            "iso3166_2": "KE-001",
+            "aliases": [],
+            "cities": {
+              "Mombasa": {
+                "geoname_id": 184742,
+                "lat": -4.0435,
+                "lon": 39.6682,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Lesotho": {
+      "aliases": ["Kingdom of Lesotho"],
+      "iso2": "LS",
+      "iso3": "LSO",
+      "m49": "426",
+      "subdivisions": {
+        "districts": {
+          "Maseru": {
+            "iso3166_2": "LS-M",
+            "aliases": [],
+            "cities": {
+              "Maseru": {
+                "geoname_id": 932187,
+                "lat": -29.31,
+                "lon": 27.48,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Liberia": {
+      "aliases": ["Republic of Liberia"],
+      "iso2": "LR",
+      "iso3": "LBR",
+      "m49": "430",
+      "subdivisions": {
+        "counties": {
+          "Montserrado": {
+            "iso3166_2": "LR-MG",
+            "aliases": [],
+            "cities": {
+              "Monrovia": {
+                "geoname_id": 2274894,
+                "lat": 6.3005,
+                "lon": -10.7607,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Libya": {
+      "aliases": ["State of Libya"],
+      "iso2": "LY",
+      "iso3": "LBY",
+      "m49": "434",
+      "subdivisions": {
+        "districts": {
+          "Tripoli": {
+            "iso3166_2": "LY-TB",
+            "aliases": ["Tarabulus"],
+            "cities": {
+              "Tripoli": {
+                "geoname_id": 2210237,
+                "lat": 32.8872,
+                "lon": 13.1913,
+                "aliases": ["Tarabulus"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Madagascar": {
+      "aliases": ["Republic of Madagascar"],
+      "iso2": "MG",
+      "iso3": "MDG",
+      "m49": "450",
+      "subdivisions": {
+        "provinces": {
+          "Analamanga": {
+            "iso3166_2": "MG-T",
+            "aliases": [],
+            "cities": {
+              "Antananarivo": {
+                "geoname_id": 1070940,
+                "lat": -18.9333,
+                "lon": 47.5167,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Malawi": {
+      "aliases": ["Republic of Malawi"],
+      "iso2": "MW",
+      "iso3": "MWI",
+      "m49": "454",
+      "subdivisions": {
+        "regions": {
+          "Central": {
+            "iso3166_2": "MW-C",
+            "aliases": [],
+            "cities": {
+              "Lilongwe": {
+                "geoname_id": 925388,
+                "lat": -13.9833,
+                "lon": 33.7833,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Mali": {
+      "aliases": ["Republic of Mali"],
+      "iso2": "ML",
+      "iso3": "MLI",
+      "m49": "466",
+      "subdivisions": {
+        "districts": {
+          "Bamako": {
+            "iso3166_2": "ML-BK",
+            "aliases": [],
+            "cities": {
+              "Bamako": {
+                "geoname_id": 2451328,
+                "lat": 12.6392,
+                "lon": -8.0029,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Mauritania": {
+      "aliases": ["Islamic Republic of Mauritania"],
+      "iso2": "MR",
+      "iso3": "MRT",
+      "m49": "478",
+      "subdivisions": {
+        "regions": {
+          "Nouakchott": {
+            "iso3166_2": "MR-NKC",
+            "aliases": [],
+            "cities": {
+              "Nouakchott": {
+                "geoname_id": 2376450,
+                "lat": 18.0858,
+                "lon": -15.9785,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Mauritius": {
+      "aliases": ["Republic of Mauritius"],
+      "iso2": "MU",
+      "iso3": "MUS",
+      "m49": "480",
+      "subdivisions": {
+        "districts": {
+          "Port Louis": {
+            "iso3166_2": "MU-PL",
+            "aliases": [],
+            "cities": {
+              "Port Louis": {
+                "geoname_id": 934152,
+                "lat": -20.1619,
+                "lon": 57.4989,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Morocco": {
+      "aliases": ["Kingdom of Morocco"],
+      "iso2": "MA",
+      "iso3": "MAR",
+      "m49": "504",
+      "subdivisions": {
+        "regions": {
+          "Casablanca-Settat": {
+            "iso3166_2": "MA-CAS",
+            "aliases": [],
+            "cities": {
+              "Casablanca": {
+                "geoname_id": 2553604,
+                "lat": 33.593,
+                "lon": -7.6194,
+                "aliases": ["Dar el-Beida"]
+              }
+            }
+          },
+          "Rabat-Salé-Kénitra": {
+            "iso3166_2": "MA-RAB",
+            "aliases": [],
+            "cities": {
+              "Rabat": {
+                "geoname_id": 2546472,
+                "lat": 34.0209,
+                "lon": -6.8416,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Mozambique": {
+      "aliases": ["Republic of Mozambique"],
+      "iso2": "MZ",
+      "iso3": "MOZ",
+      "m49": "508",
+      "subdivisions": {
+        "provinces": {
+          "Maputo": {
+            "iso3166_2": "MZ-MPM",
+            "aliases": [],
+            "cities": {
+              "Maputo": {
+                "geoname_id": 1039971,
+                "lat": -25.9653,
+                "lon": 32.5832,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Namibia": {
+      "aliases": ["Republic of Namibia"],
+      "iso2": "NA",
+      "iso3": "NAM",
+      "m49": "516",
+      "subdivisions": {
+        "regions": {
+          "Khomas": {
+            "iso3166_2": "NA-KH",
+            "aliases": [],
+            "cities": {
+              "Windhoek": {
+                "geoname_id": 3352637,
+                "lat": -22.5594,
+                "lon": 17.0832,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Niger": {
+      "aliases": ["Republic of Niger"],
+      "iso2": "NE",
+      "iso3": "NER",
+      "m49": "562",
+      "subdivisions": {
+        "regions": {
+          "Niamey": {
+            "iso3166_2": "NE-8",
+            "aliases": [],
+            "cities": {
+              "Niamey": {
+                "geoname_id": 2440475,
+                "lat": 13.5137,
+                "lon": 2.1098,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Nigeria": {
+      "aliases": ["Federal Republic of Nigeria"],
+      "iso2": "NG",
+      "iso3": "NGA",
+      "m49": "566",
+      "subdivisions": {
+        "states": {
+          "Lagos": {
+            "iso3166_2": "NG-LA",
+            "aliases": [],
+            "cities": {
+              "Lagos": {
+                "geoname_id": 2332459,
+                "lat": 6.4531,
+                "lon": 3.3958,
+                "aliases": ["Eko"]
+              }
+            }
+          },
+          "Federal Capital Territory": {
+            "iso3166_2": "NG-FC",
+            "aliases": [],
+            "cities": {
+              "Abuja": {
+                "geoname_id": 2352778,
+                "lat": 9.0765,
+                "lon": 7.3986,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Rwanda": {
+      "aliases": ["Republic of Rwanda"],
+      "iso2": "RW",
+      "iso3": "RWA",
+      "m49": "646",
+      "subdivisions": {
+        "provinces": {
+          "Kigali": {
+            "iso3166_2": "RW-KG",
+            "aliases": [],
+            "cities": {
+              "Kigali": {
+                "geoname_id": 202046,
+                "lat": -1.9536,
+                "lon": 30.0606,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Sao Tome and Principe": {
+      "aliases": ["Democratic Republic of Sao Tome and Principe"],
+      "iso2": "ST",
+      "iso3": "STP",
+      "m49": "678",
+      "subdivisions": {
+        "autonomous regions": {
+          "São Tomé": {
+            "iso3166_2": "ST-ST",
+            "aliases": ["Sao Tome"],
+            "cities": {
+              "São Tomé": {
+                "geoname_id": 2410763,
+                "lat": 0.3361,
+                "lon": 6.7273,
+                "aliases": ["Sao Tome"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Senegal": {
+      "aliases": ["Republic of Senegal"],
+      "iso2": "SN",
+      "iso3": "SEN",
+      "m49": "686",
+      "subdivisions": {
+        "regions": {
+          "Dakar": {
+            "iso3166_2": "SN-DK",
+            "aliases": [],
+            "cities": {
+              "Dakar": {
+                "geoname_id": 2245662,
+                "lat": 14.6937,
+                "lon": -17.4441,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Seychelles": {
+      "aliases": ["Republic of Seychelles"],
+      "iso2": "SC",
+      "iso3": "SYC",
+      "m49": "690",
+      "subdivisions": {
+        "districts": {
+          "Mahé": {
+            "iso3166_2": "SC-01",
+            "aliases": [],
+            "cities": {
+              "Victoria": {
+                "geoname_id": 241131,
+                "lat": -4.6206,
+                "lon": 55.4543,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Sierra Leone": {
+      "aliases": ["Republic of Sierra Leone"],
+      "iso2": "SL",
+      "iso3": "SLE",
+      "m49": "694",
+      "subdivisions": {
+        "provinces": {
+          "Western Area": {
+            "iso3166_2": "SL-W",
+            "aliases": [],
+            "cities": {
+              "Freetown": {
+                "geoname_id": 2409300,
+                "lat": 8.4844,
+                "lon": -13.2317,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Somalia": {
+      "aliases": ["Federal Republic of Somalia"],
+      "iso2": "SO",
+      "iso3": "SOM",
+      "m49": "706",
+      "subdivisions": {
+        "regions": {
+          "Banaadir": {
+            "iso3166_2": "SO-BN",
+            "aliases": [],
+            "cities": {
+              "Mogadishu": {
+                "geoname_id": 53654,
+                "lat": 2.0469,
+                "lon": 45.3182,
+                "aliases": ["Muqdisho"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "South Africa": {
+      "aliases": ["Republic of South Africa"],
+      "iso2": "ZA",
+      "iso3": "ZAF",
+      "m49": "710",
+      "subdivisions": {
+        "provinces": {
+          "Gauteng": {
+            "iso3166_2": "ZA-GP",
+            "aliases": [],
+            "cities": {
+              "Johannesburg": {
+                "geoname_id": 993800,
+                "lat": -26.2041,
+                "lon": 28.0473,
+                "aliases": ["Joburg", "Jozi"]
+              },
+              "Pretoria": {
+                "geoname_id": 964137,
+                "lat": -25.7479,
+                "lon": 28.2293,
+                "aliases": ["Tshwane"]
+              }
+            }
+          },
+          "Western Cape": {
+            "iso3166_2": "ZA-WC",
+            "aliases": [],
+            "cities": {
+              "Cape Town": {
+                "geoname_id": 3369157,
+                "lat": -33.9249,
+                "lon": 18.4241,
+                "aliases": ["Kaapstad"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "South Sudan": {
+      "aliases": ["Republic of South Sudan"],
+      "iso2": "SS",
+      "iso3": "SSD",
+      "m49": "728",
+      "subdivisions": {
+        "states": {
+          "Juba": {
+            "iso3166_2": "SS-JU",
+            "aliases": [],
+            "cities": {
+              "Juba": {
+                "geoname_id": 374976,
+                "lat": 4.8472,
+                "lon": 31.5997,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Sudan": {
+      "aliases": ["Republic of the Sudan"],
+      "iso2": "SD",
+      "iso3": "SDN",
+      "m49": "729",
+      "subdivisions": {
+        "states": {
+          "Khartoum": {
+            "iso3166_2": "SD-KH",
+            "aliases": [],
+            "cities": {
+              "Khartoum": {
+                "geoname_id": 379254,
+                "lat": 15.5517,
+                "lon": 32.5324,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Tanzania": {
+      "aliases": ["United Republic of Tanzania"],
+      "iso2": "TZ",
+      "iso3": "TZA",
+      "m49": "834",
+      "subdivisions": {
+        "regions": {
+          "Dar es Salaam": {
+            "iso3166_2": "TZ-DS",
+            "aliases": [],
+            "cities": {
+              "Dar es Salaam": {
+                "geoname_id": 149590,
+                "lat": -6.7924,
+                "lon": 39.2083,
+                "aliases": []
+              }
+            }
+          },
+          "Dodoma": {
+            "iso3166_2": "TZ-DO",
+            "aliases": [],
+            "cities": {
+              "Dodoma": {
+                "geoname_id": 150575,
+                "lat": -6.1831,
+                "lon": 35.746,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Togo": {
+      "aliases": ["Togolese Republic"],
+      "iso2": "TG",
+      "iso3": "TGO",
+      "m49": "768",
+      "subdivisions": {
+        "regions": {
+          "Maritime": {
+            "iso3166_2": "TG-M",
+            "aliases": [],
+            "cities": {
+              "Lomé": {
+                "geoname_id": 2365361,
+                "lat": 6.1728,
+                "lon": 1.2143,
+                "aliases": ["Lome"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Tunisia": {
+      "aliases": ["Republic of Tunisia"],
+      "iso2": "TN",
+      "iso3": "TUN",
+      "m49": "788",
+      "subdivisions": {
+        "governorates": {
+          "Tunis": {
+            "iso3166_2": "TN-11",
+            "aliases": [],
+            "cities": {
+              "Tunis": {
+                "geoname_id": 2464471,
+                "lat": 36.8065,
+                "lon": 10.1815,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Uganda": {
+      "aliases": ["Republic of Uganda"],
+      "iso2": "UG",
+      "iso3": "UGA",
+      "m49": "800",
+      "subdivisions": {
+        "districts": {
+          "Kampala": {
+            "iso3166_2": "UG-101",
+            "aliases": [],
+            "cities": {
+              "Kampala": {
+                "geoname_id": 226334,
+                "lat": 0.3176,
+                "lon": 32.5825,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Zambia": {
+      "aliases": ["Republic of Zambia"],
+      "iso2": "ZM",
+      "iso3": "ZMB",
+      "m49": "894",
+      "subdivisions": {
+        "provinces": {
+          "Lusaka": {
+            "iso3166_2": "ZM-LS",
+            "aliases": [],
+            "cities": {
+              "Lusaka": {
+                "geoname_id": 915494,
+                "lat": -15.4167,
+                "lon": 28.2833,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Zimbabwe": {
+      "aliases": ["Republic of Zimbabwe"],
+      "iso2": "ZW",
+      "iso3": "ZWE",
+      "m49": "716",
+      "subdivisions": {
+        "provinces": {
+          "Harare": {
+            "iso3166_2": "ZW-HA",
+            "aliases": [],
+            "cities": {
+              "Harare": {
+                "geoname_id": 890298,
+                "lat": -17.8277,
+                "lon": 31.0536,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "Americas": {
+    "Antigua and Barbuda": {
+      "aliases": ["Antigua"],
+      "iso2": "AG",
+      "iso3": "ATG",
+      "m49": "028",
+      "subdivisions": {
+        "parishes": {
+          "Saint John": {
+            "iso3166_2": "AG-01",
+            "aliases": ["St. John"],
+            "cities": {
+              "St. John's": {
+                "geoname_id": 3576470,
+                "lat": 17.1206,
+                "lon": -61.8446,
+                "aliases": ["Saint John's"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Argentina": {
+      "aliases": ["Argentine Republic"],
+      "iso2": "AR",
+      "iso3": "ARG",
+      "m49": "032",
+      "subdivisions": {
+        "provinces": {
+          "Buenos Aires": {
+            "iso3166_2": "AR-B",
+            "aliases": [],
+            "cities": {
+              "Buenos Aires": {
+                "geoname_id": 3435910,
+                "lat": -34.6013,
+                "lon": -58.386,
+                "aliases": []
+              },
+              "La Plata": {
+                "geoname_id": 3432043,
+                "lat": -34.9215,
+                "lon": -57.9545,
+                "aliases": []
+              }
+            }
+          },
+          "Córdoba": {
+            "iso3166_2": "AR-X",
+            "aliases": [],
+            "cities": {
+              "Córdoba": {
+                "geoname_id": 3861330,
+                "lat": -31.4201,
+                "lon": -64.1888,
+                "aliases": ["Cordoba"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Bahamas": {
+      "aliases": ["Commonwealth of The Bahamas"],
+      "iso2": "BS",
+      "iso3": "BHS",
+      "m49": "044",
+      "subdivisions": {
+        "islands": {
+          "New Providence": {
+            "iso3166_2": "BS-NP",
+            "aliases": [],
+            "cities": {
+              "Nassau": {
+                "geoname_id": 3573395,
+                "lat": 25.0589,
+                "lon": -77.3333,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Barbados": {
+      "aliases": [],
+      "iso2": "BB",
+      "iso3": "BRB",
+      "m49": "052",
+      "subdivisions": {
+        "parishes": {
+          "Saint Michael": {
+            "iso3166_2": "BB-01",
+            "aliases": ["St. Michael"],
+            "cities": {
+              "Bridgetown": {
+                "geoname_id": 3374080,
+                "lat": 13.1065,
+                "lon": -59.6142,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Belize": {
+      "aliases": [],
+      "iso2": "BZ",
+      "iso3": "BLZ",
+      "m49": "084",
+      "subdivisions": {
+        "districts": {
+          "Belize": {
+            "iso3166_2": "BZ-BZ",
+            "aliases": [],
+            "cities": {
+              "Belize City": {
+                "geoname_id": 3582678,
+                "lat": 17.4995,
+                "lon": -88.1975,
+                "aliases": []
+              },
+              "Belmopan": {
+                "geoname_id": 3582557,
+                "lat": 17.251,
+                "lon": -88.771,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Bolivia": {
+      "aliases": ["Plurinational State of Bolivia"],
+      "iso2": "BO",
+      "iso3": "BOL",
+      "m49": "068",
+      "subdivisions": {
+        "departments": {
+          "La Paz": {
+            "iso3166_2": "BO-LP",
+            "aliases": [],
+            "cities": {
+              "La Paz": {
+                "geoname_id": 3910120,
+                "lat": -16.4942,
+                "lon": -68.1475,
+                "aliases": []
+              }
+            }
+          },
+          "Santa Cruz": {
+            "iso3166_2": "BO-S",
+            "aliases": [],
+            "cities": {
+              "Santa Cruz de la Sierra": {
+                "geoname_id": 3445431,
+                "lat": -17.7766,
+                "lon": -63.1874,
+                "aliases": ["Santa Cruz"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Brazil": {
+      "aliases": ["Federative Republic of Brazil", "Brasil"],
+      "iso2": "BR",
+      "iso3": "BRA",
+      "m49": "076",
+      "subdivisions": {
+        "states": {
+          "São Paulo": {
+            "iso3166_2": "BR-SP",
+            "aliases": ["Sao Paulo", "SP"],
+            "cities": {
+              "São Paulo": {
+                "geoname_id": 3448439,
+                "lat": -23.5505,
+                "lon": -46.6333,
+                "aliases": ["Sao Paulo"]
+              },
+              "Campinas": {
+                "geoname_id": 3467865,
+                "lat": -22.9056,
+                "lon": -47.0608,
+                "aliases": []
+              },
+              "Guarulhos": {
+                "geoname_id": 3460283,
+                "lat": -23.4625,
+                "lon": -46.5331,
+                "aliases": []
+              },
+              "São Bernardo do Campo": {
+                "geoname_id": 3447498,
+                "lat": -23.6906,
+                "lon": -46.5656,
+                "aliases": ["Sao Bernardo do Campo"]
+              }
+            }
+          },
+          "Rio de Janeiro": {
+            "iso3166_2": "BR-RJ",
+            "aliases": ["RJ"],
+            "cities": {
+              "Rio de Janeiro": {
+                "geoname_id": 3451190,
+                "lat": -22.9068,
+                "lon": -43.1729,
+                "aliases": []
+              },
+              "Niterói": {
+                "geoname_id": 3455329,
+                "lat": -22.8832,
+                "lon": -43.1034,
+                "aliases": ["Niteroi"]
+              },
+              "Duque de Caxias": {
+                "geoname_id": 3460243,
+                "lat": -22.7856,
+                "lon": -43.3117,
+                "aliases": []
+              }
+            }
+          },
+          "Minas Gerais": {
+            "iso3166_2": "BR-MG",
+            "aliases": ["MG"],
+            "cities": {
+              "Belo Horizonte": {
+                "geoname_id": 3470289,
+                "lat": -19.9207,
+                "lon": -43.8788,
+                "aliases": []
+              },
+              "Uberlândia": {
+                "geoname_id": 3446836,
+                "lat": -18.9113,
+                "lon": -48.2752,
+                "aliases": ["Uberlandia"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Canada": {
+      "aliases": ["Dominion of Canada"],
+      "iso2": "CA",
+      "iso3": "CAN",
+      "m49": "124",
+      "subdivisions": {
+        "provinces": {
+          "Ontario": {
+            "iso3166_2": "CA-ON",
+            "aliases": [],
+            "cities": {
+              "Toronto": {
+                "geoname_id": 6167865,
+                "lat": 43.6532,
+                "lon": -79.3832,
+                "aliases": []
+              },
+              "Ottawa": {
+                "geoname_id": 6094817,
+                "lat": 45.4215,
+                "lon": -75.6972,
+                "aliases": []
+              }
+            }
+          },
+          "Quebec": {
+            "iso3166_2": "CA-QC",
+            "aliases": [],
+            "cities": {
+              "Montreal": {
+                "geoname_id": 6077243,
+                "lat": 45.5017,
+                "lon": -73.5673,
+                "aliases": ["Montréal"]
+              },
+              "Quebec City": {
+                "geoname_id": 6325494,
+                "lat": 46.8139,
+                "lon": -71.208,
+                "aliases": ["Québec"]
+              }
+            }
+          },
+          "British Columbia": {
+            "iso3166_2": "CA-BC",
+            "aliases": ["BC"],
+            "cities": {
+              "Vancouver": {
+                "geoname_id": 6173331,
+                "lat": 49.2614,
+                "lon": -123.138,
+                "aliases": []
+              }
+            }
+          },
+          "Alberta": {
+            "iso3166_2": "CA-AB",
+            "aliases": [],
+            "cities": {
+              "Calgary": {
+                "geoname_id": 5887946,
+                "lat": 51.045,
+                "lon": -114.0667,
+                "aliases": []
+              },
+              "Edmonton": {
+                "geoname_id": 5883102,
+                "lat": 53.5501,
+                "lon": -113.4938,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Chile": {
+      "aliases": ["Republic of Chile"],
+      "iso2": "CL",
+      "iso3": "CHL",
+      "m49": "152",
+      "subdivisions": {
+        "regions": {
+          "Santiago Metropolitan": {
+            "iso3166_2": "CL-RM",
+            "aliases": ["Región Metropolitana"],
+            "cities": {
+              "Santiago": {
+                "geoname_id": 3871333,
+                "lat": -33.4475,
+                "lon": -70.6737,
+                "aliases": []
+              }
+            }
+          },
+          "Valparaíso": {
+            "iso3166_2": "CL-VS",
+            "aliases": ["Valparaiso"],
+            "cities": {
+              "Valparaíso": {
+                "geoname_id": 3896827,
+                "lat": -33.0457,
+                "lon": -71.6204,
+                "aliases": ["Valparaiso"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Colombia": {
+      "aliases": ["Republic of Colombia"],
+      "iso2": "CO",
+      "iso3": "COL",
+      "m49": "170",
+      "subdivisions": {
+        "departments": {
+          "Bogotá": {
+            "iso3166_2": "CO-DC",
+            "aliases": ["Bogota"],
+            "cities": {
+              "Bogotá": {
+                "geoname_id": 3688689,
+                "lat": 4.6243,
+                "lon": -74.0636,
+                "aliases": ["Bogota"]
+              }
+            }
+          },
+          "Antioquia": {
+            "iso3166_2": "CO-ANT",
+            "aliases": [],
+            "cities": {
+              "Medellín": {
+                "geoname_id": 3681486,
+                "lat": 6.2518,
+                "lon": -75.5636,
+                "aliases": ["Medellin"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Costa Rica": {
+      "aliases": ["Republic of Costa Rica"],
+      "iso2": "CR",
+      "iso3": "CRI",
+      "m49": "188",
+      "subdivisions": {
+        "provinces": {
+          "San José": {
+            "iso3166_2": "CR-SJ",
+            "aliases": ["San Jose"],
+            "cities": {
+              "San José": {
+                "geoname_id": 3621666,
+                "lat": 9.9333,
+                "lon": -84.0833,
+                "aliases": ["San Jose"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Cuba": {
+      "aliases": ["Republic of Cuba"],
+      "iso2": "CU",
+      "iso3": "CUB",
+      "m49": "192",
+      "subdivisions": {
+        "provinces": {
+          "La Habana": {
+            "iso3166_2": "CU-03",
+            "aliases": ["Havana"],
+            "cities": {
+              "Havana": {
+                "geoname_id": 3553478,
+                "lat": 23.1136,
+                "lon": -82.3666,
+                "aliases": ["La Habana"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Dominica": {
+      "aliases": ["Commonwealth of Dominica"],
+      "iso2": "DM",
+      "iso3": "DMA",
+      "m49": "212",
+      "subdivisions": {
+        "parishes": {
+          "Saint George": {
+            "iso3166_2": "DM-02",
+            "aliases": ["St. George"],
+            "cities": {
+              "Roseau": {
+                "geoname_id": 3575904,
+                "lat": 15.3014,
+                "lon": -61.3881,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Dominican Republic": {
+      "aliases": ["DR"],
+      "iso2": "DO",
+      "iso3": "DOM",
+      "m49": "214",
+      "subdivisions": {
+        "provinces": {
+          "Distrito Nacional": {
+            "iso3166_2": "DO-01",
+            "aliases": [],
+            "cities": {
+              "Santo Domingo": {
+                "geoname_id": 3492909,
+                "lat": 18.4764,
+                "lon": -69.8933,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Ecuador": {
+      "aliases": ["Republic of Ecuador"],
+      "iso2": "EC",
+      "iso3": "ECU",
+      "m49": "218",
+      "subdivisions": {
+        "provinces": {
+          "Pichincha": {
+            "iso3166_2": "EC-P",
+            "aliases": [],
+            "cities": {
+              "Quito": {
+                "geoname_id": 3652462,
+                "lat": -0.2299,
+                "lon": -78.5243,
+                "aliases": []
+              }
+            }
+          },
+          "Guayas": {
+            "iso3166_2": "EC-G",
+            "aliases": [],
+            "cities": {
+              "Guayaquil": {
+                "geoname_id": 3652463,
+                "lat": -2.1962,
+                "lon": -79.8866,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "El Salvador": {
+      "aliases": ["Republic of El Salvador"],
+      "iso2": "SV",
+      "iso3": "SLV",
+      "m49": "222",
+      "subdivisions": {
+        "departments": {
+          "San Salvador": {
+            "iso3166_2": "SV-SS",
+            "aliases": [],
+            "cities": {
+              "San Salvador": {
+                "geoname_id": 3583319,
+                "lat": 13.6989,
+                "lon": -89.1914,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Grenada": {
+      "aliases": [],
+      "iso2": "GD",
+      "iso3": "GRD",
+      "m49": "308",
+      "subdivisions": {
+        "parishes": {
+          "Saint George": {
+            "iso3166_2": "GD-01",
+            "aliases": ["St. George"],
+            "cities": {
+              "St. George's": {
+                "geoname_id": 3574978,
+                "lat": 12.0561,
+                "lon": -61.7488,
+                "aliases": ["Saint George's"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Guatemala": {
+      "aliases": ["Republic of Guatemala"],
+      "iso2": "GT",
+      "iso3": "GTM",
+      "m49": "320",
+      "subdivisions": {
+        "departments": {
+          "Guatemala": {
+            "iso3166_2": "GT-GU",
+            "aliases": [],
+            "cities": {
+              "Guatemala City": {
+                "geoname_id": 3595528,
+                "lat": 14.6407,
+                "lon": -90.5133,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Guyana": {
+      "aliases": ["Co-operative Republic of Guyana"],
+      "iso2": "GY",
+      "iso3": "GUY",
+      "m49": "328",
+      "subdivisions": {
+        "regions": {
+          "Demerara-Mahaica": {
+            "iso3166_2": "GY-DE",
+            "aliases": [],
+            "cities": {
+              "Georgetown": {
+                "geoname_id": 3379044,
+                "lat": 6.8044,
+                "lon": -58.1553,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Haiti": {
+      "aliases": ["Republic of Haiti"],
+      "iso2": "HT",
+      "iso3": "HTI",
+      "m49": "332",
+      "subdivisions": {
+        "departments": {
+          "Ouest": {
+            "iso3166_2": "HT-OU",
+            "aliases": [],
+            "cities": {
+              "Port-au-Prince": {
+                "geoname_id": 3718426,
+                "lat": 18.5944,
+                "lon": -72.3074,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Honduras": {
+      "aliases": ["Republic of Honduras"],
+      "iso2": "HN",
+      "iso3": "HND",
+      "m49": "340",
+      "subdivisions": {
+        "departments": {
+          "Francisco Morazán": {
+            "iso3166_2": "HN-FM",
+            "aliases": ["Francisco Morazan"],
+            "cities": {
+              "Tegucigalpa": {
+                "geoname_id": 360630,
+                "lat": 14.0723,
+                "lon": -87.1921,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Jamaica": {
+      "aliases": [],
+      "iso2": "JM",
+      "iso3": "JAM",
+      "m49": "388",
+      "subdivisions": {
+        "parishes": {
+          "Kingston": {
+            "iso3166_2": "JM-01",
+            "aliases": [],
+            "cities": {
+              "Kingston": {
+                "geoname_id": 3489854,
+                "lat": 17.9714,
+                "lon": -76.7931,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Mexico": {
+      "aliases": ["United Mexican States", "Estados Unidos Mexicanos"],
+      "iso2": "MX",
+      "iso3": "MEX",
+      "m49": "484",
+      "subdivisions": {
+        "states": {
+          "Mexico City": {
+            "iso3166_2": "MX-CMX",
+            "aliases": ["Ciudad de México"],
+            "cities": {
+              "Mexico City": {
+                "geoname_id": 3530597,
+                "lat": 19.4326,
+                "lon": -99.1332,
+                "aliases": ["Ciudad de Mexico"]
+              }
+            }
+          },
+          "Jalisco": {
+            "iso3166_2": "MX-JAL",
+            "aliases": [],
+            "cities": {
+              "Guadalajara": {
+                "geoname_id": 4005539,
+                "lat": 20.6597,
+                "lon": -103.3496,
+                "aliases": []
+              }
+            }
+          },
+          "Nuevo León": {
+            "iso3166_2": "MX-NL",
+            "aliases": ["Nuevo Leon"],
+            "cities": {
+              "Monterrey": {
+                "geoname_id": 3990595,
+                "lat": 25.6667,
+                "lon": -100.3167,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Nicaragua": {
+      "aliases": ["Republic of Nicaragua"],
+      "iso2": "NI",
+      "iso3": "NIC",
+      "m49": "558",
+      "subdivisions": {
+        "departments": {
+          "Managua": {
+            "iso3166_2": "NI-MN",
+            "aliases": [],
+            "cities": {
+              "Managua": {
+                "geoname_id": 361747,
+                "lat": 12.1328,
+                "lon": -86.2504,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Panama": {
+      "aliases": ["Republic of Panama"],
+      "iso2": "PA",
+      "iso3": "PAN",
+      "m49": "591",
+      "subdivisions": {
+        "provinces": {
+          "Panamá": {
+            "iso3166_2": "PA-8",
+            "aliases": ["Panama"],
+            "cities": {
+              "Panama City": {
+                "geoname_id": 3703443,
+                "lat": 8.9824,
+                "lon": -79.5199,
+                "aliases": ["Ciudad de Panamá"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Paraguay": {
+      "aliases": ["Republic of Paraguay"],
+      "iso2": "PY",
+      "iso3": "PRY",
+      "m49": "600",
+      "subdivisions": {
+        "departments": {
+          "Asunción": {
+            "iso3166_2": "PY-AS",
+            "aliases": ["Asuncion"],
+            "cities": {
+              "Asunción": {
+                "geoname_id": 3437598,
+                "lat": -25.3007,
+                "lon": -57.6359,
+                "aliases": ["Asuncion"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Peru": {
+      "aliases": ["Republic of Peru"],
+      "iso2": "PE",
+      "iso3": "PER",
+      "m49": "604",
+      "subdivisions": {
+        "regions": {
+          "Lima": {
+            "iso3166_2": "PE-LIM",
+            "aliases": [],
+            "cities": {
+              "Lima": {
+                "geoname_id": 3936456,
+                "lat": -12.0464,
+                "lon": -77.0428,
+                "aliases": []
+              }
+            }
+          },
+          "Arequipa": {
+            "iso3166_2": "PE-ARE",
+            "aliases": [],
+            "cities": {
+              "Arequipa": {
+                "geoname_id": 3936457,
+                "lat": -16.409,
+                "lon": -71.5375,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Saint Kitts and Nevis": {
+      "aliases": ["Federation of Saint Christopher and Nevis"],
+      "iso2": "KN",
+      "iso3": "KNA",
+      "m49": "659",
+      "subdivisions": {
+        "parishes": {
+          "Saint George Basseterre": {
+            "iso3166_2": "KN-01",
+            "aliases": ["St. George Basseterre"],
+            "cities": {
+              "Basseterre": {
+                "geoname_id": 3575581,
+                "lat": 17.2955,
+                "lon": -62.7351,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Saint Lucia": {
+      "aliases": [],
+      "iso2": "LC",
+      "iso3": "LCA",
+      "m49": "662",
+      "subdivisions": {
+        "quarters": {
+          "Castries": {
+            "iso3166_2": "LC-01",
+            "aliases": [],
+            "cities": {
+              "Castries": {
+                "geoname_id": 3576148,
+                "lat": 13.9957,
+                "lon": -60.9979,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Saint Vincent and the Grenadines": {
+      "aliases": [],
+      "iso2": "VC",
+      "iso3": "VCT",
+      "m49": "670",
+      "subdivisions": {
+        "parishes": {
+          "Saint George": {
+            "iso3166_2": "VC-01",
+            "aliases": ["St. George"],
+            "cities": {
+              "Kingstown": {
+                "geoname_id": 3577144,
+                "lat": 13.1559,
+                "lon": -61.2279,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Suriname": {
+      "aliases": ["Republic of Suriname"],
+      "iso2": "SR",
+      "iso3": "SUR",
+      "m49": "740",
+      "subdivisions": {
+        "districts": {
+          "Paramaribo": {
+            "iso3166_2": "SR-PR",
+            "aliases": [],
+            "cities": {
+              "Paramaribo": {
+                "geoname_id": 3383295,
+                "lat": 5.8664,
+                "lon": -55.1668,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Trinidad and Tobago": {
+      "aliases": ["Republic of Trinidad and Tobago"],
+      "iso2": "TT",
+      "iso3": "TTO",
+      "m49": "780",
+      "subdivisions": {
+        "municipalities": {
+          "Port of Spain": {
+            "iso3166_2": "TT-POS",
+            "aliases": [],
+            "cities": {
+              "Port of Spain": {
+                "geoname_id": 3573591,
+                "lat": 10.6667,
+                "lon": -61.5167,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "United States": {
+      "aliases": ["USA", "US", "United States of America"],
+      "iso2": "US",
+      "iso3": "USA",
+      "m49": "840",
+      "subdivisions": {
+        "states": {
+          "California": {
+            "iso3166_2": "US-CA",
+            "aliases": ["CA"],
+            "cities": {
+              "Los Angeles": {
+                "geoname_id": 5368361,
+                "lat": 34.0522,
+                "lon": -118.2437,
+                "aliases": []
+              },
+              "San Francisco": {
+                "geoname_id": 5391959,
+                "lat": 37.7749,
+                "lon": -122.4194,
+                "aliases": []
+              },
+              "San Diego": {
+                "geoname_id": 5391811,
+                "lat": 32.7157,
+                "lon": -117.1611,
+                "aliases": []
+              },
+              "Sacramento": {
+                "geoname_id": 5389389,
+                "lat": 38.5816,
+                "lon": -121.4944,
+                "aliases": []
+              },
+              "Oakland": {
+                "geoname_id": 5378538,
+                "lat": 37.8044,
+                "lon": -122.2712,
+                "aliases": []
+              }
+            }
+          },
+          "Texas": {
+            "iso3166_2": "US-TX",
+            "aliases": [],
+            "cities": {
+              "Houston": {
+                "geoname_id": 4699066,
+                "lat": 29.7604,
+                "lon": -95.3698,
+                "aliases": []
+              },
+              "Austin": {
+                "geoname_id": 4671654,
+                "lat": 30.2672,
+                "lon": -97.7431,
+                "aliases": []
+              },
+              "Dallas": {
+                "geoname_id": 4684888,
+                "lat": 32.7767,
+                "lon": -96.797,
+                "aliases": []
+              },
+              "San Antonio": {
+                "geoname_id": 4726206,
+                "lat": 29.4241,
+                "lon": -98.4936,
+                "aliases": []
+              }
+            }
+          },
+          "New York": {
+            "iso3166_2": "US-NY",
+            "aliases": [],
+            "cities": {
+              "New York": {
+                "geoname_id": 5128581,
+                "lat": 40.7128,
+                "lon": -74.006,
+                "aliases": ["NYC"]
+              },
+              "Buffalo": {
+                "geoname_id": 5110629,
+                "lat": 42.8864,
+                "lon": -78.8784,
+                "aliases": []
+              }
+            }
+          },
+          "Florida": {
+            "iso3166_2": "US-FL",
+            "aliases": [],
+            "cities": {
+              "Miami": {
+                "geoname_id": 4164148,
+                "lat": 25.7617,
+                "lon": -80.1918,
+                "aliases": []
+              },
+              "Orlando": {
+                "geoname_id": 3769498,
+                "lat": 28.5383,
+                "lon": -81.3792,
+                "aliases": []
+              }
+            }
+          },
+          "Illinois": {
+            "iso3166_2": "US-IL",
+            "aliases": [],
+            "cities": {
+              "Chicago": {
+                "geoname_id": 4887398,
+                "lat": 41.8781,
+                "lon": -87.6298,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Uruguay": {
+      "aliases": ["Eastern Republic of Uruguay"],
+      "iso2": "UY",
+      "iso3": "URY",
+      "m49": "858",
+      "subdivisions": {
+        "departments": {
+          "Montevideo": {
+            "iso3166_2": "UY-MO",
+            "aliases": [],
+            "cities": {
+              "Montevideo": {
+                "geoname_id": 3440211,
+                "lat": -34.9033,
+                "lon": -56.1882,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Venezuela": {
+      "aliases": ["Bolivarian Republic of Venezuela"],
+      "iso2": "VE",
+      "iso3": "VEN",
+      "m49": "862",
+      "subdivisions": {
+        "states": {
+          "Distrito Capital": {
+            "iso3166_2": "VE-DA",
+            "aliases": [],
+            "cities": {
+              "Caracas": {
+                "geoname_id": 3646737,
+                "lat": 10.48,
+                "lon": -66.8792,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "Asia": {
+    "Afghanistan": {
+      "aliases": ["Islamic Republic of Afghanistan"],
+      "iso2": "AF",
+      "iso3": "AFG",
+      "m49": "004",
+      "subdivisions": {
+        "provinces": {
+          "Kabul": {
+            "iso3166_2": "AF-KAB",
+            "aliases": [],
+            "cities": {
+              "Kabul": {
+                "geoname_id": 1138464,
+                "lat": 34.5167,
+                "lon": 69.1833,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Bahrain": {
+      "aliases": ["Kingdom of Bahrain"],
+      "iso2": "BH",
+      "iso3": "BHR",
+      "m49": "048",
+      "subdivisions": {
+        "governorates": {
+          "Capital": {
+            "iso3166_2": "BH-13",
+            "aliases": [],
+            "cities": {
+              "Manama": {
+                "geoname_id": 290341,
+                "lat": 26.2167,
+                "lon": 50.5667,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Bangladesh": {
+      "aliases": ["People's Republic of Bangladesh"],
+      "iso2": "BD",
+      "iso3": "BGD",
+      "m49": "050",
+      "subdivisions": {
+        "divisions": {
+          "Dhaka": {
+            "iso3166_2": "BD-D",
+            "aliases": [],
+            "cities": {
+              "Dhaka": {
+                "geoname_id": 1185241,
+                "lat": 23.7104,
+                "lon": 90.4074,
+                "aliases": []
+              }
+            }
+          },
+          "Chittagong": {
+            "iso3166_2": "BD-C",
+            "aliases": [],
+            "cities": {
+              "Chittagong": {
+                "geoname_id": 1206298,
+                "lat": 22.4578,
+                "lon": 91.7969,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Bhutan": {
+      "aliases": ["Kingdom of Bhutan"],
+      "iso2": "BT",
+      "iso3": "BTN",
+      "m49": "064",
+      "subdivisions": {
+        "districts": {
+          "Thimphu": {
+            "iso3166_2": "BT-TI",
+            "aliases": [],
+            "cities": {
+              "Thimphu": {
+                "geoname_id": 1252585,
+                "lat": 27.4661,
+                "lon": 89.6419,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Brunei Darussalam": {
+      "aliases": ["Brunei"],
+      "iso2": "BN",
+      "iso3": "BRN",
+      "m49": "096",
+      "subdivisions": {
+        "districts": {
+          "Brunei-Muara": {
+            "iso3166_2": "BN-BM",
+            "aliases": [],
+            "cities": {
+              "Bandar Seri Begawan": {
+                "geoname_id": 1820305,
+                "lat": 4.9403,
+                "lon": 114.9481,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Cambodia": {
+      "aliases": ["Kingdom of Cambodia"],
+      "iso2": "KH",
+      "iso3": "KHM",
+      "m49": "116",
+      "subdivisions": {
+        "municipalities": {
+          "Phnom Penh": {
+            "iso3166_2": "KH-12",
+            "aliases": [],
+            "cities": {
+              "Phnom Penh": {
+                "geoname_id": 1831182,
+                "lat": 11.5621,
+                "lon": 104.8885,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "China": {
+      "aliases": ["People's Republic of China"],
+      "iso2": "CN",
+      "iso3": "CHN",
+      "m49": "156",
+      "subdivisions": {
+        "municipalities": {
+          "Beijing": {
+            "iso3166_2": "CN-BJ",
+            "aliases": [],
+            "cities": {
+              "Beijing": {
+                "geoname_id": 1816670,
+                "lat": 39.9042,
+                "lon": 116.4074,
+                "aliases": ["Peking"]
+              }
+            }
+          },
+          "Shanghai": {
+            "iso3166_2": "CN-SH",
+            "aliases": [],
+            "cities": {
+              "Shanghai": {
+                "geoname_id": 1796236,
+                "lat": 31.2304,
+                "lon": 121.4737,
+                "aliases": []
+              }
+            }
+          },
+          "Tianjin": {
+            "iso3166_2": "CN-TJ",
+            "aliases": [],
+            "cities": {
+              "Tianjin": {
+                "geoname_id": 1796236,
+                "lat": 39.1042,
+                "lon": 117.2009,
+                "aliases": []
+              }
+            }
+          }
+        },
+        "provinces": {
+          "Guangdong": {
+            "iso3166_2": "CN-GD",
+            "aliases": [],
+            "cities": {
+              "Guangzhou": {
+                "geoname_id": 1809857,
+                "lat": 23.1291,
+                "lon": 113.2644,
+                "aliases": ["Canton"]
+              },
+              "Shenzhen": {
+                "geoname_id": 1795565,
+                "lat": 22.5431,
+                "lon": 114.0579,
+                "aliases": []
+              }
+            }
+          },
+          "Sichuan": {
+            "iso3166_2": "CN-SC",
+            "aliases": [],
+            "cities": {
+              "Chengdu": {
+                "geoname_id": 1815286,
+                "lat": 30.6667,
+                "lon": 104.0667,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Cyprus": {
+      "aliases": ["Republic of Cyprus"],
+      "iso2": "CY",
+      "iso3": "CYP",
+      "m49": "196",
+      "subdivisions": {
+        "districts": {
+          "Nicosia": {
+            "iso3166_2": "CY-01",
+            "aliases": ["Lefkosia"],
+            "cities": {
+              "Nicosia": {
+                "geoname_id": 146468,
+                "lat": 35.1725,
+                "lon": 33.365,
+                "aliases": ["Lefkosia"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Democratic People's Republic of Korea": {
+      "aliases": ["North Korea", "DPRK"],
+      "iso2": "KP",
+      "iso3": "PRK",
+      "m49": "408",
+      "subdivisions": {
+        "provinces": {
+          "Pyongyang": {
+            "iso3166_2": "KP-01",
+            "aliases": [],
+            "cities": {
+              "Pyongyang": {
+                "geoname_id": 1871856,
+                "lat": 39.0339,
+                "lon": 125.7543,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "India": {
+      "aliases": ["Republic of India"],
+      "iso2": "IN",
+      "iso3": "IND",
+      "m49": "356",
+      "subdivisions": {
+        "states": {
+          "Maharashtra": {
+            "iso3166_2": "IN-MH",
+            "aliases": [],
+            "cities": {
+              "Mumbai": {
+                "geoname_id": 1275339,
+                "lat": 19.076,
+                "lon": 72.8777,
+                "aliases": ["Bombay"]
+              },
+              "Pune": {
+                "geoname_id": 1259229,
+                "lat": 18.5204,
+                "lon": 73.8567,
+                "aliases": []
+              }
+            }
+          },
+          "Karnataka": {
+            "iso3166_2": "IN-KA",
+            "aliases": [],
+            "cities": {
+              "Bangalore": {
+                "geoname_id": 1277333,
+                "lat": 12.9716,
+                "lon": 77.5946,
+                "aliases": ["Bengaluru"]
+              }
+            }
+          },
+          "Delhi": {
+            "iso3166_2": "IN-DL",
+            "aliases": [],
+            "cities": {
+              "New Delhi": {
+                "geoname_id": 1261481,
+                "lat": 28.6139,
+                "lon": 77.209,
+                "aliases": []
+              }
+            }
+          },
+          "West Bengal": {
+            "iso3166_2": "IN-WB",
+            "aliases": [],
+            "cities": {
+              "Kolkata": {
+                "geoname_id": 1275339,
+                "lat": 22.5697,
+                "lon": 88.3697,
+                "aliases": ["Calcutta"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Indonesia": {
+      "aliases": ["Republic of Indonesia"],
+      "iso2": "ID",
+      "iso3": "IDN",
+      "m49": "360",
+      "subdivisions": {
+        "provinces": {
+          "DKI Jakarta": {
+            "iso3166_2": "ID-JK",
+            "aliases": ["Jakarta"],
+            "cities": {
+              "Jakarta": {
+                "geoname_id": 1642911,
+                "lat": -6.2088,
+                "lon": 106.8456,
+                "aliases": []
+              }
+            }
+          },
+          "Jawa Barat": {
+            "iso3166_2": "ID-JB",
+            "aliases": ["West Java"],
+            "cities": {
+              "Bandung": {
+                "geoname_id": 1642911,
+                "lat": -6.9175,
+                "lon": 107.6191,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Iran": {
+      "aliases": ["Islamic Republic of Iran"],
+      "iso2": "IR",
+      "iso3": "IRN",
+      "m49": "364",
+      "subdivisions": {
+        "provinces": {
+          "Tehran": {
+            "iso3166_2": "IR-07",
+            "aliases": [],
+            "cities": {
+              "Tehran": {
+                "geoname_id": 112931,
+                "lat": 35.6961,
+                "lon": 51.4231,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Iraq": {
+      "aliases": ["Republic of Iraq"],
+      "iso2": "IQ",
+      "iso3": "IRQ",
+      "m49": "368",
+      "subdivisions": {
+        "governorates": {
+          "Baghdad": {
+            "iso3166_2": "IQ-BG",
+            "aliases": [],
+            "cities": {
+              "Baghdad": {
+                "geoname_id": 98182,
+                "lat": 33.3406,
+                "lon": 44.4009,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Israel": {
+      "aliases": ["State of Israel"],
+      "iso2": "IL",
+      "iso3": "ISR",
+      "m49": "376",
+      "subdivisions": {
+        "districts": {
+          "Tel Aviv": {
+            "iso3166_2": "IL-TA",
+            "aliases": [],
+            "cities": {
+              "Tel Aviv": {
+                "geoname_id": 293397,
+                "lat": 32.0809,
+                "lon": 34.7806,
+                "aliases": []
+              }
+            }
+          },
+          "Jerusalem": {
+            "iso3166_2": "IL-JM",
+            "aliases": [],
+            "cities": {
+              "Jerusalem": {
+                "geoname_id": 281184,
+                "lat": 31.769,
+                "lon": 35.2163,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Japan": {
+      "aliases": ["Japan"],
+      "iso2": "JP",
+      "iso3": "JPN",
+      "m49": "392",
+      "subdivisions": {
+        "prefectures": {
+          "Tokyo": {
+            "iso3166_2": "JP-13",
+            "aliases": [],
+            "cities": {
+              "Tokyo": {
+                "geoname_id": 1850147,
+                "lat": 35.6762,
+                "lon": 139.6503,
+                "aliases": []
+              }
+            }
+          },
+          "Osaka": {
+            "iso3166_2": "JP-27",
+            "aliases": [],
+            "cities": {
+              "Osaka": {
+                "geoname_id": 1853909,
+                "lat": 34.6937,
+                "lon": 135.5023,
+                "aliases": []
+              }
+            }
+          },
+          "Kyoto": {
+            "iso3166_2": "JP-26",
+            "aliases": [],
+            "cities": {
+              "Kyoto": {
+                "geoname_id": 1857907,
+                "lat": 35.0211,
+                "lon": 135.7556,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Jordan": {
+      "aliases": ["Hashemite Kingdom of Jordan"],
+      "iso2": "JO",
+      "iso3": "JOR",
+      "m49": "400",
+      "subdivisions": {
+        "governorates": {
+          "Amman": {
+            "iso3166_2": "JO-AM",
+            "aliases": [],
+            "cities": {
+              "Amman": {
+                "geoname_id": 250169,
+                "lat": 31.9539,
+                "lon": 35.9106,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Kazakhstan": {
+      "aliases": ["Republic of Kazakhstan"],
+      "iso2": "KZ",
+      "iso3": "KAZ",
+      "m49": "398",
+      "subdivisions": {
+        "cities": {
+          "Almaty": {
+            "iso3166_2": "KZ-ALA",
+            "aliases": [],
+            "cities": {
+              "Almaty": {
+                "geoname_id": 1526273,
+                "lat": 43.222,
+                "lon": 76.8512,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Kuwait": {
+      "aliases": ["State of Kuwait"],
+      "iso2": "KW",
+      "iso3": "KWT",
+      "m49": "414",
+      "subdivisions": {
+        "governorates": {
+          "Al Asimah": {
+            "iso3166_2": "KW-KU",
+            "aliases": ["Kuwait City"],
+            "cities": {
+              "Kuwait City": {
+                "geoname_id": 287270,
+                "lat": 29.3697,
+                "lon": 47.9783,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Kyrgyzstan": {
+      "aliases": ["Kyrgyz Republic"],
+      "iso2": "KG",
+      "iso3": "KGZ",
+      "m49": "417",
+      "subdivisions": {
+        "cities": {
+          "Bishkek": {
+            "iso3166_2": "KG-GB",
+            "aliases": [],
+            "cities": {
+              "Bishkek": {
+                "geoname_id": 1528675,
+                "lat": 42.8746,
+                "lon": 74.5698,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Lao People's Democratic Republic": {
+      "aliases": ["Laos"],
+      "iso2": "LA",
+      "iso3": "LAO",
+      "m49": "418",
+      "subdivisions": {
+        "prefectures": {
+          "Vientiane": {
+            "iso3166_2": "LA-VT",
+            "aliases": [],
+            "cities": {
+              "Vientiane": {
+                "geoname_id": 1651933,
+                "lat": 17.9667,
+                "lon": 102.6,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Lebanon": {
+      "aliases": ["Lebanese Republic"],
+      "iso2": "LB",
+      "iso3": "LBN",
+      "m49": "422",
+      "subdivisions": {
+        "governorates": {
+          "Beirut": {
+            "iso3166_2": "LB-BY",
+            "aliases": [],
+            "cities": {
+              "Beirut": {
+                "geoname_id": 276781,
+                "lat": 33.8938,
+                "lon": 35.5018,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Malaysia": {
+      "aliases": [],
+      "iso2": "MY",
+      "iso3": "MYS",
+      "m49": "458",
+      "subdivisions": {
+        "states": {
+          "Kuala Lumpur": {
+            "iso3166_2": "MY-14",
+            "aliases": [],
+            "cities": {
+              "Kuala Lumpur": {
+                "geoname_id": 1735161,
+                "lat": 3.139,
+                "lon": 101.6869,
+                "aliases": []
+              }
+            }
+          },
+          "Selangor": {
+            "iso3166_2": "MY-10",
+            "aliases": [],
+            "cities": {
+              "Petaling Jaya": {
+                "geoname_id": 1735161,
+                "lat": 3.1073,
+                "lon": 101.6067,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Maldives": {
+      "aliases": ["Republic of Maldives"],
+      "iso2": "MV",
+      "iso3": "MDV",
+      "m49": "462",
+      "subdivisions": {
+        "atolls": {
+          "Kaafu": {
+            "iso3166_2": "MV-KA",
+            "aliases": [],
+            "cities": {
+              "Malé": {
+                "geoname_id": 1282028,
+                "lat": 4.1755,
+                "lon": 73.5089,
+                "aliases": ["Male"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Mongolia": {
+      "aliases": [],
+      "iso2": "MN",
+      "iso3": "MNG",
+      "m49": "496",
+      "subdivisions": {
+        "municipalities": {
+          "Ulaanbaatar": {
+            "iso3166_2": "MN-UL",
+            "aliases": [],
+            "cities": {
+              "Ulaanbaatar": {
+                "geoname_id": 2029969,
+                "lat": 47.9214,
+                "lon": 106.9172,
+                "aliases": ["Ulan Bator"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Myanmar": {
+      "aliases": ["Republic of the Union of Myanmar", "Burma"],
+      "iso2": "MM",
+      "iso3": "MMR",
+      "m49": "104",
+      "subdivisions": {
+        "regions": {
+          "Yangon": {
+            "iso3166_2": "MM-04",
+            "aliases": [],
+            "cities": {
+              "Yangon": {
+                "geoname_id": 1298824,
+                "lat": 16.7967,
+                "lon": 96.1609,
+                "aliases": ["Rangoon"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Nepal": {
+      "aliases": ["Federal Democratic Republic of Nepal"],
+      "iso2": "NP",
+      "iso3": "NPL",
+      "m49": "524",
+      "subdivisions": {
+        "provinces": {
+          "Bagmati": {
+            "iso3166_2": "NP-3",
+            "aliases": [],
+            "cities": {
+              "Kathmandu": {
+                "geoname_id": 1283240,
+                "lat": 27.7017,
+                "lon": 85.3206,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Oman": {
+      "aliases": ["Sultanate of Oman"],
+      "iso2": "OM",
+      "iso3": "OMN",
+      "m49": "512",
+      "subdivisions": {
+        "governorates": {
+          "Muscat": {
+            "iso3166_2": "OM-MA",
+            "aliases": [],
+            "cities": {
+              "Muscat": {
+                "geoname_id": 287287,
+                "lat": 23.5859,
+                "lon": 58.4059,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Pakistan": {
+      "aliases": ["Islamic Republic of Pakistan"],
+      "iso2": "PK",
+      "iso3": "PAK",
+      "m49": "586",
+      "subdivisions": {
+        "territories": {
+          "Islamabad": {
+            "iso3166_2": "PK-IS",
+            "aliases": [],
+            "cities": {
+              "Islamabad": {
+                "geoname_id": 1169854,
+                "lat": 33.7207,
+                "lon": 73.0456,
+                "aliases": []
+              }
+            }
+          }
+        },
+        "provinces": {
+          "Punjab": {
+            "iso3166_2": "PK-PB",
+            "aliases": [],
+            "cities": {
+              "Lahore": {
+                "geoname_id": 1172451,
+                "lat": 31.5497,
+                "lon": 74.3436,
+                "aliases": []
+              }
+            }
+          },
+          "Sindh": {
+            "iso3166_2": "PK-SD",
+            "aliases": [],
+            "cities": {
+              "Karachi": {
+                "geoname_id": 1168873,
+                "lat": 24.8607,
+                "lon": 67.0011,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Palestine": {
+      "aliases": ["State of Palestine"],
+      "iso2": "PS",
+      "iso3": "PSE",
+      "m49": "275",
+      "subdivisions": {
+        "governorates": {
+          "Gaza": {
+            "iso3166_2": "PS-GZ",
+            "aliases": [],
+            "cities": {
+              "Gaza": {
+                "geoname_id": 281184,
+                "lat": 31.389,
+                "lon": 34.343,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Philippines": {
+      "aliases": ["Republic of the Philippines"],
+      "iso2": "PH",
+      "iso3": "PHL",
+      "m49": "608",
+      "subdivisions": {
+        "regions": {
+          "National Capital Region": {
+            "iso3166_2": "PH-NCR",
+            "aliases": ["NCR"],
+            "cities": {
+              "Manila": {
+                "geoname_id": 1701668,
+                "lat": 14.6042,
+                "lon": 120.9822,
+                "aliases": []
+              },
+              "Quezon City": {
+                "geoname_id": 1694008,
+                "lat": 14.676,
+                "lon": 121.0437,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Qatar": {
+      "aliases": ["State of Qatar"],
+      "iso2": "QA",
+      "iso3": "QAT",
+      "m49": "634",
+      "subdivisions": {
+        "municipalities": {
+          "Doha": {
+            "iso3166_2": "QA-DA",
+            "aliases": [],
+            "cities": {
+              "Doha": {
+                "geoname_id": 290012,
+                "lat": 25.2854,
+                "lon": 51.531,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Republic of Korea": {
+      "aliases": ["South Korea"],
+      "iso2": "KR",
+      "iso3": "KOR",
+      "m49": "410",
+      "subdivisions": {
+        "provinces": {
+          "Seoul": {
+            "iso3166_2": "KR-11",
+            "aliases": [],
+            "cities": {
+              "Seoul": {
+                "geoname_id": 1835848,
+                "lat": 37.5665,
+                "lon": 126.978,
+                "aliases": []
+              }
+            }
+          },
+          "Busan": {
+            "iso3166_2": "KR-26",
+            "aliases": [],
+            "cities": {
+              "Busan": {
+                "geoname_id": 1839726,
+                "lat": 35.1796,
+                "lon": 129.0756,
+                "aliases": ["Pusan"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Saudi Arabia": {
+      "aliases": ["Kingdom of Saudi Arabia"],
+      "iso2": "SA",
+      "iso3": "SAU",
+      "m49": "682",
+      "subdivisions": {
+        "emirates": {
+          "Riyadh": {
+            "iso3166_2": "SA-01",
+            "aliases": [],
+            "cities": {
+              "Riyadh": {
+                "geoname_id": 108410,
+                "lat": 24.6877,
+                "lon": 46.7219,
+                "aliases": []
+              }
+            }
+          },
+          "Mecca": {
+            "iso3166_2": "SA-02",
+            "aliases": ["Makkah"],
+            "cities": {
+              "Mecca": {
+                "geoname_id": 104615,
+                "lat": 21.4225,
+                "lon": 39.8262,
+                "aliases": ["Makkah"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Singapore": {
+      "aliases": ["Republic of Singapore"],
+      "iso2": "SG",
+      "iso3": "SGP",
+      "m49": "702",
+      "subdivisions": {
+        "districts": {
+          "Central": {
+            "iso3166_2": "SG-01",
+            "aliases": [],
+            "cities": {
+              "Singapore": {
+                "geoname_id": 1880252,
+                "lat": 1.2931,
+                "lon": 103.8558,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Sri Lanka": {
+      "aliases": ["Democratic Socialist Republic of Sri Lanka"],
+      "iso2": "LK",
+      "iso3": "LKA",
+      "m49": "144",
+      "subdivisions": {
+        "provinces": {
+          "Western": {
+            "iso3166_2": "LK-1",
+            "aliases": [],
+            "cities": {
+              "Colombo": {
+                "geoname_id": 1248991,
+                "lat": 6.9271,
+                "lon": 79.8612,
+                "aliases": []
+              },
+              "Sri Jayawardenepura Kotte": {
+                "geoname_id": 1248991,
+                "lat": 6.9219,
+                "lon": 79.8656,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Syrian Arab Republic": {
+      "aliases": ["Syria"],
+      "iso2": "SY",
+      "iso3": "SYR",
+      "m49": "760",
+      "subdivisions": {
+        "governorates": {
+          "Damascus": {
+            "iso3166_2": "SY-DI",
+            "aliases": [],
+            "cities": {
+              "Damascus": {
+                "geoname_id": 170842,
+                "lat": 33.5131,
+                "lon": 36.2918,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Tajikistan": {
+      "aliases": ["Republic of Tajikistan"],
+      "iso2": "TJ",
+      "iso3": "TJK",
+      "m49": "762",
+      "subdivisions": {
+        "regions": {
+          "Dushanbe": {
+            "iso3166_2": "TJ-DU",
+            "aliases": [],
+            "cities": {
+              "Dushanbe": {
+                "geoname_id": 1221484,
+                "lat": 38.5598,
+                "lon": 68.787,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Thailand": {
+      "aliases": ["Kingdom of Thailand"],
+      "iso2": "TH",
+      "iso3": "THA",
+      "m49": "764",
+      "subdivisions": {
+        "provinces": {
+          "Bangkok": {
+            "iso3166_2": "TH-10",
+            "aliases": [],
+            "cities": {
+              "Bangkok": {
+                "geoname_id": 1609350,
+                "lat": 13.7563,
+                "lon": 100.5018,
+                "aliases": ["Krung Thep"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Timor-Leste": {
+      "aliases": ["Democratic Republic of Timor-Leste", "East Timor"],
+      "iso2": "TL",
+      "iso3": "TLS",
+      "m49": "626",
+      "subdivisions": {
+        "districts": {
+          "Dili": {
+            "iso3166_2": "TL-DI",
+            "aliases": [],
+            "cities": {
+              "Dili": {
+                "geoname_id": 1936266,
+                "lat": -8.5586,
+                "lon": 125.6078,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Turkey": {
+      "aliases": ["Republic of Turkey"],
+      "iso2": "TR",
+      "iso3": "TUR",
+      "m49": "792",
+      "subdivisions": {
+        "provinces": {
+          "Istanbul": {
+            "iso3166_2": "TR-34",
+            "aliases": [],
+            "cities": {
+              "Istanbul": {
+                "geoname_id": 745044,
+                "lat": 41.0138,
+                "lon": 28.9497,
+                "aliases": []
+              }
+            }
+          },
+          "Ankara": {
+            "iso3166_2": "TR-06",
+            "aliases": [],
+            "cities": {
+              "Ankara": {
+                "geoname_id": 323786,
+                "lat": 39.9255,
+                "lon": 32.866,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "United Arab Emirates": {
+      "aliases": ["UAE"],
+      "iso2": "AE",
+      "iso3": "ARE",
+      "m49": "784",
+      "subdivisions": {
+        "emirates": {
+          "Dubai": {
+            "iso3166_2": "AE-DU",
+            "aliases": [],
+            "cities": {
+              "Dubai": {
+                "geoname_id": 292223,
+                "lat": 25.2769,
+                "lon": 55.2962,
+                "aliases": []
+              }
+            }
+          },
+          "Abu Dhabi": {
+            "iso3166_2": "AE-AZ",
+            "aliases": [],
+            "cities": {
+              "Abu Dhabi": {
+                "geoname_id": 292968,
+                "lat": 24.4667,
+                "lon": 54.3667,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Uzbekistan": {
+      "aliases": ["Republic of Uzbekistan"],
+      "iso2": "UZ",
+      "iso3": "UZB",
+      "m49": "860",
+      "subdivisions": {
+        "regions": {
+          "Tashkent": {
+            "iso3166_2": "UZ-TK",
+            "aliases": [],
+            "cities": {
+              "Tashkent": {
+                "geoname_id": 1216603,
+                "lat": 41.2647,
+                "lon": 69.2163,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Viet Nam": {
+      "aliases": ["Socialist Republic of Vietnam", "Vietnam"],
+      "iso2": "VN",
+      "iso3": "VNM",
+      "m49": "704",
+      "subdivisions": {
+        "municipalities": {
+          "Hanoi": {
+            "iso3166_2": "VN-HN",
+            "aliases": [],
+            "cities": {
+              "Hanoi": {
+                "geoname_id": 1581139,
+                "lat": 21.0245,
+                "lon": 105.8412,
+                "aliases": []
+              }
+            }
+          },
+          "Ho Chi Minh City": {
+            "iso3166_2": "VN-SG",
+            "aliases": [],
+            "cities": {
+              "Ho Chi Minh City": {
+                "geoname_id": 1566083,
+                "lat": 10.8231,
+                "lon": 106.6297,
+                "aliases": ["Saigon"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Yemen": {
+      "aliases": ["Republic of Yemen"],
+      "iso2": "YE",
+      "iso3": "YEM",
+      "m49": "887",
+      "subdivisions": {
+        "governorates": {
+          "Sana'a": {
+            "iso3166_2": "YE-SN",
+            "aliases": ["Sanaa"],
+            "cities": {
+              "Sana'a": {
+                "geoname_id": 103553,
+                "lat": 15.35,
+                "lon": 44.2067,
+                "aliases": ["Sanaa"]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "Europe": {
+    "Albania": {
+      "aliases": ["Republic of Albania"],
+      "iso2": "AL",
+      "iso3": "ALB",
+      "m49": "008",
+      "subdivisions": {
+        "counties": {
+          "Tirana": {
+            "iso3166_2": "AL-51",
+            "aliases": [],
+            "cities": {
+              "Tirana": {
+                "geoname_id": 3185523,
+                "lat": 41.3275,
+                "lon": 19.8187,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Andorra": {
+      "aliases": ["Principality of Andorra"],
+      "iso2": "AD",
+      "iso3": "AND",
+      "m49": "020",
+      "subdivisions": {
+        "parishes": {
+          "Andorra la Vella": {
+            "iso3166_2": "AD-07",
+            "aliases": [],
+            "cities": {
+              "Andorra la Vella": {
+                "geoname_id": 3041565,
+                "lat": 42.5078,
+                "lon": 1.5211,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Armenia": {
+      "aliases": ["Republic of Armenia"],
+      "iso2": "AM",
+      "iso3": "ARM",
+      "m49": "051",
+      "subdivisions": {
+        "provinces": {
+          "Yerevan": {
+            "iso3166_2": "AM-ER",
+            "aliases": [],
+            "cities": {
+              "Yerevan": {
+                "geoname_id": 616052,
+                "lat": 40.1811,
+                "lon": 44.5136,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Austria": {
+      "aliases": ["Republic of Austria"],
+      "iso2": "AT",
+      "iso3": "AUT",
+      "m49": "040",
+      "subdivisions": {
+        "states": {
+          "Vienna": {
+            "iso3166_2": "AT-9",
+            "aliases": ["Wien"],
+            "cities": {
+              "Vienna": {
+                "geoname_id": 2761369,
+                "lat": 48.2082,
+                "lon": 16.3738,
+                "aliases": ["Wien"]
+              }
+            }
+          },
+          "Salzburg": {
+            "iso3166_2": "AT-5",
+            "aliases": [],
+            "cities": {
+              "Salzburg": {
+                "geoname_id": 2766824,
+                "lat": 47.8095,
+                "lon": 13.055,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Azerbaijan": {
+      "aliases": ["Republic of Azerbaijan"],
+      "iso2": "AZ",
+      "iso3": "AZE",
+      "m49": "031",
+      "subdivisions": {
+        "cities": {
+          "Baku": {
+            "iso3166_2": "AZ-BA",
+            "aliases": ["Baki"],
+            "cities": {
+              "Baku": {
+                "geoname_id": 587084,
+                "lat": 40.3777,
+                "lon": 49.892,
+                "aliases": ["Baki"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Belarus": {
+      "aliases": ["Republic of Belarus"],
+      "iso2": "BY",
+      "iso3": "BLR",
+      "m49": "112",
+      "subdivisions": {
+        "cities": {
+          "Minsk": {
+            "iso3166_2": "BY-HM",
+            "aliases": [],
+            "cities": {
+              "Minsk": {
+                "geoname_id": 625144,
+                "lat": 53.9,
+                "lon": 27.5667,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Belgium": {
+      "aliases": ["Kingdom of Belgium"],
+      "iso2": "BE",
+      "iso3": "BEL",
+      "m49": "056",
+      "subdivisions": {
+        "regions": {
+          "Brussels-Capital": {
+            "iso3166_2": "BE-BRU",
+            "aliases": [],
+            "cities": {
+              "Brussels": {
+                "geoname_id": 2800866,
+                "lat": 50.8503,
+                "lon": 4.3517,
+                "aliases": ["Bruxelles"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Bosnia and Herzegovina": {
+      "aliases": [],
+      "iso2": "BA",
+      "iso3": "BIH",
+      "m49": "070",
+      "subdivisions": {
+        "entities": {
+          "Federation of Bosnia and Herzegovina": {
+            "iso3166_2": "BA-BIH",
+            "aliases": [],
+            "cities": {
+              "Sarajevo": {
+                "geoname_id": 3190359,
+                "lat": 43.8486,
+                "lon": 18.3564,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Bulgaria": {
+      "aliases": ["Republic of Bulgaria"],
+      "iso2": "BG",
+      "iso3": "BGR",
+      "m49": "100",
+      "subdivisions": {
+        "provinces": {
+          "Sofia-Grad": {
+            "iso3166_2": "BG-22",
+            "aliases": [],
+            "cities": {
+              "Sofia": {
+                "geoname_id": 727011,
+                "lat": 42.6977,
+                "lon": 23.3219,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Croatia": {
+      "aliases": ["Republic of Croatia"],
+      "iso2": "HR",
+      "iso3": "HRV",
+      "m49": "191",
+      "subdivisions": {
+        "counties": {
+          "City of Zagreb": {
+            "iso3166_2": "HR-21",
+            "aliases": [],
+            "cities": {
+              "Zagreb": {
+                "geoname_id": 3188950,
+                "lat": 45.8144,
+                "lon": 15.9785,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Cyprus": {
+      "aliases": ["Republic of Cyprus"],
+      "iso2": "CY",
+      "iso3": "CYP",
+      "m49": "196",
+      "subdivisions": {
+        "districts": {
+          "Nicosia": {
+            "iso3166_2": "CY-01",
+            "aliases": ["Lefkosia"],
+            "cities": {
+              "Nicosia": {
+                "geoname_id": 146468,
+                "lat": 35.1725,
+                "lon": 33.365,
+                "aliases": ["Lefkosia"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Czechia": {
+      "aliases": ["Czech Republic"],
+      "iso2": "CZ",
+      "iso3": "CZE",
+      "m49": "203",
+      "subdivisions": {
+        "regions": {
+          "Prague": {
+            "iso3166_2": "CZ-PR",
+            "aliases": [],
+            "cities": {
+              "Prague": {
+                "geoname_id": 3067696,
+                "lat": 50.0755,
+                "lon": 14.4378,
+                "aliases": ["Praha"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Denmark": {
+      "aliases": ["Kingdom of Denmark"],
+      "iso2": "DK",
+      "iso3": "DNK",
+      "m49": "208",
+      "subdivisions": {
+        "regions": {
+          "Capital": {
+            "iso3166_2": "DK-84",
+            "aliases": [],
+            "cities": {
+              "Copenhagen": {
+                "geoname_id": 2618425,
+                "lat": 55.6761,
+                "lon": 12.5683,
+                "aliases": ["København"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Estonia": {
+      "aliases": ["Republic of Estonia"],
+      "iso2": "EE",
+      "iso3": "EST",
+      "m49": "233",
+      "subdivisions": {
+        "counties": {
+          "Harju": {
+            "iso3166_2": "EE-37",
+            "aliases": [],
+            "cities": {
+              "Tallinn": {
+                "geoname_id": 588409,
+                "lat": 59.437,
+                "lon": 24.7535,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Finland": {
+      "aliases": ["Republic of Finland"],
+      "iso2": "FI",
+      "iso3": "FIN",
+      "m49": "246",
+      "subdivisions": {
+        "regions": {
+          "Uusimaa": {
+            "iso3166_2": "FI-01",
+            "aliases": [],
+            "cities": {
+              "Helsinki": {
+                "geoname_id": 658225,
+                "lat": 60.1695,
+                "lon": 24.9354,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "France": {
+      "aliases": ["French Republic"],
+      "iso2": "FR",
+      "iso3": "FRA",
+      "m49": "250",
+      "subdivisions": {
+        "regions": {
+          "Île-de-France": {
+            "iso3166_2": "FR-IDF",
+            "aliases": ["Ile-de-France"],
+            "cities": {
+              "Paris": {
+                "geoname_id": 2988507,
+                "lat": 48.8566,
+                "lon": 2.3522,
+                "aliases": []
+              }
+            }
+          },
+          "Provence-Alpes-Côte d'Azur": {
+            "iso3166_2": "FR-PACA",
+            "aliases": ["Provence-Alpes-Cote d'Azur"],
+            "cities": {
+              "Marseille": {
+                "geoname_id": 2995468,
+                "lat": 43.2965,
+                "lon": 5.3698,
+                "aliases": []
+              },
+              "Nice": {
+                "geoname_id": 2990440,
+                "lat": 43.7102,
+                "lon": 7.262,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Georgia": {
+      "aliases": [],
+      "iso2": "GE",
+      "iso3": "GEO",
+      "m49": "268",
+      "subdivisions": {
+        "regions": {
+          "Tbilisi": {
+            "iso3166_2": "GE-TB",
+            "aliases": [],
+            "cities": {
+              "Tbilisi": {
+                "geoname_id": 611717,
+                "lat": 41.6941,
+                "lon": 44.8337,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Germany": {
+      "aliases": ["Federal Republic of Germany"],
+      "iso2": "DE",
+      "iso3": "DEU",
+      "m49": "276",
+      "subdivisions": {
+        "states": {
+          "Berlin": {
+            "iso3166_2": "DE-BE",
+            "aliases": [],
+            "cities": {
+              "Berlin": {
+                "geoname_id": 2950159,
+                "lat": 52.52,
+                "lon": 13.405,
+                "aliases": []
+              }
+            }
+          },
+          "Bavaria": {
+            "iso3166_2": "DE-BY",
+            "aliases": ["Bayern"],
+            "cities": {
+              "Munich": {
+                "geoname_id": 2867714,
+                "lat": 48.1351,
+                "lon": 11.582,
+                "aliases": ["München"]
+              },
+              "Nuremberg": {
+                "geoname_id": 2861650,
+                "lat": 49.4542,
+                "lon": 11.0775,
+                "aliases": []
+              }
+            }
+          },
+          "Hamburg": {
+            "iso3166_2": "DE-HH",
+            "aliases": [],
+            "cities": {
+              "Hamburg": {
+                "geoname_id": 2911298,
+                "lat": 53.5511,
+                "lon": 9.9937,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Greece": {
+      "aliases": ["Hellenic Republic"],
+      "iso2": "GR",
+      "iso3": "GRC",
+      "m49": "300",
+      "subdivisions": {
+        "regions": {
+          "Attica": {
+            "iso3166_2": "GR-A",
+            "aliases": [],
+            "cities": {
+              "Athens": {
+                "geoname_id": 264371,
+                "lat": 37.9838,
+                "lon": 23.7275,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Hungary": {
+      "aliases": [],
+      "iso2": "HU",
+      "iso3": "HUN",
+      "m49": "348",
+      "subdivisions": {
+        "counties": {
+          "Budapest": {
+            "iso3166_2": "HU-BU",
+            "aliases": [],
+            "cities": {
+              "Budapest": {
+                "geoname_id": 3054638,
+                "lat": 47.498,
+                "lon": 19.0399,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Iceland": {
+      "aliases": ["Republic of Iceland"],
+      "iso2": "IS",
+      "iso3": "ISL",
+      "m49": "352",
+      "subdivisions": {
+        "regions": {
+          "Capital Region": {
+            "iso3166_2": "IS-1",
+            "aliases": [],
+            "cities": {
+              "Reykjavík": {
+                "geoname_id": 3413829,
+                "lat": 64.1466,
+                "lon": -21.9426,
+                "aliases": ["Reykjavik"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Ireland": {
+      "aliases": [],
+      "iso2": "IE",
+      "iso3": "IRL",
+      "m49": "372",
+      "subdivisions": {
+        "counties": {
+          "Dublin": {
+            "iso3166_2": "IE-D",
+            "aliases": [],
+            "cities": {
+              "Dublin": {
+                "geoname_id": 2964574,
+                "lat": 53.3498,
+                "lon": -6.2603,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Italy": {
+      "aliases": ["Italian Republic"],
+      "iso2": "IT",
+      "iso3": "ITA",
+      "m49": "380",
+      "subdivisions": {
+        "regions": {
+          "Lazio": {
+            "iso3166_2": "IT-62",
+            "aliases": ["Latium"],
+            "cities": {
+              "Rome": {
+                "geoname_id": 3169070,
+                "lat": 41.9028,
+                "lon": 12.4964,
+                "aliases": ["Roma"]
+              }
+            }
+          },
+          "Lombardy": {
+            "iso3166_2": "IT-25",
+            "aliases": [],
+            "cities": {
+              "Milan": {
+                "geoname_id": 3173435,
+                "lat": 45.4642,
+                "lon": 9.19,
+                "aliases": ["Milano"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Kazakhstan": {
+      "aliases": ["Republic of Kazakhstan"],
+      "iso2": "KZ",
+      "iso3": "KAZ",
+      "m49": "398",
+      "subdivisions": {
+        "cities": {
+          "Almaty": {
+            "iso3166_2": "KZ-ALA",
+            "aliases": [],
+            "cities": {
+              "Almaty": {
+                "geoname_id": 1526273,
+                "lat": 43.222,
+                "lon": 76.8512,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Latvia": {
+      "aliases": ["Republic of Latvia"],
+      "iso2": "LV",
+      "iso3": "LVA",
+      "m49": "428",
+      "subdivisions": {
+        "planning regions": {
+          "Riga": {
+            "iso3166_2": "LV-RIX",
+            "aliases": [],
+            "cities": {
+              "Riga": {
+                "geoname_id": 456172,
+                "lat": 56.9465,
+                "lon": 24.1049,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Liechtenstein": {
+      "aliases": ["Principality of Liechtenstein"],
+      "iso2": "LI",
+      "iso3": "LIE",
+      "m49": "438",
+      "subdivisions": {
+        "communes": {
+          "Vaduz": {
+            "iso3166_2": "LI-01",
+            "aliases": [],
+            "cities": {
+              "Vaduz": {
+                "geoname_id": 3042050,
+                "lat": 47.141,
+                "lon": 9.5215,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Lithuania": {
+      "aliases": ["Republic of Lithuania"],
+      "iso2": "LT",
+      "iso3": "LTU",
+      "m49": "440",
+      "subdivisions": {
+        "counties": {
+          "Vilnius": {
+            "iso3166_2": "LT-VL",
+            "aliases": [],
+            "cities": {
+              "Vilnius": {
+                "geoname_id": 595415,
+                "lat": 54.6892,
+                "lon": 25.2798,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Luxembourg": {
+      "aliases": ["Grand Duchy of Luxembourg"],
+      "iso2": "LU",
+      "iso3": "LUX",
+      "m49": "442",
+      "subdivisions": {
+        "cantons": {
+          "Luxembourg": {
+            "iso3166_2": "LU-L",
+            "aliases": [],
+            "cities": {
+              "Luxembourg": {
+                "geoname_id": 2799657,
+                "lat": 49.6117,
+                "lon": 6.13,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Malta": {
+      "aliases": ["Republic of Malta"],
+      "iso2": "MT",
+      "iso3": "MLT",
+      "m49": "470",
+      "subdivisions": {
+        "regions": {
+          "Northern Harbour": {
+            "iso3166_2": "MT-NO",
+            "aliases": [],
+            "cities": {
+              "Valletta": {
+                "geoname_id": 2562305,
+                "lat": 35.8992,
+                "lon": 14.514,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Moldova": {
+      "aliases": ["Republic of Moldova"],
+      "iso2": "MD",
+      "iso3": "MDA",
+      "m49": "498",
+      "subdivisions": {
+        "municipalities": {
+          "Chișinău": {
+            "iso3166_2": "MD-CU",
+            "aliases": ["Chisinau"],
+            "cities": {
+              "Chișinău": {
+                "geoname_id": 617425,
+                "lat": 47.0122,
+                "lon": 28.8565,
+                "aliases": ["Chisinau"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Monaco": {
+      "aliases": ["Principality of Monaco"],
+      "iso2": "MC",
+      "iso3": "MCO",
+      "m49": "492",
+      "subdivisions": {
+        "wards": {
+          "Monaco-Ville": {
+            "iso3166_2": "MC-MO",
+            "aliases": [],
+            "cities": {
+              "Monaco": {
+                "geoname_id": 2993458,
+                "lat": 43.7396,
+                "lon": 7.4069,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Montenegro": {
+      "aliases": [],
+      "iso2": "ME",
+      "iso3": "MNE",
+      "m49": "499",
+      "subdivisions": {
+        "municipalities": {
+          "Podgorica": {
+            "iso3166_2": "ME-01",
+            "aliases": [],
+            "cities": {
+              "Podgorica": {
+                "geoname_id": 3206289,
+                "lat": 42.4411,
+                "lon": 19.2636,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Netherlands": {
+      "aliases": ["Kingdom of the Netherlands"],
+      "iso2": "NL",
+      "iso3": "NLD",
+      "m49": "528",
+      "subdivisions": {
+        "provinces": {
+          "North Holland": {
+            "iso3166_2": "NL-NH",
+            "aliases": ["Noord-Holland"],
+            "cities": {
+              "Amsterdam": {
+                "geoname_id": 2759794,
+                "lat": 52.374,
+                "lon": 4.8897,
+                "aliases": []
+              }
+            }
+          },
+          "South Holland": {
+            "iso3166_2": "NL-ZH",
+            "aliases": ["Zuid-Holland"],
+            "cities": {
+              "Rotterdam": {
+                "geoname_id": 2747373,
+                "lat": 51.9244,
+                "lon": 4.4777,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "North Macedonia": {
+      "aliases": ["Republic of North Macedonia"],
+      "iso2": "MK",
+      "iso3": "MKD",
+      "m49": "807",
+      "subdivisions": {
+        "municipalities": {
+          "Skopje": {
+            "iso3166_2": "MK-01",
+            "aliases": [],
+            "cities": {
+              "Skopje": {
+                "geoname_id": 785190,
+                "lat": 42,
+                "lon": 21.4333,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Norway": {
+      "aliases": ["Kingdom of Norway"],
+      "iso2": "NO",
+      "iso3": "NOR",
+      "m49": "578",
+      "subdivisions": {
+        "counties": {
+          "Oslo": {
+            "iso3166_2": "NO-03",
+            "aliases": [],
+            "cities": {
+              "Oslo": {
+                "geoname_id": 3143244,
+                "lat": 59.9139,
+                "lon": 10.7387,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Poland": {
+      "aliases": ["Republic of Poland"],
+      "iso2": "PL",
+      "iso3": "POL",
+      "m49": "616",
+      "subdivisions": {
+        "voivodeships": {
+          "Masovian": {
+            "iso3166_2": "PL-MZ",
+            "aliases": ["Mazowieckie"],
+            "cities": {
+              "Warsaw": {
+                "geoname_id": 756135,
+                "lat": 52.2297,
+                "lon": 21.0122,
+                "aliases": ["Warszawa"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Portugal": {
+      "aliases": ["Portuguese Republic"],
+      "iso2": "PT",
+      "iso3": "PRT",
+      "m49": "620",
+      "subdivisions": {
+        "districts": {
+          "Lisbon": {
+            "iso3166_2": "PT-LX",
+            "aliases": ["Lisboa"],
+            "cities": {
+              "Lisbon": {
+                "geoname_id": 2233387,
+                "lat": 38.7167,
+                "lon": -9.1333,
+                "aliases": ["Lisboa"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Romania": {
+      "aliases": [],
+      "iso2": "RO",
+      "iso3": "ROU",
+      "m49": "642",
+      "subdivisions": {
+        "counties": {
+          "Bucharest": {
+            "iso3166_2": "RO-B",
+            "aliases": [],
+            "cities": {
+              "Bucharest": {
+                "geoname_id": 683506,
+                "lat": 44.4268,
+                "lon": 26.1025,
+                "aliases": ["București"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Russian Federation": {
+      "aliases": ["Russia"],
+      "iso2": "RU",
+      "iso3": "RUS",
+      "m49": "643",
+      "subdivisions": {
+        "federal cities": {
+          "Moscow": {
+            "iso3166_2": "RU-MOW",
+            "aliases": [],
+            "cities": {
+              "Moscow": {
+                "geoname_id": 524894,
+                "lat": 55.7558,
+                "lon": 37.6173,
+                "aliases": ["Moskva"]
+              }
+            }
+          },
+          "Saint Petersburg": {
+            "iso3166_2": "RU-SPE",
+            "aliases": [],
+            "cities": {
+              "Saint Petersburg": {
+                "geoname_id": 498817,
+                "lat": 59.9343,
+                "lon": 30.3351,
+                "aliases": ["Sankt-Peterburg"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "San Marino": {
+      "aliases": ["Republic of San Marino"],
+      "iso2": "SM",
+      "iso3": "SMR",
+      "m49": "674",
+      "subdivisions": {
+        "castles": {
+          "Città di San Marino": {
+            "iso3166_2": "SM-01",
+            "aliases": [],
+            "cities": {
+              "San Marino": {
+                "geoname_id": 3168070,
+                "lat": 43.9316,
+                "lon": 12.4446,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Serbia": {
+      "aliases": ["Republic of Serbia"],
+      "iso2": "RS",
+      "iso3": "SRB",
+      "m49": "688",
+      "subdivisions": {
+        "districts": {
+          "Belgrade": {
+            "iso3166_2": "RS-00",
+            "aliases": [],
+            "cities": {
+              "Belgrade": {
+                "geoname_id": 792680,
+                "lat": 44.804,
+                "lon": 20.4651,
+                "aliases": ["Beograd"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Slovakia": {
+      "aliases": ["Slovak Republic"],
+      "iso2": "SK",
+      "iso3": "SVK",
+      "m49": "703",
+      "subdivisions": {
+        "regions": {
+          "Bratislava": {
+            "iso3166_2": "SK-BL",
+            "aliases": [],
+            "cities": {
+              "Bratislava": {
+                "geoname_id": 3060972,
+                "lat": 48.1486,
+                "lon": 17.1077,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Slovenia": {
+      "aliases": ["Republic of Slovenia"],
+      "iso2": "SI",
+      "iso3": "SVN",
+      "m49": "705",
+      "subdivisions": {
+        "municipalities": {
+          "Ljubljana": {
+            "iso3166_2": "SI-050",
+            "aliases": [],
+            "cities": {
+              "Ljubljana": {
+                "geoname_id": 3192244,
+                "lat": 46.0569,
+                "lon": 14.5058,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Spain": {
+      "aliases": ["Kingdom of Spain"],
+      "iso2": "ES",
+      "iso3": "ESP",
+      "m49": "724",
+      "subdivisions": {
+        "autonomous communities": {
+          "Madrid": {
+            "iso3166_2": "ES-MD",
+            "aliases": [],
+            "cities": {
+              "Madrid": {
+                "geoname_id": 3117735,
+                "lat": 40.4168,
+                "lon": -3.7038,
+                "aliases": []
+              }
+            }
+          },
+          "Catalonia": {
+            "iso3166_2": "ES-CT",
+            "aliases": ["Cataluña"],
+            "cities": {
+              "Barcelona": {
+                "geoname_id": 3128760,
+                "lat": 41.3851,
+                "lon": 2.1734,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Sweden": {
+      "aliases": ["Kingdom of Sweden"],
+      "iso2": "SE",
+      "iso3": "SWE",
+      "m49": "752",
+      "subdivisions": {
+        "counties": {
+          "Stockholm": {
+            "iso3166_2": "SE-AB",
+            "aliases": [],
+            "cities": {
+              "Stockholm": {
+                "geoname_id": 2673730,
+                "lat": 59.3293,
+                "lon": 18.0686,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Switzerland": {
+      "aliases": ["Swiss Confederation"],
+      "iso2": "CH",
+      "iso3": "CHE",
+      "m49": "756",
+      "subdivisions": {
+        "cantons": {
+          "Zürich": {
+            "iso3166_2": "CH-ZH",
+            "aliases": ["Zurich"],
+            "cities": {
+              "Zürich": {
+                "geoname_id": 2657896,
+                "lat": 47.3769,
+                "lon": 8.5417,
+                "aliases": ["Zurich"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Turkey": {
+      "aliases": ["Republic of Turkey"],
+      "iso2": "TR",
+      "iso3": "TUR",
+      "m49": "792",
+      "subdivisions": {
+        "provinces": {
+          "Istanbul": {
+            "iso3166_2": "TR-34",
+            "aliases": [],
+            "cities": {
+              "Istanbul": {
+                "geoname_id": 745044,
+                "lat": 41.0138,
+                "lon": 28.9497,
+                "aliases": []
+              }
+            }
+          },
+          "Ankara": {
+            "iso3166_2": "TR-06",
+            "aliases": [],
+            "cities": {
+              "Ankara": {
+                "geoname_id": 323786,
+                "lat": 39.9255,
+                "lon": 32.866,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Ukraine": {
+      "aliases": [],
+      "iso2": "UA",
+      "iso3": "UKR",
+      "m49": "804",
+      "subdivisions": {
+        "cities": {
+          "Kyiv": {
+            "iso3166_2": "UA-30",
+            "aliases": ["Kiev"],
+            "cities": {
+              "Kyiv": {
+                "geoname_id": 703448,
+                "lat": 50.4501,
+                "lon": 30.5234,
+                "aliases": ["Kiev"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "United Kingdom": {
+      "aliases": ["UK", "Great Britain"],
+      "iso2": "GB",
+      "iso3": "GBR",
+      "m49": "826",
+      "subdivisions": {
+        "countries": {
+          "England": {
+            "iso3166_2": "GB-ENG",
+            "aliases": [],
+            "cities": {
+              "London": {
+                "geoname_id": 2643743,
+                "lat": 51.5074,
+                "lon": -0.1278,
+                "aliases": []
+              },
+              "Manchester": {
+                "geoname_id": 2643123,
+                "lat": 53.4808,
+                "lon": -2.2426,
+                "aliases": []
+              }
+            }
+          },
+          "Scotland": {
+            "iso3166_2": "GB-SCT",
+            "aliases": [],
+            "cities": {
+              "Edinburgh": {
+                "geoname_id": 2650225,
+                "lat": 55.9533,
+                "lon": -3.1883,
+                "aliases": []
+              },
+              "Glasgow": {
+                "geoname_id": 2648579,
+                "lat": 55.8642,
+                "lon": -4.2518,
+                "aliases": []
+              }
+            }
+          },
+          "Wales": {
+            "iso3166_2": "GB-WLS",
+            "aliases": [],
+            "cities": {
+              "Cardiff": {
+                "geoname_id": 2653822,
+                "lat": 51.4816,
+                "lon": -3.1791,
+                "aliases": []
+              }
+            }
+          },
+          "Northern Ireland": {
+            "iso3166_2": "GB-NIR",
+            "aliases": [],
+            "cities": {
+              "Belfast": {
+                "geoname_id": 2655984,
+                "lat": 54.597,
+                "lon": -5.9301,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Vatican City": {
+      "aliases": ["Vatican City State", "Holy See"],
+      "iso2": "VA",
+      "iso3": "VAT",
+      "m49": "336",
+      "subdivisions": {
+        "parishes": {
+          "Vatican City": {
+            "iso3166_2": "VA-VA",
+            "aliases": [],
+            "cities": {
+              "Vatican City": {
+                "geoname_id": 3169070,
+                "lat": 41.9028,
+                "lon": 12.4964,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "Oceania": {
+    "Australia": {
+      "aliases": ["Commonwealth of Australia"],
+      "iso2": "AU",
+      "iso3": "AUS",
+      "m49": "036",
+      "subdivisions": {
+        "states": {
+          "New South Wales": {
+            "iso3166_2": "AU-NSW",
+            "aliases": ["NSW"],
+            "cities": {
+              "Sydney": {
+                "geoname_id": 2147714,
+                "lat": -33.8688,
+                "lon": 151.2093,
+                "aliases": []
+              },
+              "Newcastle": {
+                "geoname_id": 8221104,
+                "lat": -32.9267,
+                "lon": 151.7783,
+                "aliases": []
+              }
+            }
+          },
+          "Victoria": {
+            "iso3166_2": "AU-VIC",
+            "aliases": ["VIC"],
+            "cities": {
+              "Melbourne": {
+                "geoname_id": 2158177,
+                "lat": -37.8136,
+                "lon": 144.9631,
+                "aliases": []
+              }
+            }
+          },
+          "Queensland": {
+            "iso3166_2": "AU-QLD",
+            "aliases": ["QLD"],
+            "cities": {
+              "Brisbane": {
+                "geoname_id": 2172797,
+                "lat": -27.4698,
+                "lon": 153.0251,
+                "aliases": []
+              },
+              "Gold Coast": {
+                "geoname_id": 2202175,
+                "lat": -28.0003,
+                "lon": 153.431,
+                "aliases": []
+              }
+            }
+          },
+          "Western Australia": {
+            "iso3166_2": "AU-WA",
+            "aliases": ["WA"],
+            "cities": {
+              "Perth": {
+                "geoname_id": 2078538,
+                "lat": -31.9505,
+                "lon": 115.8605,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Fiji": {
+      "aliases": ["Republic of Fiji"],
+      "iso2": "FJ",
+      "iso3": "FJI",
+      "m49": "242",
+      "subdivisions": {
+        "divisions": {
+          "Central": {
+            "iso3166_2": "FJ-CE",
+            "aliases": [],
+            "cities": {
+              "Suva": {
+                "geoname_id": 2198238,
+                "lat": -18.1248,
+                "lon": 178.4501,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Kiribati": {
+      "aliases": ["Republic of Kiribati"],
+      "iso2": "KI",
+      "iso3": "KIR",
+      "m49": "296",
+      "subdivisions": {
+        "island groups": {
+          "Gilbert Islands": {
+            "iso3166_2": "KI-G",
+            "aliases": [],
+            "cities": {
+              "Tarawa": {
+                "geoname_id": 2110257,
+                "lat": 1.3278,
+                "lon": 172.9784,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Marshall Islands": {
+      "aliases": ["Republic of the Marshall Islands"],
+      "iso2": "MH",
+      "iso3": "MHL",
+      "m49": "296",
+      "subdivisions": {
+        "chains": {
+          "Ratak Chain": {
+            "iso3166_2": "MH-ALK",
+            "aliases": [],
+            "cities": {
+              "Majuro": {
+                "geoname_id": 726814,
+                "lat": 7.0954,
+                "lon": 171.3809,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Micronesia": {
+      "aliases": ["Federated States of Micronesia"],
+      "iso2": "FM",
+      "iso3": "FSM",
+      "m49": "583",
+      "subdivisions": {
+        "states": {
+          "Pohnpei": {
+            "iso3166_2": "FM-PNI",
+            "aliases": [],
+            "cities": {
+              "Palikir": {
+                "geoname_id": 7306496,
+                "lat": 6.9226,
+                "lon": 158.161,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Nauru": {
+      "aliases": ["Republic of Nauru"],
+      "iso2": "NR",
+      "iso3": "NRU",
+      "m49": "520",
+      "subdivisions": {
+        "districts": {
+          "Yaren": {
+            "iso3166_2": "NR-13",
+            "aliases": [],
+            "cities": {
+              "Yaren": {
+                "geoname_id": 2110445,
+                "lat": -0.5478,
+                "lon": 166.9159,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "New Zealand": {
+      "aliases": [],
+      "iso2": "NZ",
+      "iso3": "NZL",
+      "m49": "554",
+      "subdivisions": {
+        "regions": {
+          "Auckland": {
+            "iso3166_2": "NZ-AUK",
+            "aliases": [],
+            "cities": {
+              "Auckland": {
+                "geoname_id": 2193734,
+                "lat": -36.8485,
+                "lon": 174.7633,
+                "aliases": []
+              }
+            }
+          },
+          "Wellington": {
+            "iso3166_2": "NZ-WGN",
+            "aliases": [],
+            "cities": {
+              "Wellington": {
+                "geoname_id": 2179394,
+                "lat": -41.2865,
+                "lon": 174.7762,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Palau": {
+      "aliases": ["Republic of Palau"],
+      "iso2": "PW",
+      "iso3": "PLW",
+      "m49": "585",
+      "subdivisions": {
+        "states": {
+          "Melekeok": {
+            "iso3166_2": "PW-ME",
+            "aliases": [],
+            "cities": {
+              "Ngerulmud": {
+                "geoname_id": 7306496,
+                "lat": 7.4822,
+                "lon": 134.624,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Papua New Guinea": {
+      "aliases": ["Independent State of Papua New Guinea"],
+      "iso2": "PG",
+      "iso3": "PNG",
+      "m49": "598",
+      "subdivisions": {
+        "provinces": {
+          "National Capital": {
+            "iso3166_2": "PG-NCD",
+            "aliases": [],
+            "cities": {
+              "Port Moresby": {
+                "geoname_id": 2088182,
+                "lat": -9.4788,
+                "lon": 147.1496,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Samoa": {
+      "aliases": ["Independent State of Samoa"],
+      "iso2": "WS",
+      "iso3": "WSM",
+      "m49": "882",
+      "subdivisions": {
+        "itūmālō": {
+          "iso3166_2": "WS-TU",
+            "aliases": ["Tuamasaga"],
+            "cities": {
+              "Apia": {
+                "geoname_id": 4035605,
+                "lat": -13.8507,
+                "lon": -171.7513,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Solomon Islands": {
+      "aliases": [],
+      "iso2": "SB",
+      "iso3": "SLB",
+      "m49": "090",
+      "subdivisions": {
+        "provinces": {
+          "Capital Territory": {
+            "iso3166_2": "SB-CT",
+            "aliases": [],
+            "cities": {
+              "Honiara": {
+                "geoname_id": 2108106,
+                "lat": -9.4332,
+                "lon": 159.9555,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Tonga": {
+      "aliases": ["Kingdom of Tonga"],
+      "iso2": "TO",
+      "iso3": "TON",
+      "m49": "776",
+      "subdivisions": {
+        "divisions": {
+          "Tongatapu": {
+            "iso3166_2": "TO-TA",
+            "aliases": [],
+            "cities": {
+              "Nuku'alofa": {
+                "geoname_id": 4036285,
+                "lat": -21.1789,
+                "lon": -175.1982,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Tuvalu": {
+      "aliases": [],
+      "iso2": "TV",
+      "iso3": "TUV",
+      "m49": "798",
+      "subdivisions": {
+        "island councils": {
+          "Funafuti": {
+            "iso3166_2": "TV-FU",
+            "aliases": [],
+            "cities": {
+              "Funafuti": {
+                "geoname_id": 2110297,
+                "lat": -8.5167,
+                "lon": 179.2167,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "Vanuatu": {
+      "aliases": ["Republic of Vanuatu"],
+      "iso2": "VU",
+      "iso3": "VUT",
+      "m49": "548",
+      "subdivisions": {
+        "provinces": {
+          "Shefa": {
+            "iso3166_2": "VU-SH",
+            "aliases": [],
+            "cities": {
+              "Port Vila": {
+                "geoname_id": 2136881,
+                "lat": -17.735,
+                "lon": 168.306,
+                "aliases": []
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
