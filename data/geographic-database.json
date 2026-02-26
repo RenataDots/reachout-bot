@@ -5150,102 +5150,101 @@
       "subdivisions": {
         "itūmālō": {
           "iso3166_2": "WS-TU",
-            "aliases": ["Tuamasaga"],
-            "cities": {
-              "Apia": {
-                "geoname_id": 4035605,
-                "lat": -13.8507,
-                "lon": -171.7513,
-                "aliases": []
-              }
+          "aliases": ["Tuamasaga"],
+          "cities": {
+            "Apia": {
+              "geoname_id": 4035605,
+              "lat": -13.8507,
+              "lon": -171.7513,
+              "aliases": []
             }
           }
         }
       }
-    },
-    "Solomon Islands": {
-      "aliases": [],
-      "iso2": "SB",
-      "iso3": "SLB",
-      "m49": "090",
-      "subdivisions": {
-        "provinces": {
-          "Capital Territory": {
-            "iso3166_2": "SB-CT",
-            "aliases": [],
-            "cities": {
-              "Honiara": {
-                "geoname_id": 2108106,
-                "lat": -9.4332,
-                "lon": 159.9555,
-                "aliases": []
-              }
+    }
+  },
+  "Solomon Islands": {
+    "aliases": [],
+    "iso2": "SB",
+    "iso3": "SLB",
+    "m49": "090",
+    "subdivisions": {
+      "provinces": {
+        "Capital Territory": {
+          "iso3166_2": "SB-CT",
+          "aliases": [],
+          "cities": {
+            "Honiara": {
+              "geoname_id": 2108106,
+              "lat": -9.4332,
+              "lon": 159.9555,
+              "aliases": []
             }
           }
         }
       }
-    },
-    "Tonga": {
-      "aliases": ["Kingdom of Tonga"],
-      "iso2": "TO",
-      "iso3": "TON",
-      "m49": "776",
-      "subdivisions": {
-        "divisions": {
-          "Tongatapu": {
-            "iso3166_2": "TO-TA",
-            "aliases": [],
-            "cities": {
-              "Nuku'alofa": {
-                "geoname_id": 4036285,
-                "lat": -21.1789,
-                "lon": -175.1982,
-                "aliases": []
-              }
+    }
+  },
+  "Tonga": {
+    "aliases": ["Kingdom of Tonga"],
+    "iso2": "TO",
+    "iso3": "TON",
+    "m49": "776",
+    "subdivisions": {
+      "divisions": {
+        "Tongatapu": {
+          "iso3166_2": "TO-TA",
+          "aliases": [],
+          "cities": {
+            "Nuku'alofa": {
+              "geoname_id": 4036285,
+              "lat": -21.1789,
+              "lon": -175.1982,
+              "aliases": []
             }
           }
         }
       }
-    },
-    "Tuvalu": {
-      "aliases": [],
-      "iso2": "TV",
-      "iso3": "TUV",
-      "m49": "798",
-      "subdivisions": {
-        "island councils": {
-          "Funafuti": {
-            "iso3166_2": "TV-FU",
-            "aliases": [],
-            "cities": {
-              "Funafuti": {
-                "geoname_id": 2110297,
-                "lat": -8.5167,
-                "lon": 179.2167,
-                "aliases": []
-              }
+    }
+  },
+  "Tuvalu": {
+    "aliases": [],
+    "iso2": "TV",
+    "iso3": "TUV",
+    "m49": "798",
+    "subdivisions": {
+      "island councils": {
+        "Funafuti": {
+          "iso3166_2": "TV-FU",
+          "aliases": [],
+          "cities": {
+            "Funafuti": {
+              "geoname_id": 2110297,
+              "lat": -8.5167,
+              "lon": 179.2167,
+              "aliases": []
             }
           }
         }
       }
-    },
-    "Vanuatu": {
-      "aliases": ["Republic of Vanuatu"],
-      "iso2": "VU",
-      "iso3": "VUT",
-      "m49": "548",
-      "subdivisions": {
-        "provinces": {
-          "Shefa": {
-            "iso3166_2": "VU-SH",
-            "aliases": [],
-            "cities": {
-              "Port Vila": {
-                "geoname_id": 2136881,
-                "lat": -17.735,
-                "lon": 168.306,
-                "aliases": []
-              }
+    }
+  },
+  "Vanuatu": {
+    "aliases": ["Republic of Vanuatu"],
+    "iso2": "VU",
+    "iso3": "VUT",
+    "m49": "548",
+    "subdivisions": {
+      "provinces": {
+        "Shefa": {
+          "iso3166_2": "VU-SH",
+          "aliases": [],
+          "cities": {
+            "Port Vila": {
+              "geoname_id": 2136881,
+              "lat": -17.735,
+              "lon": 168.306,
+              "aliases": []
             }
           }
         }
