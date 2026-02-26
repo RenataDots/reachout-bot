@@ -390,7 +390,7 @@ function extractEnhancedKeywords(
 }
 
 /**
- * Enhanced relevance scoring algorithm
+ * Enhanced relevance scoring algorithm with Phase 2 insights
  */
 function calculateEnhancedRelevanceScore(
   ngo: schemas.NGOProfile,
@@ -404,31 +404,267 @@ function calculateEnhancedRelevanceScore(
     .map((a) => a.toLowerCase())
     .join(" ");
 
-  // Focus area matching (40% weight)
+  // Phase 1: Basic scoring (40% weight)
+  // Focus area matching
   const focusAreaMatches = keywords.filter((keyword) =>
     ngoFocusAreas.includes(keyword.toLowerCase()),
   );
-  score += focusAreaMatches.length * 25;
+  score += focusAreaMatches.length * 20;
 
-  // Domain-specific matching (25% weight)
+  // Domain-specific matching
   const domainMatches = extractDomainMatches(cleanedText, ngo);
-  score += domainMatches * 20;
+  score += domainMatches * 15;
 
-  // Geography matching (20% weight)
+  // Geography matching
   const geographyScore = calculateGeographyMatch(cleanedText, ngo.geography);
-  score += geographyScore * 15;
+  score += geographyScore * 10;
 
-  // Organization type matching (10% weight)
+  // Organization type matching
   const orgTypeScore = calculateOrganizationTypeMatch(cleanedText, ngo);
-  score += orgTypeScore * 10;
+  score += orgTypeScore * 5;
 
-  // Keyword density (5% weight)
-  const keywordDensity =
-    keywords.filter((keyword) => ngoFocusAreas.includes(keyword.toLowerCase()))
-      .length / keywords.length;
-  score += keywordDensity * 5;
+  // Phase 2: Advanced scoring (60% weight)
+  // Intent alignment (20% weight)
+  const intentScore = calculateIntentAlignment(ngo, processedBrief.intent);
+  score += intentScore * 20;
+
+  // Entity matching (15% weight)
+  const entityScore = calculateEntityMatches(ngo, processedBrief.entities);
+  score += entityScore * 15;
+
+  // Tone compatibility (10% weight)
+  const toneScore = calculateToneCompatibility(ngo, processedBrief.tone);
+  score += toneScore * 10;
+
+  // Geographic fit based on entities (10% weight)
+  const geoEntityScore = calculateGeographicEntityFit(
+    ngo,
+    processedBrief.entities.locations,
+  );
+  score += geoEntityScore * 10;
+
+  // Scope alignment (5% weight)
+  const scopeScore = calculateScopeAlignment(ngo, processedBrief.intent.scope);
+  score += scopeScore * 5;
 
   return score;
+}
+
+/**
+ * Calculate intent alignment score
+ */
+function calculateIntentAlignment(
+  ngo: schemas.NGOProfile,
+  intent: any,
+): number {
+  let score = 0;
+  const ngoName = ngo.name.toLowerCase();
+  const ngoFocus = ngo.focusAreas?.join(" ").toLowerCase() || "";
+
+  switch (intent.primaryGoal) {
+    case "partnership":
+      if (
+        ngoName.includes("alliance") ||
+        ngoName.includes("coalition") ||
+        ngoName.includes("network")
+      ) {
+        score += 3;
+      }
+      if (
+        ngoFocus.includes("partnership") ||
+        ngoFocus.includes("collaboration")
+      ) {
+        score += 2;
+      }
+      break;
+
+    case "funding":
+      if (ngoName.includes("fund") || ngoName.includes("foundation")) {
+        score += 3;
+      }
+      if (ngoFocus.includes("funding") || ngoFocus.includes("grants")) {
+        score += 2;
+      }
+      break;
+
+    case "volunteers":
+      if (ngoFocus.includes("volunteer") || ngoFocus.includes("community")) {
+        score += 3;
+      }
+      break;
+
+    case "advocacy":
+      if (
+        ngoName.includes("club") ||
+        ngoName.includes("society") ||
+        ngoName.includes("defense")
+      ) {
+        score += 3;
+      }
+      if (ngoFocus.includes("advocacy") || ngoFocus.includes("policy")) {
+        score += 2;
+      }
+      break;
+
+    case "research":
+      if (ngoName.includes("institute") || ngoName.includes("conservancy")) {
+        score += 3;
+      }
+      if (ngoFocus.includes("research") || ngoFocus.includes("science")) {
+        score += 2;
+      }
+      break;
+  }
+
+  return Math.min(score, 5);
+}
+
+/**
+ * Calculate entity matching score
+ */
+function calculateEntityMatches(
+  ngo: schemas.NGOProfile,
+  entities: any,
+): number {
+  let score = 0;
+  const ngoName = ngo.name.toLowerCase();
+  const ngoFocus = ngo.focusAreas?.join(" ").toLowerCase() || "";
+
+  // Organization matches
+  entities.organizations.forEach((org: string) => {
+    if (ngoName.includes(org.toLowerCase())) {
+      score += 3;
+    }
+  });
+
+  // Cause matches
+  entities.causes.forEach((cause: string) => {
+    if (ngoFocus.includes(cause.toLowerCase())) {
+      score += 2;
+    }
+  });
+
+  // Activity matches
+  entities.activities.forEach((activity: string) => {
+    if (ngoFocus.includes(activity.toLowerCase())) {
+      score += 1;
+    }
+  });
+
+  return Math.min(score, 5);
+}
+
+/**
+ * Calculate tone compatibility score
+ */
+function calculateToneCompatibility(
+  ngo: schemas.NGOProfile,
+  tone: any,
+): number {
+  let score = 2; // Base score
+
+  const ngoName = ngo.name.toLowerCase();
+  const ngoFocus = ngo.focusAreas?.join(" ").toLowerCase() || "";
+
+  // Formal organizations prefer formal tone
+  if (
+    ngoName.includes("institute") ||
+    ngoName.includes("foundation") ||
+    ngoName.includes("society")
+  ) {
+    if (tone.formality === "formal") {
+      score += 2;
+    } else if (tone.formality === "casual") {
+      score -= 1;
+    }
+  }
+
+  // Advocacy organizations may prefer passionate tone
+  if (ngoFocus.includes("advocacy") || ngoFocus.includes("campaign")) {
+    if (tone.emotional_language) {
+      score += 1;
+    }
+  }
+
+  // Research organizations prefer neutral tone
+  if (ngoFocus.includes("research") || ngoFocus.includes("science")) {
+    if (tone.sentiment === "neutral") {
+      score += 2;
+    } else if (tone.sentiment === "negative") {
+      score -= 1;
+    }
+  }
+
+  return Math.max(0, Math.min(score, 5));
+}
+
+/**
+ * Calculate geographic entity fit
+ */
+function calculateGeographicEntityFit(
+  ngo: schemas.NGOProfile,
+  locations: string[],
+): number {
+  if (locations.length === 0) return 1; // Default score
+
+  const ngoGeography = ngo.geography?.toLowerCase() || "";
+  let score = 0;
+
+  locations.forEach((location: string) => {
+    const loc = location.toLowerCase();
+
+    if (
+      ngoGeography.includes("global") &&
+      (loc.includes("global") || loc.includes("world"))
+    ) {
+      score += 3;
+    } else if (
+      ngoGeography.includes("usa") &&
+      (loc.includes("usa") || loc.includes("america"))
+    ) {
+      score += 3;
+    } else if (ngoGeography.toLowerCase().includes(loc)) {
+      score += 2;
+    }
+  });
+
+  return Math.min(score, 5);
+}
+
+/**
+ * Calculate scope alignment
+ */
+function calculateScopeAlignment(
+  ngo: schemas.NGOProfile,
+  scope: string,
+): number {
+  const ngoGeography = ngo.geography?.toLowerCase() || "";
+
+  switch (scope) {
+    case "global":
+      if (ngoGeography.includes("global")) return 5;
+      if (ngoGeography.includes("international")) return 4;
+      return 2;
+
+    case "national":
+      if (ngoGeography.includes("usa") || ngoGeography.includes("country"))
+        return 5;
+      if (ngoGeography.includes("national")) return 4;
+      return 2;
+
+    case "regional":
+      if (ngoGeography.includes("regional") || ngoGeography.includes("state"))
+        return 5;
+      return 3;
+
+    case "local":
+      if (ngoGeography.includes("local") || ngoGeography.includes("community"))
+        return 5;
+      return 2;
+
+    default:
+      return 3;
+  }
 }
 
 // Helper functions for enhanced processing
