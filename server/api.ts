@@ -16,7 +16,7 @@ import { fileURLToPath } from "url";
 import * as mocks from "../integrations/mocks";
 import * as schemas from "../shared/schemas";
 import { ReachOutWorkflow } from "../backend/workflow";
-import { searchNGOs } from "../integrations/ngo-search";
+import { searchNGOs, searchNGOsWithGrok } from "../integrations/ngo-search";
 import { GoogleDriveService } from "../integrations/google-drive";
 import { v4 as uuidv4 } from "uuid";
 
@@ -160,6 +160,38 @@ app.post("/api/ngos/search", async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       error: (error as Error).message || "Error searching for NGOs",
+    });
+  }
+});
+
+/**
+ * POST /api/ngos/search/grok
+ * Search NGOs using Grok AI for intelligent matching
+ */
+app.post("/api/ngos/search/grok", async (req: Request, res: Response) => {
+  const { campaign } = req.body;
+
+  if (!campaign || !campaign.name || !campaign.description) {
+    return res.status(400).json({
+      success: false,
+      error: "Please provide a campaign with name and description",
+    });
+  }
+
+  try {
+    const results = await searchNGOsWithGrok(campaign);
+
+    res.json({
+      success: true,
+      count: results.length,
+      ngos: results,
+      message: `Found ${results.length} matching NGO(s) using Grok AI`,
+      source: "grok-ai",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: (error as Error).message || "Error searching for NGOs with Grok",
     });
   }
 });
@@ -517,6 +549,45 @@ app.get(
       res.json({
         success: true,
         template: template,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: (error as Error).message,
+      });
+    }
+  },
+);
+
+// Fetch templates from sharing links
+app.post(
+  "/api/google-drive/templates/from-links",
+  async (req: Request, res: Response) => {
+    try {
+      const { sharingUrls } = req.body;
+
+      if (!sharingUrls || !Array.isArray(sharingUrls)) {
+        return res.status(400).json({
+          success: false,
+          error: "Missing or invalid sharingUrls array in request body",
+        });
+      }
+
+      const initialized = await googleDrive.initialize();
+      if (!initialized) {
+        return res.status(500).json({
+          success: false,
+          error: "Failed to initialize Google Drive service",
+        });
+      }
+
+      const templates =
+        await googleDrive.fetchTemplatesFromSharingLinks(sharingUrls);
+
+      res.json({
+        success: true,
+        templates: templates,
+        count: templates.length,
       });
     } catch (error) {
       res.status(500).json({

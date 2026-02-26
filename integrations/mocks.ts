@@ -514,22 +514,23 @@ export class MockAIService implements interfaces.IAIService {
   ): Promise<interfaces.AIGenerationResult> {
     this.logger(`[MockAIService] Generating email for NGO: ${ngo.name}`);
 
-    // No delay for instant response
+    // Template-based email generation
+    const template = this.getTemplateForNGO(ngo, campaign);
 
     const email: schemas.AIGeneratedEmail = {
-      subject: `Partnership Opportunity with ${campaign.name}`,
-      body: `Dear ${ngo.name} Team,
-
-We're reaching out to explore potential collaboration opportunities with your organization.
-
-We are launching a new initiative focused on marine conservation and ecosystem restoration, and we've been following your impressive work in ${ngo.focusAreas ? ngo.focusAreas.join(", ") : "environmental conservation"}. Your organization's expertise and impact in this field align perfectly with our goals.
-
-We believe there may be significant synergies between our initiatives and your work. We'd welcome the opportunity to discuss how we might work together to create greater impact in protecting our marine ecosystems and coastal environments.
-
-Would you be available for a brief call next week to explore potential partnership opportunities?
-
-Best regards,
-The Reach Out Team`,
+      subject: template.subject
+        .replace("{{ngoName}}", ngo.name)
+        .replace("{{campaignName}}", campaign.name),
+      body: template.body
+        .replace("{{ngoName}}", ngo.name)
+        .replace(
+          "{{ngoFocus}}",
+          ngo.focusAreas
+            ? ngo.focusAreas.join(", ")
+            : "environmental conservation",
+        )
+        .replace("{{campaignName}}", campaign.name)
+        .replace("{{ngoDomain}}", ngo.domain || "environmental protection"),
       tone: "professional",
       targetNGOName: ngo.name,
       personalizationNotes: [
@@ -541,11 +542,34 @@ The Reach Out Team`,
       validationErrors: [],
     };
 
-    this.logger(`[MockAIService] Email generated successfully`);
+    this.logger(`[MockAIService] Email generated successfully using template`);
 
     return {
       success: true,
       data: email,
+    };
+  }
+
+  private getTemplateForNGO(
+    ngo: schemas.NGOProfile,
+    campaign: schemas.OutreachCampaign,
+  ): { subject: string; body: string } {
+    // TODO: Fetch from Google Drive template
+    // For now, using a hardcoded template based on your Google Doc
+    return {
+      subject: "Partnership Opportunity: {{campaignName}}",
+      body: `Dear {{ngoName}} Team,
+
+We hope this message finds you well. We are reaching out to explore potential collaboration opportunities with your organization.
+
+We are launching {{campaignName}}, a new initiative focused on marine conservation and ecosystem restoration, and we've been following your impressive work in {{ngoFocus}}. Your organization's expertise and impact in this field align perfectly with our goals.
+
+We believe there may be significant synergies between our initiatives and your work. We'd welcome the opportunity to discuss how we might work together to create greater impact in protecting our marine ecosystems and coastal environments.
+
+Would you be available for a brief call next week to explore potential partnership opportunities?
+
+Best regards,
+The Reach Out Team`,
     };
   }
 

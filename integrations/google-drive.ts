@@ -16,6 +16,17 @@ export interface EmailTemplate {
   content: string;
   type: "partnership" | "collaboration" | "funding" | "custom";
   category?: string;
+  source?: "oauth2" | "sharing-link";
+  sharingUrl?: string;
+}
+
+interface TemplateContent {
+  id: string;
+  name: string;
+  content: string;
+  type: EmailTemplate["type"];
+  source?: "oauth2" | "sharing-link";
+  sharingUrl?: string;
 }
 
 export class GoogleDriveService {
@@ -171,8 +182,17 @@ export class GoogleDriveService {
             (file.mimeType.includes("document") ||
               file.mimeType.includes("text"))
           ) {
-            const template = await this.getTemplateContent(file.id, file.name);
-            if (template) {
+            const templateContent = await this.getTemplateContent(
+              file.id,
+              file.name,
+            );
+            if (templateContent) {
+              const template: EmailTemplate = {
+                id: templateContent.id,
+                name: templateContent.name,
+                content: templateContent.content,
+                type: templateContent.type,
+              };
               templates.push(template);
             }
           }
@@ -195,7 +215,7 @@ export class GoogleDriveService {
   private async getTemplateContent(
     fileId: string,
     fileName: string,
-  ): Promise<EmailTemplate | null> {
+  ): Promise<TemplateContent | null> {
     try {
       this.logger(`[GoogleDriveService] Fetching content for: ${fileName}`);
 
@@ -210,7 +230,7 @@ export class GoogleDriveService {
       // Determine template type based on filename
       const type = this.determineTemplateType(fileName);
 
-      const template: EmailTemplate = {
+      const template: TemplateContent = {
         id: fileId,
         name: fileName,
         content: content,
@@ -259,16 +279,107 @@ export class GoogleDriveService {
         return null;
       }
 
-      return await this.getTemplateContent(
-        response.data.id,
+      const templateContent = await this.getTemplateContent(
+        templateId,
         response.data.name,
       );
+      if (templateContent) {
+        const template: EmailTemplate = {
+          id: templateContent.id,
+          name: templateContent.name,
+          content: templateContent.content,
+          type: templateContent.type,
+        };
+        return template;
+      }
+      return null;
     } catch (error) {
       this.logger(
         `[GoogleDriveService] Failed to get template: ${(error as Error).message}`,
         "error",
       );
       return null;
+    }
+  }
+
+  async fetchTemplateFromSharingLink(
+    sharingUrl: string,
+  ): Promise<EmailTemplate | null> {
+    try {
+      this.logger(
+        `[GoogleDriveService] Fetching template from sharing link: ${sharingUrl}`,
+      );
+
+      // Extract file ID from sharing URL (handle both /file/d/ and /document/d/ formats)
+      const fileIdMatch = sharingUrl.match(
+        /\/(?:file|document)\/d\/([a-zA-Z0-9_-]+)/,
+      );
+      if (!fileIdMatch) {
+        this.logger(
+          `[GoogleDriveService] Invalid sharing URL format: ${sharingUrl}`,
+          "error",
+        );
+        return null;
+      }
+
+      const fileId = fileIdMatch[1];
+
+      // Get file info using public access
+      const response = await this.drive.files.get({
+        fileId: fileId,
+        fields: "id,name,mimeType,webViewLink",
+      });
+
+      if (!response.data) {
+        return null;
+      }
+
+      const template = await this.getTemplateContent(
+        fileId,
+        response.data.name,
+      );
+      if (template) {
+        template.source = "sharing-link";
+        template.sharingUrl = sharingUrl;
+      }
+
+      return template;
+    } catch (error) {
+      this.logger(
+        `[GoogleDriveService] Failed to fetch template from sharing link: ${(error as Error).message}`,
+        "error",
+      );
+      return null;
+    }
+  }
+
+  async fetchTemplatesFromSharingLinks(
+    sharingUrls: string[],
+  ): Promise<EmailTemplate[]> {
+    try {
+      this.logger(
+        `[GoogleDriveService] Fetching ${sharingUrls.length} templates from sharing links`,
+      );
+
+      const templates: EmailTemplate[] = [];
+
+      for (const sharingUrl of sharingUrls) {
+        const template = await this.fetchTemplateFromSharingLink(sharingUrl);
+        if (template) {
+          templates.push(template);
+        }
+      }
+
+      this.logger(
+        `[GoogleDriveService] Successfully fetched ${templates.length} templates from sharing links`,
+      );
+      return templates;
+    } catch (error) {
+      this.logger(
+        `[GoogleDriveService] Failed to fetch templates from sharing links: ${(error as Error).message}`,
+        "error",
+      );
+      return [];
     }
   }
 }

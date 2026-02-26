@@ -1,13 +1,13 @@
 /**
  * NGO Search Service
  *
- * Searches for NGOs using curated knowledge base
- * Since external APIs require authentication or are rate-limited,
- * we use a comprehensive knowledge base of real NGOs and fuzzy matching.
+ * Searches for NGOs using curated knowledge base and Grok AI
+ * Combines local database with intelligent AI-powered search
  */
 
 import axios from "axios";
 import * as schemas from "../shared/schemas";
+import { GrokService } from "./grok";
 
 // Comprehensive NGO database with real organizations focused on environmental conservation and protection
 const NGO_DATABASE: schemas.NGOProfile[] = [
@@ -276,6 +276,44 @@ const NGO_DATABASE: schemas.NGOProfile[] = [
     updatedAt: "2025-01-01T00:00:00Z",
   },
 ];
+
+/**
+ * Search NGOs using Grok AI for intelligent matching
+ */
+export async function searchNGOsWithGrok(
+  campaign: schemas.OutreachCampaign,
+): Promise<schemas.NGOProfile[]> {
+  console.log(
+    `[NGO Search - Grok] Searching for NGOs in campaign: ${campaign.name}`,
+  );
+
+  const grokService = new GrokService(console.log);
+
+  // Initialize Grok service
+  const initialized = await grokService.initialize();
+  if (!initialized) {
+    console.error("[NGO Search - Grok] Failed to initialize Grok service");
+    return [];
+  }
+
+  try {
+    // Search for NGOs using Grok
+    const result = await grokService.searchNGOs(campaign);
+
+    if (result.success && result.ngos) {
+      console.log(
+        `[NGO Search - Grok] Found ${result.ngos.length} NGOs via Grok`,
+      );
+      return result.ngos;
+    } else {
+      console.error("[NGO Search - Grok] Search failed:", result.error);
+      return [];
+    }
+  } catch (error) {
+    console.error("[NGO Search - Grok] Error:", error);
+    return [];
+  }
+}
 
 /**
  * Search NGOs from database using keyword matching
