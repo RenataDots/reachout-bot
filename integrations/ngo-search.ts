@@ -7,6 +7,7 @@
 
 import axios from "axios";
 import * as schemas from "../shared/schemas";
+import { BriefProcessor } from "./brief-processor";
 
 // Comprehensive NGO database with real organizations focused on environmental conservation and protection
 const NGO_DATABASE: schemas.NGOProfile[] = [
@@ -282,7 +283,25 @@ const NGO_DATABASE: schemas.NGOProfile[] = [
 export async function searchNGOs(brief: string): Promise<schemas.NGOProfile[]> {
   if (!brief || brief.trim().length === 0) return [];
 
-  console.log(`[NGO Search] Searching for: "${brief}"`);
+  console.log(
+    `[NGO Search] Processing brief: "${brief.substring(0, 100)}${brief.length > 100 ? "..." : ""}"`,
+  );
+
+  // Initialize brief processor
+  const briefProcessor = new BriefProcessor(console.log);
+
+  // Process the brief with enhanced text analysis
+  const processedBrief = briefProcessor.processBrief(brief);
+
+  console.log(
+    `[NGO Search] Brief processed: ${processedBrief.wordCount} words, quality score: ${processedBrief.quality.score}`,
+  );
+
+  if (processedBrief.quality.issues.length > 0) {
+    console.log(
+      `[NGO Search] Brief quality issues: ${processedBrief.quality.issues.join(", ")}`,
+    );
+  }
 
   // Try Google Custom Search first (if configured)
   const apiKey = process.env.GOOGLE_API_KEY;
@@ -290,7 +309,11 @@ export async function searchNGOs(brief: string): Promise<schemas.NGOProfile[]> {
 
   if (apiKey && cx) {
     try {
-      const googleResults = await searchGoogleCSE(brief, apiKey, cx);
+      const googleResults = await searchGoogleCSE(
+        processedBrief.cleanedText,
+        apiKey,
+        cx,
+      );
       if (googleResults && googleResults.length > 0) {
         console.log(
           `[NGO Search] Returning ${googleResults.length} results from Google CSE`,
@@ -305,13 +328,17 @@ export async function searchNGOs(brief: string): Promise<schemas.NGOProfile[]> {
     }
   }
 
-  // Fallback to local database
-  const keywords = extractKeywords(brief);
-  console.log(`[NGO Search] Keywords: ${keywords.join(", ")}`);
+  // Enhanced keyword extraction using processed brief
+  const keywords = extractEnhancedKeywords(
+    processedBrief.cleanedText,
+    processedBrief,
+  );
+  console.log(`[NGO Search] Enhanced keywords: ${keywords.join(", ")}`);
 
+  // Enhanced relevance scoring
   const scoredNGOs = NGO_DATABASE.map((ngo) => ({
     ngo,
-    score: calculateRelevanceScore(ngo, brief, keywords),
+    score: calculateEnhancedRelevanceScore(ngo, processedBrief, keywords),
   }));
 
   const results = scoredNGOs
@@ -322,6 +349,335 @@ export async function searchNGOs(brief: string): Promise<schemas.NGOProfile[]> {
 
   console.log(`[NGO Search] Found ${results.length} matching NGOs (database)`);
   return results;
+}
+
+/**
+ * Enhanced keyword extraction using processed brief
+ */
+function extractEnhancedKeywords(
+  cleanedText: string,
+  processedBrief: any,
+): string[] {
+  const keywords = new Set<string>();
+
+  // Extract from structure-based segments
+  processedBrief.sentences.forEach((sentence: string) => {
+    const sentenceWords = sentence
+      .toLowerCase()
+      .split(/\s+/)
+      .filter((word: string) => word.length > 3 && !isStopWord(word));
+    sentenceWords.forEach((word: string) => keywords.add(word));
+  });
+
+  // Extract from paragraphs
+  processedBrief.paragraphs.forEach((paragraph: string) => {
+    const paragraphWords = paragraph
+      .toLowerCase()
+      .split(/\s+/)
+      .filter((word: string) => word.length > 3 && !isStopWord(word));
+    paragraphWords.forEach((word: string) => keywords.add(word));
+  });
+
+  // Add domain-specific keywords
+  const domainKeywords = extractDomainKeywords(cleanedText);
+  domainKeywords.forEach((keyword) => keywords.add(keyword));
+
+  // Add contextual keywords
+  const contextualKeywords = extractContextualKeywords(cleanedText);
+  contextualKeywords.forEach((keyword) => keywords.add(keyword));
+
+  return Array.from(keywords).slice(0, 12); // Limit to top 12 keywords
+}
+
+/**
+ * Enhanced relevance scoring algorithm
+ */
+function calculateEnhancedRelevanceScore(
+  ngo: schemas.NGOProfile,
+  processedBrief: any,
+  keywords: string[],
+): number {
+  let score = 0;
+  const cleanedText = processedBrief.cleanedText.toLowerCase();
+  const ngoName = ngo.name.toLowerCase();
+  const ngoFocusAreas = (ngo.focusAreas || [])
+    .map((a) => a.toLowerCase())
+    .join(" ");
+
+  // Focus area matching (40% weight)
+  const focusAreaMatches = keywords.filter((keyword) =>
+    ngoFocusAreas.includes(keyword.toLowerCase()),
+  );
+  score += focusAreaMatches.length * 25;
+
+  // Domain-specific matching (25% weight)
+  const domainMatches = extractDomainMatches(cleanedText, ngo);
+  score += domainMatches * 20;
+
+  // Geography matching (20% weight)
+  const geographyScore = calculateGeographyMatch(cleanedText, ngo.geography);
+  score += geographyScore * 15;
+
+  // Organization type matching (10% weight)
+  const orgTypeScore = calculateOrganizationTypeMatch(cleanedText, ngo);
+  score += orgTypeScore * 10;
+
+  // Keyword density (5% weight)
+  const keywordDensity =
+    keywords.filter((keyword) => ngoFocusAreas.includes(keyword.toLowerCase()))
+      .length / keywords.length;
+  score += keywordDensity * 5;
+
+  return score;
+}
+
+// Helper functions for enhanced processing
+
+function isStopWord(word: string): boolean {
+  const stopwords = [
+    "the",
+    "a",
+    "an",
+    "and",
+    "or",
+    "but",
+    "in",
+    "on",
+    "at",
+    "to",
+    "for",
+    "of",
+    "with",
+    "by",
+    "help",
+    "work",
+    "support",
+    "that",
+    "this",
+    "them",
+    "they",
+    "their",
+    "are",
+    "is",
+    "be",
+    "into",
+    "should",
+    "would",
+    "could",
+    "have",
+    "has",
+    "had",
+    "was",
+    "were",
+    "been",
+    "being",
+    "get",
+    "got",
+    "will",
+    "would",
+    "could",
+    "should",
+  ];
+  return stopwords.includes(word.toLowerCase());
+}
+
+function extractDomainKeywords(text: string): string[] {
+  const domains = {
+    environmental: [
+      "environment",
+      "climate",
+      "conservation",
+      "sustainability",
+      "green",
+      "eco",
+    ],
+    agriculture: [
+      "agriculture",
+      "farming",
+      "farmers",
+      "regenerative",
+      "organic",
+      "soil",
+      "crops",
+    ],
+    marine: [
+      "marine",
+      "ocean",
+      "water",
+      "aquatic",
+      "fisheries",
+      "coral",
+      "coastal",
+    ],
+    education: [
+      "education",
+      "teaching",
+      "learning",
+      "school",
+      "students",
+      "training",
+    ],
+    health: [
+      "health",
+      "medical",
+      "healthcare",
+      "medicine",
+      "patients",
+      "wellness",
+    ],
+    wildlife: [
+      "wildlife",
+      "animals",
+      "conservation",
+      "habitat",
+      "species",
+      "biodiversity",
+    ],
+    energy: [
+      "energy",
+      "renewable",
+      "solar",
+      "wind",
+      "clean",
+      "power",
+      "electricity",
+    ],
+  };
+
+  const lowerText = text.toLowerCase();
+  const foundKeywords: string[] = [];
+
+  Object.entries(domains).forEach(([domain, keywords]) => {
+    keywords.forEach((keyword) => {
+      if (lowerText.includes(keyword)) {
+        foundKeywords.push(keyword);
+      }
+    });
+  });
+
+  return foundKeywords;
+}
+
+function extractContextualKeywords(text: string): string[] {
+  const contextual = [
+    "partnership",
+    "collaboration",
+    "cooperation",
+    "joint",
+    "alliance",
+    "funding",
+    "grant",
+    "investment",
+    "donation",
+    "support",
+    "sponsorship",
+    "volunteer",
+    "internship",
+    "training",
+    "capacity",
+    "building",
+    "advocacy",
+    "campaign",
+    "policy",
+    "rights",
+    "justice",
+    "equity",
+    "research",
+    "science",
+    "innovation",
+    "technology",
+    "data",
+    "community",
+    "development",
+    "social",
+    "economic",
+    "global",
+  ];
+
+  const lowerText = text.toLowerCase();
+  return contextual.filter((keyword) => lowerText.includes(keyword));
+}
+
+function extractDomainMatches(text: string, ngo: schemas.NGOProfile): number {
+  let matches = 0;
+
+  // NGO name mentions
+  if (text.toLowerCase().includes(ngo.name.toLowerCase())) {
+    matches += 3;
+  }
+
+  // Domain-specific terms
+  if (ngo.focusAreas) {
+    ngo.focusAreas.forEach((area) => {
+      if (text.toLowerCase().includes(area.toLowerCase())) {
+        matches += 2;
+      }
+    });
+  }
+
+  return matches;
+}
+
+function calculateGeographyMatch(text: string, ngoGeography?: string): number {
+  if (!ngoGeography) return 0;
+
+  const lowerText = text.toLowerCase();
+  const lowerGeography = ngoGeography.toLowerCase();
+
+  if (
+    lowerText.includes("usa") ||
+    lowerText.includes("united states") ||
+    lowerText.includes("america")
+  ) {
+    if (lowerGeography.includes("usa") || lowerGeography.includes("global")) {
+      return 5;
+    }
+  }
+
+  if (lowerText.includes("global") && lowerGeography.includes("global")) {
+    return 5;
+  }
+
+  // Check for specific country/region matches
+  const geoTerms = lowerGeography.split(/[\s,]+/);
+  geoTerms.forEach((term) => {
+    if (lowerText.includes(term)) {
+      return 3;
+    }
+  });
+
+  return 0;
+}
+
+function calculateOrganizationTypeMatch(
+  text: string,
+  ngo: schemas.NGOProfile,
+): number {
+  let score = 0;
+
+  const lowerText = text.toLowerCase();
+
+  // Size indicators
+  if (lowerText.includes("small") || lowerText.includes("local")) {
+    score += 2;
+  } else if (
+    lowerText.includes("large") ||
+    lowerText.includes("national") ||
+    lowerText.includes("international")
+  ) {
+    score += 3;
+  }
+
+  // Type indicators
+  if (
+    lowerText.includes("foundation") ||
+    lowerText.includes("nonprofit") ||
+    lowerText.includes("charity")
+  ) {
+    score += 2;
+  }
+
+  return score;
 }
 
 /**

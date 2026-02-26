@@ -131,7 +131,7 @@ app.post("/api/ngos", (req: Request, res: Response) => {
 
 /**
  * POST /api/ngos/search
- * Search NGOs based on brief text using GlobalGiving and DuckDuckGo
+ * Search NGOs based on brief text using enhanced processing
  */
 app.post("/api/ngos/search", async (req: Request, res: Response) => {
   const { brief } = req.body;
