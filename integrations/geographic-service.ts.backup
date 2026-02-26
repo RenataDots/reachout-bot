@@ -26,32 +26,47 @@ export interface CachedResult {
   accessCount: number;
 }
 
-// Nested geographic data structure
+// Enhanced nested geographic data structure
 interface GeographicData {
-  [country: string]: {
-    type: "country";
-    code: string;
-    coordinates?: { lat: number; lng: number };
-    subdivisions: {
-      [state: string]: {
-        type: "state" | "province" | "territory" | "region";
-        code: string;
-        coordinates?: { lat: number; lng: number };
-        cities?: {
-          [city: string]: {
-            type: "city";
-            coordinates: { lat: number; lng: number };
-          };
-        };
-        districts?: {
-          [district: string]: {
-            type: "district";
-            coordinates: { lat: number; lng: number };
+  [region: string]: {
+    [country: string]: {
+      aliases: string[];
+      iso2: string;
+      iso3: string;
+      m49: string;
+      subdivisions: {
+        [subdivisionType: string]: {
+          [subdivisionName: string]: {
+            iso3166_2: string;
+            aliases: string[];
+            cities: {
+              [cityName: string]: {
+                geoname_id: number;
+                lat: number;
+                lon: number;
+                aliases: string[];
+              };
+            };
           };
         };
       };
     };
   };
+}
+
+// UN API response types
+interface UNCountry {
+  geoAreaCode: string;
+  geoAreaName: string;
+  parentCode?: string;
+  type: string;
+}
+
+interface UNSubdivision {
+  geoAreaCode: string;
+  geoAreaName: string;
+  parentCode: string;
+  type: string;
 }
 
 export class GeographicService {
@@ -64,10 +79,9 @@ export class GeographicService {
   private readonly RATE_LIMIT = 1000; // 1 second between requests
   private readonly CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
   private readonly dbPath = path.join(
-    __dirname,
-    "..",
+    process.cwd(),
     "data",
-    "geographic-data.json",
+    "geographic-database.json",
   );
   private log: (message: string) => void;
 
@@ -88,9 +102,9 @@ export class GeographicService {
       );
     } catch (error) {
       this.log(
-        "[GeographicService] No local database found, initializing with default data...",
+        "[GeographicService] No local database found, fetching from UN services...",
       );
-      await this.initializeDefaultData();
+      await this.initializeFromUNData();
       await this.saveDatabase();
     }
   }
@@ -111,11 +125,520 @@ export class GeographicService {
   }
 
   /**
-   * Initialize with default UN data
+   * Initialize database from UN official data
    */
-  private async initializeDefaultData(): Promise<void> {
-    // Basic UN countries and subdivisions
-    this.geographicData = {
+  private async initializeFromUNData(): Promise<void> {
+    try {
+      this.log("[GeographicService] Fetching data from UN services...");
+
+      // Fetch UN M49 countries and subdivisions
+      const unData = await this.fetchUNOfficialData();
+
+      // Transform UN data to our nested structure
+      this.geographicData = this.transformUNData(
+        unData.countries,
+        unData.subdivisions,
+      );
+
+      // Add major cities (not available from UN API)
+      await this.addMajorCities();
+
+      this.log(
+        `[GeographicService] Initialized with ${Object.keys(this.geographicData).length} countries from UN data`,
+      );
+    } catch (error) {
+      this.log(
+        "[GeographicService] UN API error, using fallback data: " + error,
+      );
+      this.geographicData = await this.getFallbackData();
+    }
+  }
+
+  /**
+   * Fetch official geographic data from reliable APIs
+   */
+  private async fetchUNOfficialData(): Promise<{
+    countries: UNCountry[];
+    subdivisions: UNSubdivision[];
+  }> {
+    try {
+      // Use REST Countries API for countries (more reliable than UN API)
+      const countriesResponse = await fetch(
+        "https://restcountries.com/v3.1/all?fields=name,cca2,cca3",
+      );
+      const countriesData = (await countriesResponse.json()) as any[];
+
+      // Transform to our format
+      const countries: UNCountry[] = countriesData.map((country) => ({
+        geoAreaCode: country.cca2 || country.cca3,
+        geoAreaName: country.name.common,
+        type: "country",
+      }));
+
+      // For subdivisions, we'll use a more limited approach since UN API is not working
+      const subdivisions: UNSubdivision[] = this.getMajorSubdivisions();
+
+      this.log(
+        `[GeographicService] Fetched ${countries.length} countries and ${subdivisions.length} subdivisions from APIs`,
+      );
+
+      return { countries, subdivisions };
+    } catch (error) {
+      this.log("[GeographicService] API error: " + error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get major subdivisions (since UN API is not available)
+   */
+  private getMajorSubdivisions(): UNSubdivision[] {
+    return [
+      // US States
+      {
+        geoAreaCode: "US-CA",
+        geoAreaName: "California",
+        parentCode: "US",
+        type: "State",
+      },
+      {
+        geoAreaCode: "US-TX",
+        geoAreaName: "Texas",
+        parentCode: "US",
+        type: "State",
+      },
+      {
+        geoAreaCode: "US-NY",
+        geoAreaName: "New York",
+        parentCode: "US",
+        type: "State",
+      },
+      {
+        geoAreaCode: "US-FL",
+        geoAreaName: "Florida",
+        parentCode: "US",
+        type: "State",
+      },
+      {
+        geoAreaCode: "US-WA",
+        geoAreaName: "Washington",
+        parentCode: "US",
+        type: "State",
+      },
+      {
+        geoAreaCode: "US-CO",
+        geoAreaName: "Colorado",
+        parentCode: "US",
+        type: "State",
+      },
+
+      // Canadian Provinces
+      {
+        geoAreaCode: "CA-ON",
+        geoAreaName: "Ontario",
+        parentCode: "CA",
+        type: "Province",
+      },
+      {
+        geoAreaCode: "CA-QC",
+        geoAreaName: "Quebec",
+        parentCode: "CA",
+        type: "Province",
+      },
+      {
+        geoAreaCode: "CA-BC",
+        geoAreaName: "British Columbia",
+        parentCode: "CA",
+        type: "Province",
+      },
+      {
+        geoAreaCode: "CA-AB",
+        geoAreaName: "Alberta",
+        parentCode: "CA",
+        type: "Province",
+      },
+
+      // Brazilian States
+      {
+        geoAreaCode: "BR-SP",
+        geoAreaName: "São Paulo",
+        parentCode: "BR",
+        type: "State",
+      },
+      {
+        geoAreaCode: "BR-RJ",
+        geoAreaName: "Rio de Janeiro",
+        parentCode: "BR",
+        type: "State",
+      },
+      {
+        geoAreaCode: "BR-AM",
+        geoAreaName: "Amazonas",
+        parentCode: "BR",
+        type: "State",
+      },
+      {
+        geoAreaCode: "BR-MT",
+        geoAreaName: "Mato Grosso",
+        parentCode: "BR",
+        type: "State",
+      },
+
+      // UK Countries
+      {
+        geoAreaCode: "GB-ENG",
+        geoAreaName: "England",
+        parentCode: "GB",
+        type: "Country",
+      },
+      {
+        geoAreaCode: "GB-SCT",
+        geoAreaName: "Scotland",
+        parentCode: "GB",
+        type: "Country",
+      },
+      {
+        geoAreaCode: "GB-WLS",
+        geoAreaName: "Wales",
+        parentCode: "GB",
+        type: "Country",
+      },
+      {
+        geoAreaCode: "GB-NIR",
+        geoAreaName: "Northern Ireland",
+        parentCode: "GB",
+        type: "Country",
+      },
+
+      // German States
+      {
+        geoAreaCode: "DE-BY",
+        geoAreaName: "Bavaria",
+        parentCode: "DE",
+        type: "State",
+      },
+      {
+        geoAreaCode: "DE-BE",
+        geoAreaName: "Berlin",
+        parentCode: "DE",
+        type: "State",
+      },
+
+      // French Regions
+      {
+        geoAreaCode: "FR-IDF",
+        geoAreaName: "Île-de-France",
+        parentCode: "FR",
+        type: "Region",
+      },
+      {
+        geoAreaCode: "FR-PACA",
+        geoAreaName: "Provence-Alpes-Côte d'Azur",
+        parentCode: "FR",
+        type: "Region",
+      },
+
+      // Australian States
+      {
+        geoAreaCode: "AU-NSW",
+        geoAreaName: "New South Wales",
+        parentCode: "AU",
+        type: "State",
+      },
+      {
+        geoAreaCode: "AU-VIC",
+        geoAreaName: "Victoria",
+        parentCode: "AU",
+        type: "State",
+      },
+      {
+        geoAreaCode: "AU-QLD",
+        geoAreaName: "Queensland",
+        parentCode: "AU",
+        type: "State",
+      },
+
+      // Japanese Prefectures
+      {
+        geoAreaCode: "JP-13",
+        geoAreaName: "Tokyo",
+        parentCode: "JP",
+        type: "Prefecture",
+      },
+      {
+        geoAreaCode: "JP-27",
+        geoAreaName: "Osaka",
+        parentCode: "JP",
+        type: "Prefecture",
+      },
+
+      // Chinese Provinces
+      {
+        geoAreaCode: "CN-GD",
+        geoAreaName: "Guangdong",
+        parentCode: "CN",
+        type: "Province",
+      },
+      {
+        geoAreaCode: "CN-BJ",
+        geoAreaName: "Beijing",
+        parentCode: "CN",
+        type: "Municipality",
+      },
+      {
+        geoAreaCode: "CN-SH",
+        geoAreaName: "Shanghai",
+        parentCode: "CN",
+        type: "Municipality",
+      },
+      {
+        geoAreaCode: "CN-SC",
+        geoAreaName: "Sichuan",
+        parentCode: "CN",
+        type: "Province",
+      },
+
+      // Indian States
+      {
+        geoAreaCode: "IN-KA",
+        geoAreaName: "Karnataka",
+        parentCode: "IN",
+        type: "State",
+      },
+      {
+        geoAreaCode: "IN-MH",
+        geoAreaName: "Maharashtra",
+        parentCode: "IN",
+        type: "State",
+      },
+      {
+        geoAreaCode: "IN-TN",
+        geoAreaName: "Tamil Nadu",
+        parentCode: "IN",
+        type: "State",
+      },
+    ];
+  }
+
+  /**
+   * Transform UN data to our nested structure
+   */
+  private transformUNData(
+    countries: UNCountry[],
+    subdivisions: UNSubdivision[],
+  ): GeographicData {
+    const geographicData: GeographicData = {};
+
+    // Process countries
+    countries.forEach((country) => {
+      const countryName = country.geoAreaName.toLowerCase();
+      geographicData[countryName] = {
+        type: "country",
+        code: country.geoAreaCode,
+        coordinates: this.getCountryCoordinates(country.geoAreaCode),
+        subdivisions: {},
+      };
+    });
+
+    // Process subdivisions
+    subdivisions.forEach((subdivision) => {
+      const subdivisionName = subdivision.geoAreaName.toLowerCase();
+      const parentCountry = this.findParentCountry(
+        subdivision.parentCode,
+        countries,
+      );
+
+      if (parentCountry) {
+        const countryName = parentCountry.geoAreaName.toLowerCase();
+        if (geographicData[countryName]) {
+          geographicData[countryName].subdivisions[subdivisionName] = {
+            type: this.getSubdivisionType(subdivision.type),
+            code: subdivision.geoAreaCode,
+            coordinates: this.getSubdivisionCoordinates(
+              subdivision.geoAreaCode,
+            ),
+            cities: {},
+          };
+        }
+      }
+    });
+
+    return geographicData;
+  }
+
+  /**
+   * Find parent country for a subdivision
+   */
+  private findParentCountry(
+    parentCode: string,
+    countries: UNCountry[],
+  ): UNCountry | undefined {
+    return countries.find((country) => country.geoAreaCode === parentCode);
+  }
+
+  /**
+   * Get subdivision type from UN classification
+   */
+  private getSubdivisionType(
+    unType: string,
+  ): "state" | "province" | "territory" | "region" {
+    const typeMap: {
+      [key: string]: "state" | "province" | "territory" | "region";
+    } = {
+      State: "state",
+      Province: "province",
+      Territory: "territory",
+      Region: "region",
+      "Federal District": "state",
+      "Autonomous Region": "region",
+    };
+
+    return typeMap[unType] || "state";
+  }
+
+  /**
+   * Get country coordinates (fallback to major city if needed)
+   */
+  private getCountryCoordinates(
+    countryCode: string,
+  ): { lat: number; lng: number } | undefined {
+    // Major country coordinates (could be expanded)
+    const coordinates: { [key: string]: { lat: number; lng: number } } = {
+      US: { lat: 39.8283, lng: -98.5795 },
+      CA: { lat: 56.1304, lng: -106.3468 },
+      BR: { lat: -14.235, lng: -51.9253 },
+      GB: { lat: 55.3781, lng: -3.436 },
+      DE: { lat: 51.1657, lng: 10.4515 },
+      FR: { lat: 46.2276, lng: 2.2137 },
+      IT: { lat: 41.8719, lng: 12.5674 },
+      ES: { lat: 40.4637, lng: -3.7492 },
+      RU: { lat: 61.524, lng: 105.3188 },
+      CN: { lat: 35.8617, lng: 104.1954 },
+      IN: { lat: 20.5937, lng: 78.9629 },
+      JP: { lat: 36.2048, lng: 138.2529 },
+      AU: { lat: -25.2744, lng: 133.7751 },
+      MX: { lat: 23.6345, lng: -102.5528 },
+      AR: { lat: -38.4161, lng: -63.6167 },
+      ZA: { lat: -30.5595, lng: 22.9375 },
+      EG: { lat: 26.8206, lng: 30.8025 },
+      ID: { lat: -0.7893, lng: 113.9213 },
+      TH: { lat: 15.87, lng: 100.9925 },
+      PH: { lat: 12.8797, lng: 121.774 },
+      NZ: { lat: -40.9006, lng: 174.886 },
+      CL: { lat: -35.6751, lng: -71.543 },
+      PE: { lat: -9.19, lng: -75.0152 },
+      CO: { lat: 4.5709, lng: -74.2973 },
+      KE: { lat: -0.0236, lng: 37.9062 },
+      NG: { lat: 9.082, lng: 8.6753 },
+      TR: { lat: 38.9637, lng: 35.2433 },
+    };
+
+    return coordinates[countryCode];
+  }
+
+  /**
+   * Get subdivision coordinates (limited data)
+   */
+  private getSubdivisionCoordinates(
+    subdivisionCode: string,
+  ): { lat: number; lng: number } | undefined {
+    // This would need to be expanded or fetched from another source
+    // For now, return undefined and let API handle it
+    return undefined;
+  }
+
+  /**
+   * Add major cities (not available from UN API)
+   */
+  private async addMajorCities(): Promise<void> {
+    // Add major cities to existing subdivisions
+    const majorCities = {
+      "united states": {
+        california: {
+          "los angeles": {
+            type: "city" as const,
+            coordinates: { lat: 34.0522, lng: -118.2437 },
+          },
+          "san francisco": {
+            type: "city" as const,
+            coordinates: { lat: 37.7749, lng: -122.4194 },
+          },
+          "san diego": {
+            type: "city" as const,
+            coordinates: { lat: 32.7157, lng: -117.1611 },
+          },
+          sacramento: {
+            type: "city" as const,
+            coordinates: { lat: 38.5816, lng: -121.4944 },
+          },
+          oakland: {
+            type: "city" as const,
+            coordinates: { lat: 37.8044, lng: -122.2712 },
+          },
+        },
+        texas: {
+          houston: {
+            type: "city" as const,
+            coordinates: { lat: 29.7604, lng: -95.3698 },
+          },
+          austin: {
+            type: "city" as const,
+            coordinates: { lat: 30.2672, lng: -97.7431 },
+          },
+          dallas: {
+            type: "city" as const,
+            coordinates: { lat: 32.7767, lng: -96.797 },
+          },
+        },
+        "new york": {
+          "new york": {
+            type: "city" as const,
+            coordinates: { lat: 40.7128, lng: -74.006 },
+          },
+        },
+      },
+      brazil: {
+        "são paulo": {
+          "são paulo": {
+            type: "city" as const,
+            coordinates: { lat: -23.5505, lng: -46.6333 },
+          },
+        },
+      },
+      canada: {
+        ontario: {
+          toronto: {
+            type: "city" as const,
+            coordinates: { lat: 43.6532, lng: -79.3832 },
+          },
+          ottawa: {
+            type: "city" as const,
+            coordinates: { lat: 45.4215, lng: -75.6972 },
+          },
+        },
+      },
+    };
+
+    // Add cities to the geographic data
+    Object.entries(majorCities).forEach(([country, states]) => {
+      const countryKey = country.toLowerCase();
+      if (this.geographicData[countryKey]) {
+        Object.entries(states).forEach(([state, cities]) => {
+          const stateKey = state.toLowerCase();
+          if (this.geographicData[countryKey].subdivisions[stateKey]) {
+            this.geographicData[countryKey].subdivisions[stateKey].cities =
+              cities;
+          }
+        });
+      }
+    });
+  }
+
+  /**
+   * Fallback data if UN API fails
+   */
+  private async getFallbackData(): Promise<GeographicData> {
+    return {
       "united states": {
         type: "country",
         code: "US",
@@ -138,10 +661,6 @@ export class GeographicService {
                 type: "city",
                 coordinates: { lat: 37.8044, lng: -122.2712 },
               },
-              "san diego": {
-                type: "city",
-                coordinates: { lat: 32.7157, lng: -117.1611 },
-              },
             },
           },
           texas: {
@@ -156,21 +675,6 @@ export class GeographicService {
               austin: {
                 type: "city",
                 coordinates: { lat: 30.2672, lng: -97.7431 },
-              },
-              dallas: {
-                type: "city",
-                coordinates: { lat: 32.7767, lng: -96.797 },
-              },
-            },
-          },
-          "new york": {
-            type: "state",
-            code: "NY",
-            coordinates: { lat: 43.2994, lng: -74.2179 },
-            cities: {
-              "new york": {
-                type: "city",
-                coordinates: { lat: 40.7128, lng: -74.006 },
               },
             },
           },
@@ -194,28 +698,6 @@ export class GeographicService {
           },
         },
       },
-      canada: {
-        type: "country",
-        code: "CA",
-        coordinates: { lat: 56.1304, lng: -106.3468 },
-        subdivisions: {
-          ontario: {
-            type: "province",
-            code: "ON",
-            coordinates: { lat: 51.2538, lng: -85.3232 },
-            cities: {
-              toronto: {
-                type: "city",
-                coordinates: { lat: 43.6532, lng: -79.3832 },
-              },
-              ottawa: {
-                type: "city",
-                coordinates: { lat: 45.4215, lng: -75.6972 },
-              },
-            },
-          },
-        },
-      },
     };
   }
 
@@ -224,10 +706,12 @@ export class GeographicService {
    */
   private findLocation(location: string): LocationInfo | null {
     const normalized = location.toLowerCase();
-    
+
     // Search cities first
     for (const [country, countryData] of Object.entries(this.geographicData)) {
-      for (const [state, stateData] of Object.entries(countryData.subdivisions)) {
+      for (const [state, stateData] of Object.entries(
+        countryData.subdivisions,
+      )) {
         if (stateData.cities?.[normalized]) {
           const cityData = stateData.cities[normalized];
           return {
@@ -236,14 +720,14 @@ export class GeographicService {
             state: this.capitalize(state),
             country: this.capitalize(country),
             coordinates: cityData.coordinates,
-            administrativeLevel: 'city',
+            administrativeLevel: "city",
             confidence: 95,
-            source: 'local'
+            source: "local",
           };
         }
       }
     }
-    
+
     // Search states
     for (const [country, countryData] of Object.entries(this.geographicData)) {
       if (countryData.subdivisions[normalized]) {
@@ -253,25 +737,25 @@ export class GeographicService {
           state: location,
           country: this.capitalize(country),
           coordinates: stateData.coordinates,
-          administrativeLevel: 'state',
+          administrativeLevel: "state",
           confidence: 90,
-          source: 'local'
+          source: "local",
         };
       }
     }
-    
+
     // Search countries
     if (this.geographicData[normalized]) {
       return {
         name: location,
         country: location,
         coordinates: this.geographicData[normalized].coordinates,
-        administrativeLevel: 'country',
+        administrativeLevel: "country",
         confidence: 95,
-        source: 'local'
+        source: "local",
       };
     }
-    
+
     return null;
   }
 
@@ -279,9 +763,10 @@ export class GeographicService {
    * Capitalize first letter of each word
    */
   private capitalize(str: string): string {
-    return str.split(' ').map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-    ).join(' ');
+    return str
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
   }
 
   /**
@@ -289,7 +774,7 @@ export class GeographicService {
    */
   async resolveLocation(location: string): Promise<LocationInfo | null> {
     const normalized = location.toLowerCase();
-    
+
     // Check cache first
     const cached = this.cache.get(normalized);
     if (cached && Date.now() - cached.timestamp < this.CACHE_DURATION) {
@@ -304,8 +789,8 @@ export class GeographicService {
       this.cache.set(normalized, {
         data: localResult,
         timestamp: Date.now(),
-        source: 'local',
-        accessCount: 1
+        source: "local",
+        accessCount: 1,
       });
       this.log(`[GeographicService] Local database hit for: ${location}`);
       return localResult;
@@ -318,15 +803,15 @@ export class GeographicService {
         this.cache.set(normalized, {
           data: apiResult,
           timestamp: Date.now(),
-          source: 'nominatim',
-          accessCount: 1
+          source: "nominatim",
+          accessCount: 1,
         });
-        
+
         // Learn from API result if confidence is high
         if (apiResult.confidence >= 70) {
           await this.learnFromAPI(location, apiResult);
         }
-        
+
         this.log(`[GeographicService] API result for: ${location}`);
         return apiResult;
       }
@@ -336,649 +821,14 @@ export class GeographicService {
 
     return null;
   }
-    const countries = [
-      { name: "United States", code: "US" },
-      { name: "Canada", code: "CA" },
-      { name: "Brazil", code: "BR" },
-      { name: "United Kingdom", code: "GB" },
-      { name: "Germany", code: "DE" },
-      { name: "France", code: "FR" },
-      { name: "Italy", code: "IT" },
-      { name: "Spain", code: "ES" },
-      { name: "Russia", code: "RU" },
-      { name: "China", code: "CN" },
-      { name: "India", code: "IN" },
-      { name: "Japan", code: "JP" },
-      { name: "Australia", code: "AU" },
-      { name: "Mexico", code: "MX" },
-      { name: "Argentina", code: "AR" },
-      { name: "South Africa", code: "ZA" },
-      { name: "Kenya", code: "KE" },
-      { name: "Nigeria", code: "NG" },
-      { name: "Egypt", code: "EG" },
-      { name: "Indonesia", code: "ID" },
-      { name: "Thailand", code: "TH" },
-      { name: "Vietnam", code: "VN" },
-      { name: "Philippines", code: "PH" },
-      { name: "Malaysia", code: "MY" },
-      { name: "Singapore", code: "SG" },
-      { name: "New Zealand", code: "NZ" },
-      { name: "Chile", code: "CL" },
-      { name: "Peru", code: "PE" },
-      { name: "Colombia", code: "CO" },
-      { name: "Venezuela", code: "VE" },
-      { name: "Ecuador", code: "EC" },
-      { name: "Bolivia", code: "BO" },
-      { name: "Paraguay", code: "PY" },
-      { name: "Uruguay", code: "UY" },
-      { name: "Guatemala", code: "GT" },
-      { name: "Costa Rica", code: "CR" },
-      { name: "Panama", code: "PA" },
-      { name: "Cuba", code: "CU" },
-      { name: "Jamaica", code: "JM" },
-      { name: "Haiti", code: "HT" },
-      { name: "Dominican Republic", code: "DO" },
-    ];
-
-    // Major subdivisions (states/provinces)
-    const subdivisions = [
-      // US States
-      { name: "California", country: "United States", code: "US-CA" },
-      { name: "Texas", country: "United States", code: "US-TX" },
-      { name: "Florida", country: "United States", code: "US-FL" },
-      { name: "New York", country: "United States", code: "US-NY" },
-      { name: "Pennsylvania", country: "United States", code: "US-PA" },
-      { name: "Illinois", country: "United States", code: "US-IL" },
-      { name: "Ohio", country: "United States", code: "US-OH" },
-      { name: "Georgia", country: "United States", code: "US-GA" },
-      { name: "North Carolina", country: "United States", code: "US-NC" },
-      { name: "Michigan", country: "United States", code: "US-MI" },
-      { name: "New Jersey", country: "United States", code: "US-NJ" },
-      { name: "Virginia", country: "United States", code: "US-VA" },
-      { name: "Washington", country: "United States", code: "US-WA" },
-      { name: "Arizona", country: "United States", code: "US-AZ" },
-      { name: "Massachusetts", country: "United States", code: "US-MA" },
-      { name: "Tennessee", country: "United States", code: "US-TN" },
-      { name: "Indiana", country: "United States", code: "US-IN" },
-      { name: "Missouri", country: "United States", code: "US-MO" },
-      { name: "Maryland", country: "United States", code: "US-MD" },
-      { name: "Wisconsin", country: "United States", code: "US-WI" },
-      { name: "Colorado", country: "United States", code: "US-CO" },
-      { name: "Minnesota", country: "United States", code: "US-MN" },
-      { name: "South Carolina", country: "United States", code: "US-SC" },
-      { name: "Alabama", country: "United States", code: "US-AL" },
-      { name: "Louisiana", country: "United States", code: "US-LA" },
-      { name: "Kentucky", country: "United States", code: "US-KY" },
-      { name: "Oregon", country: "United States", code: "US-OR" },
-      { name: "Oklahoma", country: "United States", code: "US-OK" },
-      { name: "Connecticut", country: "United States", code: "US-CT" },
-      { name: "Utah", country: "United States", code: "US-UT" },
-      { name: "Iowa", country: "United States", code: "US-IA" },
-      { name: "Nevada", country: "United States", code: "US-NV" },
-      { name: "Arkansas", country: "United States", code: "US-AR" },
-      { name: "Mississippi", country: "United States", code: "US-MS" },
-      { name: "Kansas", country: "United States", code: "US-KS" },
-      { name: "New Mexico", country: "United States", code: "US-NM" },
-      { name: "Nebraska", country: "United States", code: "US-NE" },
-      { name: "Idaho", country: "United States", code: "US-ID" },
-      { name: "Hawaii", country: "United States", code: "US-HI" },
-      { name: "New Hampshire", country: "United States", code: "US-NH" },
-      { name: "Maine", country: "United States", code: "US-ME" },
-      { name: "Montana", country: "United States", code: "US-MT" },
-      { name: "Rhode Island", country: "United States", code: "US-RI" },
-      { name: "Delaware", country: "United States", code: "US-DE" },
-      { name: "South Dakota", country: "United States", code: "US-SD" },
-      { name: "North Dakota", country: "United States", code: "US-ND" },
-      { name: "Alaska", country: "United States", code: "US-AK" },
-      { name: "Vermont", country: "United States", code: "US-VT" },
-      { name: "Wyoming", country: "United States", code: "US-WY" },
-
-      // Canadian Provinces
-      { name: "Ontario", country: "Canada", code: "CA-ON" },
-      { name: "Quebec", country: "Canada", code: "CA-QC" },
-      { name: "British Columbia", country: "Canada", code: "CA-BC" },
-      { name: "Alberta", country: "Canada", code: "CA-AB" },
-      { name: "Manitoba", country: "Canada", code: "CA-MB" },
-      { name: "Saskatchewan", country: "Canada", code: "CA-SK" },
-      { name: "Nova Scotia", country: "Canada", code: "CA-NS" },
-      { name: "New Brunswick", country: "Canada", code: "CA-NB" },
-      { name: "Newfoundland and Labrador", country: "Canada", code: "CA-NL" },
-      { name: "Prince Edward Island", country: "Canada", code: "CA-PE" },
-
-      // Brazilian States
-      { name: "São Paulo", country: "Brazil", code: "BR-SP" },
-      { name: "Rio de Janeiro", country: "Brazil", code: "BR-RJ" },
-      { name: "Minas Gerais", country: "Brazil", code: "BR-MG" },
-      { name: "Bahia", country: "Brazil", code: "BR-BA" },
-      { name: "Paraná", country: "Brazil", code: "BR-PR" },
-      { name: "Rio Grande do Sul", country: "Brazil", code: "BR-RS" },
-      { name: "Pernambuco", country: "Brazil", code: "BR-PE" },
-      { name: "Ceará", country: "Brazil", code: "BR-CE" },
-      { name: "Pará", country: "Brazil", code: "BR-PA" },
-      { name: "Maranhão", country: "Brazil", code: "BR-MA" },
-      { name: "Santa Catarina", country: "Brazil", code: "BR-SC" },
-      { name: "Goiás", country: "Brazil", code: "BR-GO" },
-      { name: "Mato Grosso", country: "Brazil", code: "BR-MT" },
-      { name: "Mato Grosso do Sul", country: "Brazil", code: "BR-MS" },
-
-      // Indian States
-      { name: "Karnataka", country: "India", code: "IN-KA" },
-      { name: "Maharashtra", country: "India", code: "IN-MH" },
-      { name: "Tamil Nadu", country: "India", code: "IN-TN" },
-      { name: "Uttar Pradesh", country: "India", code: "IN-UP" },
-      { name: "Gujarat", country: "India", code: "IN-GJ" },
-      { name: "West Bengal", country: "India", code: "IN-WB" },
-      { name: "Rajasthan", country: "India", code: "IN-RJ" },
-      { name: "Madhya Pradesh", country: "India", code: "IN-MP" },
-      { name: "Bihar", country: "India", code: "IN-BR" },
-      { name: "Andhra Pradesh", country: "India", code: "IN-AP" },
-
-      // Chinese Provinces
-      { name: "Sichuan", country: "China", code: "CN-SC" },
-      { name: "Guangdong", country: "China", code: "CN-GD" },
-      { name: "Jiangsu", country: "China", code: "CN-JS" },
-      { name: "Shandong", country: "China", code: "CN-SD" },
-      { name: "Henan", country: "China", code: "CN-HA" },
-      { name: "Hubei", country: "China", code: "CN-HB" },
-      { name: "Hunan", country: "China", code: "CN-HN" },
-      { name: "Anhui", country: "China", code: "CN-AH" },
-      { name: "Zhejiang", country: "China", code: "CN-ZJ" },
-      { name: "Jiangxi", country: "China", code: "CN-JX" },
-    ];
-
-    return { countries, subdivisions };
-  }
-
-  /**
-   * Add major cities to local database
-   */
-  private addMajorCities(): void {
-    const majorCities = [
-      // US Cities
-      {
-        name: "New York",
-        country: "United States",
-        state: "New York",
-        lat: 40.7128,
-        lng: -74.006,
-      },
-      {
-        name: "Los Angeles",
-        country: "United States",
-        state: "California",
-        lat: 34.0522,
-        lng: -118.2437,
-      },
-      {
-        name: "Chicago",
-        country: "United States",
-        state: "Illinois",
-        lat: 41.8781,
-        lng: -87.6298,
-      },
-      {
-        name: "Houston",
-        country: "United States",
-        state: "Texas",
-        lat: 29.7604,
-        lng: -95.3698,
-      },
-      {
-        name: "Phoenix",
-        country: "United States",
-        state: "Arizona",
-        lat: 33.4484,
-        lng: -112.074,
-      },
-      {
-        name: "Philadelphia",
-        country: "United States",
-        state: "Pennsylvania",
-        lat: 39.9526,
-        lng: -75.1652,
-      },
-      {
-        name: "San Antonio",
-        country: "United States",
-        state: "Texas",
-        lat: 29.4241,
-        lng: -98.4936,
-      },
-      {
-        name: "San Diego",
-        country: "United States",
-        state: "California",
-        lat: 32.7157,
-        lng: -117.1611,
-      },
-      {
-        name: "Dallas",
-        country: "United States",
-        state: "Texas",
-        lat: 32.7767,
-        lng: -96.797,
-      },
-      {
-        name: "San Jose",
-        country: "United States",
-        state: "California",
-        lat: 37.3382,
-        lng: -121.8863,
-      },
-      {
-        name: "Austin",
-        country: "United States",
-        state: "Texas",
-        lat: 30.2672,
-        lng: -97.7431,
-      },
-      {
-        name: "Jacksonville",
-        country: "United States",
-        state: "Florida",
-        lat: 30.3322,
-        lng: -81.6557,
-      },
-      {
-        name: "Fort Worth",
-        country: "United States",
-        state: "Texas",
-        lat: 32.7555,
-        lng: -97.3308,
-      },
-      {
-        name: "Columbus",
-        country: "United States",
-        state: "Ohio",
-        lat: 39.9612,
-        lng: -82.9988,
-      },
-      {
-        name: "Charlotte",
-        country: "United States",
-        state: "North Carolina",
-        lat: 35.2271,
-        lng: -80.8431,
-      },
-      {
-        name: "San Francisco",
-        country: "United States",
-        state: "California",
-        lat: 37.7749,
-        lng: -122.4194,
-      },
-      {
-        name: "Indianapolis",
-        country: "United States",
-        state: "Indiana",
-        lat: 39.7684,
-        lng: -86.1581,
-      },
-      {
-        name: "Seattle",
-        country: "United States",
-        state: "Washington",
-        lat: 47.6062,
-        lng: -122.3321,
-      },
-      {
-        name: "Denver",
-        country: "United States",
-        state: "Colorado",
-        lat: 39.7392,
-        lng: -104.9903,
-      },
-      {
-        name: "Washington DC",
-        country: "United States",
-        lat: 38.9072,
-        lng: -77.0369,
-      },
-      {
-        name: "Boston",
-        country: "United States",
-        state: "Massachusetts",
-        lat: 42.3601,
-        lng: -71.0589,
-      },
-      {
-        name: "El Paso",
-        country: "United States",
-        state: "Texas",
-        lat: 31.7619,
-        lng: -106.485,
-      },
-      {
-        name: "Nashville",
-        country: "United States",
-        state: "Tennessee",
-        lat: 36.1627,
-        lng: -86.7816,
-      },
-      {
-        name: "Detroit",
-        country: "United States",
-        state: "Michigan",
-        lat: 42.3314,
-        lng: -83.0458,
-      },
-      {
-        name: "Portland",
-        country: "United States",
-        state: "Oregon",
-        lat: 45.5152,
-        lng: -122.6784,
-      },
-      {
-        name: "Memphis",
-        country: "United States",
-        state: "Tennessee",
-        lat: 35.1495,
-        lng: -90.049,
-      },
-      {
-        name: "Oklahoma City",
-        country: "United States",
-        state: "Oklahoma",
-        lat: 35.4676,
-        lng: -97.5164,
-      },
-      {
-        name: "Las Vegas",
-        country: "United States",
-        state: "Nevada",
-        lat: 36.1699,
-        lng: -115.1398,
-      },
-      {
-        name: "Louisville",
-        country: "United States",
-        state: "Kentucky",
-        lat: 38.2527,
-        lng: -85.7585,
-      },
-      {
-        name: "Milwaukee",
-        country: "United States",
-        state: "Wisconsin",
-        lat: 43.0389,
-        lng: -87.9065,
-      },
-      {
-        name: "Albuquerque",
-        country: "United States",
-        state: "New Mexico",
-        lat: 35.0844,
-        lng: -106.6504,
-      },
-      {
-        name: "Tucson",
-        country: "United States",
-        state: "Arizona",
-        lat: 32.2226,
-        lng: -110.9747,
-      },
-      {
-        name: "Fresno",
-        country: "United States",
-        state: "California",
-        lat: 36.7378,
-        lng: -119.7871,
-      },
-      {
-        name: "Sacramento",
-        country: "United States",
-        state: "California",
-        lat: 38.5816,
-        lng: -121.4944,
-      },
-      {
-        name: "Kansas City",
-        country: "United States",
-        state: "Missouri",
-        lat: 39.0997,
-        lng: -94.5786,
-      },
-      {
-        name: "Long Beach",
-        country: "United States",
-        state: "California",
-        lat: 33.7701,
-        lng: -118.1937,
-      },
-      {
-        name: "Mesa",
-        country: "United States",
-        state: "Arizona",
-        lat: 33.4152,
-        lng: -111.8315,
-      },
-      {
-        name: "Atlanta",
-        country: "United States",
-        state: "Georgia",
-        lat: 33.749,
-        lng: -84.388,
-      },
-      {
-        name: "Omaha",
-        country: "United States",
-        state: "Nebraska",
-        lat: 41.2565,
-        lng: -95.9345,
-      },
-      {
-        name: "Colorado Springs",
-        country: "United States",
-        state: "Colorado",
-        lat: 38.8339,
-        lng: -104.8214,
-      },
-      {
-        name: "Raleigh",
-        country: "United States",
-        state: "North Carolina",
-        lat: 35.7796,
-        lng: -78.6382,
-      },
-      {
-        name: "Miami",
-        country: "United States",
-        state: "Florida",
-        lat: 25.7617,
-        lng: -80.1918,
-      },
-      {
-        name: "Oakland",
-        country: "United States",
-        state: "California",
-        lat: 37.8044,
-        lng: -122.2712,
-      },
-      {
-        name: "Tulsa",
-        country: "United States",
-        state: "Oklahoma",
-        lat: 36.154,
-        lng: -95.9944,
-      },
-      {
-        name: "Minneapolis",
-        country: "United States",
-        state: "Minnesota",
-        lat: 44.9778,
-        lng: -93.265,
-      },
-      {
-        name: "Cleveland",
-        country: "United States",
-        state: "Ohio",
-        lat: 41.4993,
-        lng: -81.6944,
-      },
-      {
-        name: "Wichita",
-        country: "United States",
-        state: "Kansas",
-        lat: 37.6872,
-        lng: -97.3301,
-      },
-      {
-        name: "Arlington",
-        country: "United States",
-        state: "Texas",
-        lat: 32.7357,
-        lng: -97.1081,
-      },
-
-      // International Cities
-      { name: "London", country: "United Kingdom", lat: 51.5074, lng: -0.1278 },
-      { name: "Paris", country: "France", lat: 48.8566, lng: 2.3522 },
-      { name: "Tokyo", country: "Japan", lat: 35.6762, lng: 139.6503 },
-      { name: "Beijing", country: "China", lat: 39.9042, lng: 116.4074 },
-      { name: "Mumbai", country: "India", lat: 19.076, lng: 72.8777 },
-      { name: "Delhi", country: "India", lat: 28.7041, lng: 77.1025 },
-      { name: "Shanghai", country: "China", lat: 31.2304, lng: 121.4737 },
-      { name: "São Paulo", country: "Brazil", lat: -23.5505, lng: -46.6333 },
-      { name: "Mexico City", country: "Mexico", lat: 19.4326, lng: -99.1332 },
-      { name: "Cairo", country: "Egypt", lat: 30.0444, lng: 31.2357 },
-      { name: "Moscow", country: "Russia", lat: 55.7558, lng: 37.6173 },
-      { name: "Istanbul", country: "Turkey", lat: 41.0082, lng: 28.9784 },
-      { name: "Lagos", country: "Nigeria", lat: 6.5244, lng: 3.3792 },
-      {
-        name: "Buenos Aires",
-        country: "Argentina",
-        lat: -34.6037,
-        lng: -58.3816,
-      },
-      { name: "Karachi", country: "Pakistan", lat: 24.8607, lng: 67.0011 },
-      { name: "Dhaka", country: "Bangladesh", lat: 23.8103, lng: 90.4125 },
-      { name: "Manila", country: "Philippines", lat: 14.5995, lng: 120.9842 },
-      { name: "Osaka", country: "Japan", lat: 34.6937, lng: 135.5023 },
-      { name: "Guangzhou", country: "China", lat: 23.1291, lng: 113.2644 },
-      { name: "Toronto", country: "Canada", lat: 43.6532, lng: -79.3832 },
-      { name: "Vancouver", country: "Canada", lat: 49.2827, lng: -123.1207 },
-      { name: "Montreal", country: "Canada", lat: 45.5017, lng: -73.5673 },
-      { name: "Sydney", country: "Australia", lat: -33.8688, lng: 151.2093 },
-      { name: "Melbourne", country: "Australia", lat: -37.8136, lng: 144.9631 },
-      {
-        name: "Rio de Janeiro",
-        country: "Brazil",
-        lat: -22.9068,
-        lng: -43.1729,
-      },
-    ];
-
-    majorCities.forEach((city) => {
-      this.localDatabase.set(city.name.toLowerCase(), {
-        name: city.name,
-        country: city.country,
-        state: city.state,
-        city: city.name,
-        coordinates: { lat: city.lat, lng: city.lng },
-        administrativeLevel: "city",
-        confidence: 95,
-        source: "local",
-      });
-    });
-  }
-
-  /**
-   * Main method to resolve location from text
-   */
-  async resolveLocation(location: string): Promise<LocationInfo> {
-    const normalizedLocation = location.toLowerCase().trim();
-
-    // Layer 1: Cache check
-    const cached = this.cache.get(normalizedLocation);
-    if (cached && !this.isExpired(cached)) {
-      cached.accessCount++;
-      this.log(`[GeographicService] Cache hit for: ${location}`);
-      return cached.data;
-    }
-
-    // Layer 2: Local database lookup
-    const localResult = this.localDatabase.get(normalizedLocation);
-    if (localResult) {
-      const cachedResult: CachedResult = {
-        data: localResult,
-        timestamp: Date.now(),
-        source: localResult.source,
-        accessCount: 1,
-      };
-      this.cache.set(normalizedLocation, cachedResult);
-      this.log(`[GeographicService] Local DB hit for: ${location}`);
-      return localResult;
-    }
-
-    // Layer 3: Fuzzy matching
-    const fuzzyResult = this.fuzzySearch(normalizedLocation);
-    if (fuzzyResult) {
-      const cachedResult: CachedResult = {
-        data: fuzzyResult,
-        timestamp: Date.now(),
-        source: "local",
-        accessCount: 1,
-      };
-      this.cache.set(normalizedLocation, cachedResult);
-      this.log(`[GeographicService] Fuzzy match for: ${location}`);
-      return fuzzyResult;
-    }
-
-    // Layer 4: OpenStreetMap Nominatim API
-    try {
-      const apiResult = await this.queryNominatim(location);
-
-      // Cache API result
-      const cachedResult: CachedResult = {
-        data: apiResult,
-        timestamp: Date.now(),
-        source: "nominatim",
-        accessCount: 1,
-      };
-      this.cache.set(normalizedLocation, cachedResult);
-
-      // Learn from API result (if high confidence)
-      if (apiResult.confidence >= 70) {
-        await this.learnFromAPI(location, apiResult);
-      }
-
-      this.log(`[GeographicService] API hit for: ${location}`);
-      return apiResult;
-    } catch (error) {
-      this.log(
-        `[GeographicService] API failed for: ${location}, error: ${error}`,
-      );
-
-      // Fallback: partial match
-      const partialResult: LocationInfo = {
-        name: location,
-        confidence: 20,
-        source: "partial",
-      };
-
-      const cachedResult: CachedResult = {
-        data: partialResult,
-        timestamp: Date.now(),
-        source: "partial",
-        accessCount: 1,
-      };
-      this.cache.set(normalizedLocation, cachedResult);
-
-      return partialResult;
-    }
-  }
 
   /**
    * Query OpenStreetMap Nominatim API
    */
-  private async queryNominatim(location: string): Promise<LocationInfo> {
-    // Rate limiting
+  private async queryNominatim(location: string): Promise<LocationInfo | null> {
     await this.rateLimit();
 
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}&limit=5&addressdetails=1`;
-
-    this.log(`[GeographicService] Querying Nominatim API for: ${location}`);
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}&limit=1`;
 
     const response = await fetch(url, {
       headers: {
@@ -993,10 +843,10 @@ export class GeographicService {
     const data = (await response.json()) as any[];
 
     if (data.length === 0) {
-      throw new Error("No results found");
+      return null;
     }
 
-    const result = data[0]; // Take first result
+    const result = data[0];
 
     return {
       name: result.display_name.split(",")[0],
@@ -1005,7 +855,10 @@ export class GeographicService {
       district: result.address?.county || result.address?.district,
       city:
         result.address?.city || result.address?.town || result.address?.village,
-      coordinates: { lat: parseFloat(result.lat), lng: parseFloat(result.lon) },
+      coordinates: {
+        lat: parseFloat(result.lat),
+        lng: parseFloat(result.lon),
+      },
       administrativeLevel: this.determineAdminLevel(result),
       confidence: this.calculateAPIConfidence(result),
       source: "nominatim",
@@ -1021,68 +874,10 @@ export class GeographicService {
 
     if (timeSinceLastRequest < this.RATE_LIMIT) {
       const waitTime = this.RATE_LIMIT - timeSinceLastRequest;
-      this.log(`[GeographicService] Rate limiting, waiting ${waitTime}ms`);
       await new Promise((resolve) => setTimeout(resolve, waitTime));
     }
 
     this.rateLimiter.lastRequest = Date.now();
-    this.rateLimiter.requestCount++;
-  }
-
-  /**
-   * Fuzzy search in local database
-   */
-  private fuzzySearch(query: string): LocationInfo | null {
-    let bestMatch: LocationInfo | null = null;
-    let bestScore = 0;
-
-    for (const [key, value] of this.localDatabase.entries()) {
-      const score = this.calculateSimilarity(query, key);
-      if (score > 0.8 && score > bestScore) {
-        bestScore = score;
-        bestMatch = { ...value, confidence: value.confidence * score };
-      }
-    }
-
-    return bestMatch;
-  }
-
-  /**
-   * Calculate string similarity (simple Levenshtein-like)
-   */
-  private calculateSimilarity(str1: string, str2: string): number {
-    const longer = str1.length > str2.length ? str1 : str2;
-    const shorter = str1.length > str2.length ? str2 : str1;
-
-    if (longer.length === 0) return 1.0;
-
-    const editDistance = this.levenshteinDistance(longer, shorter);
-    return (longer.length - editDistance) / longer.length;
-  }
-
-  /**
-   * Simple Levenshtein distance calculation
-   */
-  private levenshteinDistance(str1: string, str2: string): number {
-    const matrix = Array(str2.length + 1)
-      .fill(null)
-      .map(() => Array(str1.length + 1).fill(null));
-
-    for (let i = 0; i <= str1.length; i++) matrix[0][i] = i;
-    for (let j = 0; j <= str2.length; j++) matrix[j][0] = j;
-
-    for (let j = 1; j <= str2.length; j++) {
-      for (let i = 1; i <= str1.length; i++) {
-        const indicator = str1[i - 1] === str2[j - 1] ? 0 : 1;
-        matrix[j][i] = Math.min(
-          matrix[j][i - 1] + 1,
-          matrix[j - 1][i] + 1,
-          matrix[j - 1][i - 1] + indicator,
-        );
-      }
-    }
-
-    return matrix[str2.length][str1.length];
   }
 
   /**
@@ -1090,33 +885,38 @@ export class GeographicService {
    */
   private determineAdminLevel(
     result: any,
-  ): LocationInfo["administrativeLevel"] {
-    if (result.type === "country") return "country";
-    if (result.type === "state" || result.type === "province") return "state";
+  ): "country" | "state" | "district" | "city" {
     if (
-      result.type === "city" ||
-      result.type === "town" ||
-      result.type === "village"
-    )
-      return "city";
-    if (result.type === "county" || result.type === "district")
+      result.type === "country" ||
+      (result.class === "boundary" &&
+        result.type === "administrative" &&
+        result.address?.country)
+    ) {
+      return "country";
+    } else if (result.type === "state" || result.type === "province") {
+      return "state";
+    } else if (result.type === "county" || result.type === "district") {
       return "district";
-    return "city"; // Default
+    } else {
+      return "city";
+    }
   }
 
   /**
-   * Calculate confidence for API result
+   * Calculate confidence score for API result
    */
   private calculateAPIConfidence(result: any): number {
-    let confidence = 70; // Base confidence for API results
+    let confidence = 50; // Base confidence
 
-    // Boost confidence for exact matches
     if (result.importance) {
-      confidence += result.importance * 30;
+      confidence += Math.round(result.importance * 30);
     }
 
-    // Boost confidence for specific types
-    if (["country", "state", "city"].includes(result.type)) {
+    if (result.address?.country && result.address?.state) {
+      confidence += 10;
+    }
+
+    if (result.type === "city" || result.type === "town") {
       confidence += 10;
     }
 
@@ -1130,24 +930,19 @@ export class GeographicService {
     location: string,
     apiResult: LocationInfo,
   ): Promise<void> {
-    const key = location.toLowerCase();
+    if (apiResult.confidence < 70) return;
 
-    // Only learn if not already in local database
-    if (!this.localDatabase.has(key)) {
-      this.localDatabase.set(key, apiResult);
-      this.log(`[GeographicService] Learned from API: ${location}`);
+    const normalized = location.toLowerCase();
+
+    // Add to local database if it's a high-confidence result
+    if (apiResult.country && !this.geographicData[normalized]) {
+      // This is a new country - would need more sophisticated logic
+      this.log(`[GeographicService] Learned new location: ${location}`);
     }
   }
 
   /**
-   * Check if cache entry is expired
-   */
-  private isExpired(cached: CachedResult): boolean {
-    return Date.now() - cached.timestamp > this.CACHE_DURATION;
-  }
-
-  /**
-   * Extract multiple locations from text
+   * Extract locations from text
    */
   async extractLocations(text: string): Promise<LocationInfo[]> {
     const locationPhrases = this.extractLocationPhrases(text);
@@ -1155,7 +950,7 @@ export class GeographicService {
 
     for (const phrase of locationPhrases) {
       const location = await this.resolveLocation(phrase);
-      if (location.confidence > 30) {
+      if (location) {
         locations.push(location);
       }
     }
@@ -1164,32 +959,35 @@ export class GeographicService {
   }
 
   /**
-   * Extract location phrases from text
+   * Extract potential location phrases from text
    */
   private extractLocationPhrases(text: string): string[] {
-    const locations: string[] = [];
-    const words = text.split(/\s+/);
+    const phrases: string[] = [];
 
-    // Look for capitalized words that might be locations
-    for (let i = 0; i < words.length; i++) {
-      const word = words[i];
+    // Simple regex patterns for location mentions
+    const patterns = [
+      /\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:state|province|country|city|town)\b/gi,
+      /\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:in|from|at|to)\b/gi,
+      /\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\b/g,
+    ];
 
-      // Check if word starts with capital letter
-      if (word.length > 2 && word[0] === word[0].toUpperCase()) {
-        // Check multi-word locations
-        let phrase = word;
-        for (let j = i + 1; j < Math.min(i + 3, words.length); j++) {
-          const nextWord = words[j];
-          if (nextWord[0] === nextWord[0].toUpperCase()) {
-            phrase += " " + nextWord;
-          } else {
-            break;
+    patterns.forEach((pattern) => {
+      const matches = text.match(pattern);
+      if (matches) {
+        matches.forEach((match) => {
+          const cleanMatch = match
+            .replace(
+              /\s+(?:state|province|country|city|town|in|from|at|to)\s*$/i,
+              "",
+            )
+            .trim();
+          if (cleanMatch.length > 2 && !phrases.includes(cleanMatch)) {
+            phrases.push(cleanMatch);
           }
-        }
-        locations.push(phrase);
+        });
       }
-    }
+    });
 
-    return [...new Set(locations)]; // Remove duplicates
+    return phrases;
   }
 }
