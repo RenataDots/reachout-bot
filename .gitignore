@@ -9,7 +9,7 @@ dist/
 .idea
 build/
 coverage/
-mock-data/
+data/
 .prettierignore
 *.json
 !package.json

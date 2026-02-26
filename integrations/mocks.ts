@@ -31,7 +31,7 @@ let mockDatabase: {
   sentEmails: new Map(),
 };
 
-const MOCK_DATA_DIR = process.env.MOCK_DATA_DIR || "./mock-data";
+const MOCK_DATA_DIR = process.env.MOCK_DATA_DIR || "./data/mock-data";
 
 /**
  * Mock Email Service

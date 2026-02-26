@@ -12,7 +12,7 @@
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"**/*.ts\"",
     "clean": "rimraf dist",
-    "local:reset": "rm -rf mock-data && echo 'Mock database reset'"
+    "local:reset": "rm -rf data/mock-data && echo 'Mock database reset'"
   },
   "keywords": [
     "ngo",

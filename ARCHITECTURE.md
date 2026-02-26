@@ -140,27 +140,29 @@
 ## Service Interfaces & Implementations
 
 ### Email Service
+
 ```typescript
 interface IEmailService {
   // Requires explicit approval + approval object
   sendApprovedEmail(draft, approval) → sent email
-  
+
   // Requires explicit approval + idempotency key
   scheduleFollowUp(draft, approval, delayMs, key) → scheduled
 }
 
-// Mock: Writes to mock-data/sent-email-*.json
+// Mock: Writes to data/mock-data/sent-email-*.json
 // Live: Calls Gmail API v1
 ```
 
 ### HubSpot Service
+
 ```typescript
 interface IHubSpotService {
   // READ ONLY
   getContactByEmail(email) → contact or null
   getContactById(id) → contact or null
   listContacts(limit, offset) → contacts[]
-  
+
   // CREATE NEW ONLY (idempotent)
   createContactIfNotExists(partial) → (contact, isNew)
 }
@@ -171,6 +173,7 @@ interface IHubSpotService {
 ```
 
 ### Supabase Service
+
 ```typescript
 interface ISupabaseService {
   // Workflow state (single source of truth)
@@ -178,17 +181,17 @@ interface ISupabaseService {
   getWorkflowState(id) → state or null
   getWorkflowStatesByCampaign(campaignId) → states[]
   updateWorkflowStage(id, newStage, data) → updated
-  
+
   // Draft emails (persistent, auditable)
   saveDraftEmail(email) → saved
   getDraftEmail(id) → email or null
   listDraftEmailsByCampaign(campaignId) → emails[]
-  
+
   // User approvals (explicit records)
   saveUserApproval(approval) → saved
   getUserApproval(id) → approval or null
   hasApproval(resourceType, resourceId) → boolean
-  
+
   // Idempotency keys (prevent duplicates)
   recordIdempotencyKey(key) → recorded
   getIdempotencyKey(key) → key or null
@@ -199,6 +202,7 @@ interface ISupabaseService {
 ```
 
 ### AI Service
+
 ```typescript
 interface IAIService {
   // Generates email (output MUST be validated)
@@ -207,7 +211,7 @@ interface IAIService {
     success: boolean
     error?: string
   }
-  
+
   generateEmailWithPrompt(prompt) → AIGenerationResult
 }
 
@@ -219,6 +223,7 @@ interface IAIService {
 ## Hard Constraint Enforcement Points
 
 ### 1. No Auto-Dispatch
+
 - **Check Point**: `workflow.sendEmailWithApproval()`
   - Requires explicit `UserApproval` object
   - Validates approval record exists in Supabase
@@ -226,6 +231,7 @@ interface IAIService {
   - Logs all attempts (approval required)
 
 ### 2. HubSpot Read-Only
+
 - **Check Point**: `hubspot.createContactIfNotExists()`
   - Queries existing contacts first
   - Returns existing if found (never updates)
@@ -233,6 +239,7 @@ interface IAIService {
   - All reads bypass update checks
 
 ### 3. Supabase as State Source
+
 - **Check Point**: All workflow state operations
   - Writes to Supabase immediately
   - Reads from Supabase for state checks
@@ -240,6 +247,7 @@ interface IAIService {
   - Persistence before returning to caller
 
 ### 4. Risk is Advisory
+
 - **Check Point**: `workflow.getAdvisoryRiskAssessment()`
   - Always returns `advisoryOnly: true`
   - Never checked in outreach block logic
@@ -247,6 +255,7 @@ interface IAIService {
   - No guard against high-risk NGOs
 
 ### 5. Idempotency
+
 - **Check Point**: Email send operations
   - Check idempotency key in Supabase
   - If already completed, return success
@@ -254,6 +263,7 @@ interface IAIService {
   - Record completion after successful send
 
 ### 6. Schema Validation
+
 - **Check Point**: `validation.validateAIGeneratedEmail()`
   - Called immediately after AI generation
   - Rejects invalid outputs
@@ -263,16 +273,19 @@ interface IAIService {
 ## Error Handling & Recovery
 
 ### Transient Errors
+
 - Email API timeout → Retry with exponential backoff
 - Supabase connection loss → Retry with circuit breaker
 - HubSpot rate limit → Queue and retry later
 
 ### Permanent Errors
+
 - Invalid email address → Mark email as failed, log error
 - NGO not found → Create empty profile with email only
 - Approval not found → Reject send operation, log security event
 
 ### Idempotency & Recovery
+
 - Email send fails → Retry allowed (idempotent)
 - Approval expires → Requires new approval
 - Workflow stage error → Can update stage again
@@ -280,16 +293,19 @@ interface IAIService {
 ## Testing Strategy
 
 ### Unit Tests
+
 - Each service implementation tested in isolation
 - Mock services tested for correctness
 - Validation functions tested for all edge cases
 
 ### Integration Tests
+
 - Workflow with all mocks connected
 - Full lifecycle: init → draft → approve → send
 - Error scenarios and recovery
 
 ### Constraint Tests (Comprehensive)
+
 - All 7 hard constraints validated
 - Constraint violations should fail tests
 - Coverage: schema validation, approval enforcement, idempotency

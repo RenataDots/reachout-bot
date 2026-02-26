@@ -18,5 +18,5 @@
     "types": ["node", "jest"]
   },
   "include": ["**/*.ts"],
-  "exclude": ["node_modules", "dist", "mock-data"]
+  "exclude": ["node_modules", "dist", "data/mock-data"]
 }
