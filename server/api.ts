@@ -23,7 +23,7 @@ import { v4 as uuidv4 } from "uuid";
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());

@@ -4,10 +4,12 @@ Lightweight MVP for NGO outreach. This project accepts a short brief, finds matc
 
 ## Setup
 
-1. Copy `.env.example` to `.env` and fill in values:
+1. Copy `.env.example` to `.env` and configure values:
+   - `PORT`: Server port (default: 3000)
+   - `API_BASE_URL`: Frontend API base URL (default: http://localhost:3000/api)
+   - `MOCK_DATA_DIR`: Directory for mock data storage (default: ./data/mock-data)
 
-   - `GOOGLE_API_KEY`: API key from Google Cloud for the Custom Search API
-   - `GOOGLE_CX`: Custom Search Engine ID (cx) from the CSE control panel
+   The application uses a built-in NGO database and does not require external API keys.
 
 2. Install dependencies and build:
 
@@ -23,16 +25,6 @@ npm run server
 ```
 
 The server will be available at http://localhost:3000
-
-## Obtaining Google Custom Search (CSE) credentials
-
-1. Go to https://console.cloud.google.com and create or select a project.
-2. Enable the **Custom Search JSON API** for that project.
-3. Create an **API key** under `APIs & Services > Credentials` and copy it to `GOOGLE_API_KEY`.
-4. Go to https://cse.google.com/cse/ and create a new search engine. In the control panel set it to search the entire web (Edit search engine > Sites to search: `Search the entire web` or add `*`).
-5. Copy the **Search engine ID** (labeled `cx`) into `GOOGLE_CX`.
-
-Note: If `GOOGLE_API_KEY` and `GOOGLE_CX` are not set, the server uses a curated local NGO fallback database.
 
 ## Security
 

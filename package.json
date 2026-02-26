@@ -25,10 +25,8 @@
   "author": "Dots Eco",
   "license": "MIT",
   "dependencies": {
-    "axios": "^1.13.4",
     "dotenv": "^16.1.4",
     "express": "^4.22.1",
-    "googleapis": "^171.4.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

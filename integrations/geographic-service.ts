@@ -158,8 +158,12 @@ export class GeographicService {
     const normalized = location.toLowerCase();
 
     // Search through all regions, countries, subdivisions, and cities
-    for (const [regionName, region] of Object.entries(this.geographicData)) {
-      for (const [countryName, countryData] of Object.entries(region)) {
+    for (const [regionName, region] of Object.entries(
+      this.geographicData || {},
+    )) {
+      if (!region) continue;
+      for (const [countryName, countryData] of Object.entries(region || {})) {
+        if (!countryData) continue;
         // Check if location matches country name or aliases
         if (
           this.matchesLocation(normalized, countryName, countryData.aliases)
@@ -175,11 +179,13 @@ export class GeographicService {
 
         // Search subdivisions and cities
         for (const [subdivisionType, subdivisions] of Object.entries(
-          countryData.subdivisions,
+          countryData.subdivisions || {},
         )) {
+          if (!subdivisions) continue;
           for (const [subdivisionName, subdivisionData] of Object.entries(
-            subdivisions,
+            subdivisions || {},
           )) {
+            if (!subdivisionData) continue;
             // Check if location matches subdivision name or aliases
             if (
               this.matchesLocation(
@@ -200,8 +206,9 @@ export class GeographicService {
 
             // Search cities
             for (const [cityName, cityData] of Object.entries(
-              subdivisionData.cities,
+              subdivisionData.cities || {},
             )) {
+              if (!cityData) continue;
               if (
                 this.matchesLocation(normalized, cityName, cityData.aliases)
               ) {
@@ -237,7 +244,9 @@ export class GeographicService {
       return true;
     }
 
-    return aliases.some((alias) => alias.toLowerCase() === searchTerm);
+    return (
+      aliases?.some((alias) => alias.toLowerCase() === searchTerm) || false
+    );
   }
 
   /**
@@ -304,7 +313,9 @@ export class GeographicService {
   private async queryNominatim(location: string): Promise<LocationInfo | null> {
     await this.rateLimit();
 
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}&limit=1`;
+    const baseUrl =
+      process.env.NOMINATIM_URL || "https://nominatim.openstreetmap.org/search";
+    const url = `${baseUrl}?format=json&q=${encodeURIComponent(location)}&limit=1`;
 
     const response = await fetch(url, {
       headers: {

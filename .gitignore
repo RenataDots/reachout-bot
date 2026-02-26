@@ -1,17 +1,20 @@
-node_modules/
-dist/
-.env
-.env.local
-.env.*.local
-*.log
-.DS_Store
+# IDE: VS Code workspace settings and configurations
 .vscode
-.idea
-build/
-coverage/
-data/
-.prettierignore
+
+# Environment: Local environment variables and secrets
+.env
+
+# Dependencies: Ignore all JSON files except essential project configs
 *.json
 !package.json
 !tsconfig.json
+
+# Dependencies: Node.js packages and modules
+node_modules/
+
+# Build: Compiled TypeScript output directory
+dist/
+
+# Data: Runtime data and mock files (except essential geographic database)
+data/
 !data/geographic-database.json

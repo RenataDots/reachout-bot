@@ -5,7 +5,6 @@
  * Uses a comprehensive database of real NGOs and fuzzy matching
  */
 
-import axios from "axios";
 import * as schemas from "../shared/schemas";
 import { BriefProcessor } from "./brief-processor";
 
@@ -303,31 +302,6 @@ export async function searchNGOs(brief: string): Promise<schemas.NGOProfile[]> {
     );
   }
 
-  // Try Google Custom Search first (if configured)
-  const apiKey = process.env.GOOGLE_API_KEY;
-  const cx = process.env.GOOGLE_CX;
-
-  if (apiKey && cx) {
-    try {
-      const googleResults = await searchGoogleCSE(
-        processedBrief.cleanedText,
-        apiKey,
-        cx,
-      );
-      if (googleResults && googleResults.length > 0) {
-        console.log(
-          `[NGO Search] Returning ${googleResults.length} results from Google CSE`,
-        );
-        return googleResults.map((g) => ({ ...g, selectedForOutreach: false }));
-      }
-    } catch (err) {
-      console.error(
-        "[NGO Search] Google CSE failed:",
-        (err as any)?.message || err,
-      );
-    }
-  }
-
   // Enhanced keyword extraction using processed brief
   const keywords = extractEnhancedKeywords(
     processedBrief.cleanedText,
@@ -335,7 +309,7 @@ export async function searchNGOs(brief: string): Promise<schemas.NGOProfile[]> {
   );
   console.log(`[NGO Search] Enhanced keywords: ${keywords.join(", ")}`);
 
-  // Enhanced relevance scoring
+  // Enhanced relevance scoring using local NGO database
   const scoredNGOs = NGO_DATABASE.map((ngo) => ({
     ngo,
     score: calculateEnhancedRelevanceScore(ngo, processedBrief, keywords),
@@ -914,50 +888,6 @@ function calculateOrganizationTypeMatch(
   }
 
   return score;
-}
-
-/**
- * Query Google Custom Search JSON API
- */
-async function searchGoogleCSE(
-  brief: string,
-  apiKey: string,
-  cx: string,
-): Promise<schemas.NGOProfile[]> {
-  const q = extractKeywords(brief).join(" ") + " NGO nonprofit organization";
-  const url = "https://www.googleapis.com/customsearch/v1";
-  const resp = await axios.get(url, {
-    params: { key: apiKey, cx, q, num: 10 },
-    timeout: 8000,
-  });
-  const items = resp.data?.items || [];
-
-  return items.map((it: any, i: number) => {
-    const title = it.title || "";
-    const snippet = it.snippet || "";
-    const link = it.link || it.formattedUrl || "";
-
-    const profile: schemas.NGOProfile = {
-      id: `gcs-${i}-${Date.now()}`,
-      name: title.substring(0, 120),
-      email: extractEmail(snippet) || extractEmail(link) || "contact@ngo.org",
-      domain: extractDomain(link) || "ngo.org",
-      geography: extractGeographyFromText(snippet + " " + title),
-      focusAreas: extractFocusAreas(
-        { description: snippet, sector: title },
-        brief,
-      ),
-      fitRationale: snippet.substring(0, 300) || title,
-      partnerStatus: "potential",
-      riskScore: 6,
-      controversySummary: `Found via Google CSE: ${link}`,
-      selectedForOutreach: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    return profile;
-  });
 }
 
 /**

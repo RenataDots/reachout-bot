@@ -214,10 +214,11 @@ export class BriefProcessor {
   private analyzeStructure(
     segments: TextSegment[],
   ): ProcessedBrief["structure"] {
-    const hasBulletPoints = segments.some((s) => s.type === "bullet");
-    const hasNumberedList = segments.some((s) => s.type === "numbered");
+    const hasBulletPoints = segments?.some((s) => s.type === "bullet") || false;
+    const hasNumberedList =
+      segments?.some((s) => s.type === "numbered") || false;
     const hasMultipleParagraphs =
-      segments.filter((s) => s.type === "paragraph").length > 1;
+      segments?.filter((s) => s.type === "paragraph").length > 1 || false;
 
     let estimatedFormat: ProcessedBrief["structure"]["estimatedFormat"] =
       "unknown";
