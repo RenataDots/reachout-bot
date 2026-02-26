@@ -17,7 +17,6 @@ import * as mocks from "../integrations/mocks";
 import * as schemas from "../shared/schemas";
 import { ReachOutWorkflow } from "../backend/workflow";
 import { searchNGOs } from "../integrations/ngo-search";
-import { GoogleDriveService } from "../integrations/google-drive";
 import { v4 as uuidv4 } from "uuid";
 
 // Load environment variables from .env (if present)
@@ -50,9 +49,6 @@ const supabase = new mocks.MockSupabaseService(console.log);
 const email = new mocks.MockEmailService(console.log);
 const hubspot = new mocks.MockHubSpotService(console.log);
 const ai = new mocks.MockAIService(console.log);
-
-// Initialize Google Drive service
-const googleDrive = new GoogleDriveService(console.log);
 
 // Create workflow orchestrator
 const workflow = new ReachOutWorkflow(supabase, email, hubspot, ai);
@@ -403,168 +399,6 @@ app.post("/api/data/reset", (req: Request, res: Response) => {
     message: "Mock database reset successfully",
   });
 });
-
-// ============================================================================
-// Google Drive Template Endpoints
-// ============================================================================
-
-// Test Google Drive connection
-app.get("/api/google-drive/test", async (req: Request, res: Response) => {
-  try {
-    const initialized = await googleDrive.initialize();
-    if (!initialized) {
-      return res.status(500).json({
-        success: false,
-        error: "Failed to initialize Google Drive service",
-      });
-    }
-
-    const connected = await googleDrive.testConnection();
-    res.json({
-      success: connected,
-      message: connected
-        ? "Successfully connected to Google Drive"
-        : "Failed to connect to Google Drive",
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: (error as Error).message,
-    });
-  }
-});
-
-// Diagnose folder access
-app.get("/api/google-drive/diagnose", async (req: Request, res: Response) => {
-  try {
-    const initialized = await googleDrive.initialize();
-    if (!initialized) {
-      return res.status(500).json({
-        success: false,
-        error: "Failed to initialize Google Drive service",
-      });
-    }
-
-    const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
-    res.json({
-      success: true,
-      folderId: folderId,
-      message: `Attempting to access folder ID: ${folderId}. If this is a Shared Drive, OAuth2 authentication is required.`,
-      recommendations: [
-        "If using a regular folder: ensure it's shared with 'Anyone with the link can view'",
-        "If using a Shared Drive: switch to OAuth2 authentication",
-        "Check Google Cloud Console: ensure Google Drive API is enabled",
-      ],
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: (error as Error).message,
-    });
-  }
-});
-
-// List email templates from Google Drive
-app.get("/api/google-drive/templates", async (req: Request, res: Response) => {
-  try {
-    const initialized = await googleDrive.initialize();
-    if (!initialized) {
-      return res.status(500).json({
-        success: false,
-        error: "Failed to initialize Google Drive service",
-      });
-    }
-
-    const templates = await googleDrive.listTemplates();
-    res.json({
-      success: true,
-      templates: templates,
-      count: templates.length,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: (error as Error).message,
-    });
-  }
-});
-
-// Get specific template from Google Drive
-app.get(
-  "/api/google-drive/templates/:templateId",
-  async (req: Request, res: Response) => {
-    try {
-      const templateId = Array.isArray(req.params.templateId)
-        ? req.params.templateId[0]
-        : req.params.templateId;
-
-      const initialized = await googleDrive.initialize();
-      if (!initialized) {
-        return res.status(500).json({
-          success: false,
-          error: "Failed to initialize Google Drive service",
-        });
-      }
-
-      const template = await googleDrive.getTemplate(templateId);
-      if (!template) {
-        return res.status(404).json({
-          success: false,
-          error: "Template not found",
-        });
-      }
-
-      res.json({
-        success: true,
-        template: template,
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        error: (error as Error).message,
-      });
-    }
-  },
-);
-
-// Fetch templates from sharing links
-app.post(
-  "/api/google-drive/templates/from-links",
-  async (req: Request, res: Response) => {
-    try {
-      const { sharingUrls } = req.body;
-
-      if (!sharingUrls || !Array.isArray(sharingUrls)) {
-        return res.status(400).json({
-          success: false,
-          error: "Missing or invalid sharingUrls array in request body",
-        });
-      }
-
-      const initialized = await googleDrive.initialize();
-      if (!initialized) {
-        return res.status(500).json({
-          success: false,
-          error: "Failed to initialize Google Drive service",
-        });
-      }
-
-      const templates =
-        await googleDrive.fetchTemplatesFromSharingLinks(sharingUrls);
-
-      res.json({
-        success: true,
-        templates: templates,
-        count: templates.length,
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        error: (error as Error).message,
-      });
-    }
-  },
-);
 
 /**
  * Start server
