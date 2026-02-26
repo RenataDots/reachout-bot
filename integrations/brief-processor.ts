@@ -61,7 +61,7 @@ export class BriefProcessor {
   /**
    * Main processing pipeline for brief text
    */
-  processBrief(text: string): ProcessedBrief {
+  async processBrief(text: string): Promise<ProcessedBrief> {
     this.logger("[BriefProcessor] Processing brief text...");
 
     // Phase 1: Text Cleaning & Normalization
@@ -76,7 +76,7 @@ export class BriefProcessor {
 
     // Phase 4: Content Analysis (NEW)
     this.logger("[BriefProcessor] Starting Phase 2 content analysis...");
-    const intent = this.intentAnalyzer.analyzeIntent(cleanedText);
+    const intent = await this.intentAnalyzer.analyzeIntent(cleanedText);
     const entities = this.entityExtractor.extractEntities(cleanedText);
     const tone = this.toneAnalyzer.analyzeTone(cleanedText);
     const gaps = this.gapAnalyzer.analyzeGaps(

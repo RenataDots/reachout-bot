@@ -291,7 +291,7 @@ export async function searchNGOs(brief: string): Promise<schemas.NGOProfile[]> {
   const briefProcessor = new BriefProcessor(console.log);
 
   // Process the brief with enhanced text analysis
-  const processedBrief = briefProcessor.processBrief(brief);
+  const processedBrief = await briefProcessor.processBrief(brief);
 
   console.log(
     `[NGO Search] Brief processed: ${processedBrief.wordCount} words, quality score: ${processedBrief.quality.score}`,
