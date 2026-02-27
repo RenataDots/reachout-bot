@@ -17,10 +17,60 @@ import * as mocks from "../integrations/mocks";
 import * as schemas from "../shared/schemas";
 import { ReachOutWorkflow } from "../backend/workflow";
 import { searchNGOs } from "../integrations/ngo-search";
+import { GrokSearchService } from "../integrations/grok-search";
 import { v4 as uuidv4 } from "uuid";
 
 // Load environment variables from .env (if present)
-dotenv.config();
+console.log("[DEBUG] Current working directory:", process.cwd());
+console.log("[DEBUG] __dirname:", __dirname);
+console.log(
+  "[DEBUG] Attempting to load .env from:",
+  path.resolve(__dirname, "../../.env"),
+);
+
+const envPath = path.resolve(__dirname, "../../.env");
+console.log("[DEBUG] .env file exists:", require("fs").existsSync(envPath));
+
+// Read file contents for debugging
+if (require("fs").existsSync(envPath)) {
+  const envContent = require("fs").readFileSync(envPath, "utf8");
+  console.log(
+    "[DEBUG] .env file content (first 200 chars):",
+    envContent.substring(0, 200),
+  );
+  console.log("[DEBUG] .env file line count:", envContent.split("\n").length);
+
+  // Parse manually since dotenv failed
+  const envLines = envContent.split("\n");
+  for (const line of envLines) {
+    const trimmedLine = line.trim();
+    if (trimmedLine && !trimmedLine.startsWith("#")) {
+      const [key, ...valueParts] = trimmedLine.split("=");
+      if (key && valueParts.length > 0) {
+        process.env[key.trim()] = valueParts.join("=").trim();
+        console.log(`[DEBUG] Loaded env var: ${key.trim()}`);
+      }
+    }
+  }
+}
+
+const result = dotenv.config();
+console.log("[DEBUG] dotenv.config() result:", result);
+
+if (result.error) {
+  console.error("[DEBUG] dotenv error:", result.error);
+}
+
+// Debug: Check if environment variables are loaded
+console.log("[API] Environment variables loaded:");
+console.log(
+  "[API] XAI_API_KEY:",
+  process.env.XAI_API_KEY ? "PRESENT" : "MISSING",
+);
+console.log(
+  "[API] GROK_MODEL:",
+  process.env.GROK_MODEL || "grok-4-1-fast-reasoning",
+);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -156,6 +206,46 @@ app.post("/api/ngos/search", async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       error: (error as Error).message || "Error searching for NGOs",
+    });
+  }
+});
+
+/**
+ * POST /api/grok/search-ngos
+ * Search NGOs using Grok AI API with fallback to local database
+ */
+app.post("/api/grok/search-ngos", async (req: Request, res: Response) => {
+  const { brief, maxResults = 12 } = req.body;
+
+  if (!brief || brief.trim().length === 0) {
+    return res.status(400).json({
+      success: false,
+      error: "Please provide a brief to search for matching NGOs",
+    });
+  }
+
+  try {
+    // Initialize Grok service
+    const grokService = new GrokSearchService();
+
+    // Search using Grok API
+    const results = await grokService.searchNGOs(brief);
+
+    // Limit results as requested
+    const limitedResults = results.slice(0, maxResults);
+
+    res.json({
+      success: true,
+      count: limitedResults.length,
+      ngos: limitedResults,
+      message: `Found ${limitedResults.length} matching NGO(s) via Grok AI`,
+    });
+  } catch (error) {
+    console.error("[API] Grok search error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Grok API search failed",
+      details: (error as Error).message,
     });
   }
 });

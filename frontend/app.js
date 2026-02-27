@@ -135,7 +135,7 @@ console.log("JavaScript loaded successfully");
 console.log("API_BASE:", API_BASE);
 
 // ============================================================================
-// STEP 1: Search NGOs by Brief
+// STEP 1: Search NGOs according to the brief
 // ============================================================================
 
 async function searchNGOs() {
@@ -157,9 +157,20 @@ async function searchNGOs() {
 
     STATE.campaign = campaignData.campaign;
 
-    // Search NGOs
-    const searchData = await apiCall("/ngos/search", "POST", { brief });
-
+    // Try Grok API first, fallback to local database
+    let searchData;
+    try {
+      // Attempt Grok search
+      searchData = await apiCall("/grok/search-ngos", "POST", {
+        brief: brief,
+        maxResults: 12,
+      });
+      console.log("Using Grok API results");
+    } catch (error) {
+      console.log("Grok API failed, using local database:", error);
+      // Fallback to local database
+      searchData = await apiCall("/ngos/search", "POST", { brief });
+    }
     if (searchData.count === 0) {
       showOutput(
         "brief-output",

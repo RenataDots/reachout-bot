@@ -7,11 +7,12 @@
 3. **Single Source of Truth** - Clear ownership: HubSpot for CRM, Supabase for workflows
 4. **Defensive Programming** - Guards on all critical operations, detailed logging
 5. **Local-First Development** - Full functionality in mock mode without external services
+6. **Hybrid Intelligence** - AI-powered search with reliable local fallback
 
 ## Component Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
+┌─────────────────────────────────────────────────────┐
 │                    Frontend (Future)                         │
 │           User Approval & Email Review UI                    │
 └────────────────────┬────────────────────────────────────────┘
@@ -22,22 +23,22 @@
 │  - Email draft management                                    │
 │  - Approval validation                                       │
 │  - Risk assessment (advisory)                                │
-└──────────┬─────────────────────────┬──────────────────┬─────┘
+└──────────┬─────────────────┬──────────────────┬─────┘
            │                         │                  │
       ┌────┴────┐        ┌──────────┴──────┐      ┌────┴────┐
       │          │        │                 │      │         │
-   ┌──┴──┐   ┌──┴──┐   ┌─┴──┐        ┌─────┴───┐ ┌─┴──┐  ┌──┴──┐
-   │Email │   │Hub  │   │Supa│        │ Google  │ │ AI │  │Risk │
-   │Svc   │   │Spot │   │base│        │ Drive   │ │Svc │  │Svc  │
-   └──┬──┘   └──┬──┘   └─┬──┘        └─────┬───┘ └─┬──┘  └──┬──┘
+   ┌──┴──┐   ┌──┴──┐   ┌─┴──┐        ┌─────┴───┐ ┌─────┴───┐ ┌─┴──┐  ┌──┴──┐
+   │Email │   │Hub  │   │Supa│        │ Google  │ │ AI │  │Risk │  │Grok │
+   │Svc   │   │Spot │   │base│        │ Drive   │ │Svc │  │Svc  │  │Search│
+   └──┬──┘   └──┬──┘   └─┬──┘        └─────┬───┘ └─┬──┘  └──┬──┘  └──┬──┘
       │         │        │                 │      │      │
-   ┌──┴───────┬─┴─────┬──┴────────┬────────┴──────┴──────┴──┐
+   ┌──┴───────┬─┴─────┬──┴────────┬────────┴──────┴──────┴──────┴──┐
    │ Mock Implementations (Local)                          │
    │ - MockEmailService                                    │
    │ - MockHubSpotService                                  │
    │ - MockSupabaseService                                 │
    │ - MockAIService                                       │
-   │ - In-memory database                                  │
+   │ - Local NGO Database (41 organizations)                 │
    └───────────────────────────────────────────────────────┘
 
    ↓ Swap to Live ↓
@@ -49,10 +50,37 @@
    │ - Real Supabase                                         │
    │ - Google Drive API                                      │
    │ - OpenAI API                                            │
+   │ - xAI Grok API                                         │
    └─────────────────────────────────────────────────────────┘
 ```
 
 ## Data Flow
+
+### NGO Search & Discovery
+
+```
+Campaign Brief Input
+         ↓
+   Brief Processing & Analysis
+   - Geographic extraction
+   - Intent analysis
+   - Entity recognition
+   - Quality assessment
+         ↓
+   ┌─────────────────────────────────┐
+   │  Hybrid Search Orchestrator   │
+   │  Try Grok API First          │
+   │  ↓ (if fails)              │
+   │  Fallback to Local Database   │
+   └──────────┬──────────────────┘
+         ↓
+   NGO Results (AI + Local)
+         ↓
+   NGO Profile Generation
+   - Risk assessment
+   - Partnership scoring
+   - Contact validation
+```
 
 ### Email Generation & Sending
 
